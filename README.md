@@ -1,10 +1,10 @@
-# CloudSecure AI - Empowering Small Businesses Across America 🇺🇸
+# CloudSecure AI - Empowering Small Businesses with Free Cloud Security
 
 **A comprehensive, free cloud security platform designed specifically for small and medium businesses (SMBs) to protect their digital assets without the need for expensive IT expertise.**
 
-## 🌟 Mission Statement
+## Mission Statement
 
-CloudSecure AI is a **non-profit, community-driven initiative** dedicated to democratizing cloud security for America's small businesses. We believe that every business, regardless of size, deserves enterprise-grade security protection without the enterprise price tag.
+CloudSecure AI is a **non-profit, community-driven initiative** dedicated to democratizing cloud security for small businesses worldwide. We believe that every business, regardless of size, deserves enterprise-grade security protection without the enterprise price tag.
 
 ## Why Small Businesses Need CloudSecure AI
 
