@@ -236,15 +236,6 @@ CloudSecure AI provides **enterprise-grade security tools** that are:
 
 ---
 
-## Default Users
-
-| Username | Password | Role  | Email |
-|----------|----------|-------|-------|
-| `admin`  | `admin123` | ADMIN | admin@cloudsecure.com |
-| `user`   | `user123`  | USER  | user@cloudsecure.com |
-
----
-
 ## Key Benefits for Small Businesses
 
 ### **Cost Savings**
