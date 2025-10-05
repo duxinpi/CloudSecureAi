@@ -140,7 +140,7 @@ CloudSecure AI provides **enterprise-grade security tools** that are:
 - **Customer Data** - GDPR and CCPA compliance for customer information
 - **Online Store Security** - Protect e-commerce platforms and customer accounts
 
-### 🏥 **Healthcare & Medical**
+### **Healthcare & Medical**
 - **Patient Data Protection** - HIPAA compliance for patient records
 - **Telemedicine Security** - Secure video consultations and remote monitoring
 - **Medical Device Security** - Protect connected medical devices
