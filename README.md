@@ -434,19 +434,6 @@ CloudSecure AI is committed to protecting America's small business economy by pr
 ![AI Chat](docs/screenshots/ai-chat-interface.png)
 *Get instant security guidance from our AI assistant*
 
-### Demo Data & Examples
-
-#### **Sample Security Findings**
-- **Critical**: Unencrypted S3 bucket with public access
-- **High**: Missing MFA on admin accounts
-- **Medium**: Outdated SSL certificates
-- **Low**: Unused security groups
-
-#### **Compliance Examples**
-- **GDPR**: Data encryption and access controls
-- **SOC 2**: Security monitoring and incident response
-- **HIPAA**: Protected health information safeguards
-
 ### Getting Started with Demo
 
 1. **Visit Demo Site**: [demo.cloudsecureai.com](https://demo.cloudsecureai.com)
