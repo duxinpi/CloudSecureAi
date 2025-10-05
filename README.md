@@ -152,7 +152,7 @@ CloudSecure AI provides **enterprise-grade security tools** that are:
 - **Fraud Prevention** - Detect and prevent financial fraud
 - **Audit Preparation** - Maintain detailed security logs for audits
 
-###  **Manufacturing & Industrial**
+### **Manufacturing & Industrial**
 - **Supply Chain Security** - Protect manufacturing and logistics data
 - **IoT Device Security** - Secure connected manufacturing equipment
 - **Intellectual Property** - Protect proprietary designs and processes
@@ -433,15 +433,6 @@ CloudSecure AI is committed to protecting America's small business economy by pr
 #### **AI Chat Interface**
 ![AI Chat](docs/screenshots/ai-chat-interface.png)
 *Get instant security guidance from our AI assistant*
-
-### Getting Started with Demo
-
-1. **Visit Demo Site**: [demo.cloudsecureai.com](https://demo.cloudsecureai.com)
-2. **Use Demo Credentials**: 
-   - Username: `demo@cloudsecureai.com`
-   - Password: `DemoUser123!`
-3. **Explore Features**: Try all platform capabilities
-4. **Contact Support**: Get help from our team
 
 ---
 
