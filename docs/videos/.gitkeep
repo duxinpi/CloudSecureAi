@@ -1,0 +1,22 @@
+# Videos Directory
+
+This directory will contain demo videos for CloudSecure AI.
+
+## Required Videos:
+- demo-thumbnail.png (1280x720)
+- platform-demo.mp4 (1920x1080, 3-5 minutes)
+
+## Video Guidelines:
+1. Record at 30fps for smooth playback
+2. Include clear narration or subtitles
+3. Show real application functionality
+4. Keep duration under 5 minutes
+5. Use professional screen recording software
+
+## Content Structure:
+1. Introduction (30s)
+2. Dashboard Tour (1m)
+3. Account Setup (1m)
+4. Security Scan (1m)
+5. AI Chat Demo (1m)
+6. Conclusion (30s)

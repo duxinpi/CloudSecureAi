@@ -350,6 +350,114 @@ CloudSecure AI is committed to protecting America's small business economy by pr
 
 ---
 
+## Demo & Workflow
+
+### Quick Start Demo
+
+**See CloudSecure AI in action with our interactive demo:**
+
+#### 1. **Dashboard Overview**
+![Dashboard Screenshot](docs/screenshots/dashboard-overview.png)
+*Get an instant view of your cloud security posture with real-time metrics and alerts*
+
+#### 2. **Cloud Account Setup**
+![Cloud Setup Screenshot](docs/screenshots/cloud-account-setup.png)
+*Connect your AWS, Azure, and GCP accounts in just a few clicks*
+
+#### 3. **Security Scan Process**
+![Security Scan Screenshot](docs/screenshots/security-scan.png)
+*Watch as our AI scans your cloud infrastructure for vulnerabilities*
+
+#### 4. **Compliance Dashboard**
+![Compliance Screenshot](docs/screenshots/compliance-dashboard.png)
+*Track your compliance status across GDPR, SOC 2, and HIPAA frameworks*
+
+#### 5. **AI Chat Assistant**
+![AI Chat Screenshot](docs/screenshots/ai-chat.png)
+*Get instant security advice from our AI-powered assistant*
+
+### Video Walkthrough
+
+**Complete Platform Demo (5 minutes):**
+[![CloudSecure AI Demo Video](docs/videos/demo-thumbnail.png)](https://youtube.com/watch?v=cloudsecure-demo)
+*Click to watch the full platform demonstration*
+
+### Step-by-Step Workflow
+
+#### **Step 1: Initial Setup (2 minutes)**
+1. **Sign Up** - Create your free account
+2. **Connect Cloud Accounts** - Add your AWS/Azure/GCP credentials
+3. **Configure Notifications** - Set up email alerts
+
+#### **Step 2: First Security Scan (3 minutes)**
+1. **Run Initial Scan** - Click "Scan Now" button
+2. **Review Results** - See your security score and findings
+3. **Fix Critical Issues** - Follow guided remediation steps
+
+#### **Step 3: Ongoing Monitoring (Daily)**
+1. **Check Dashboard** - Review daily security status
+2. **Address Alerts** - Respond to new security findings
+3. **AI Consultation** - Ask questions via chat interface
+
+### Interactive Demo Features
+
+#### **Live Demo Environment**
+- **Try Before You Buy** - Test with sample cloud data
+- **No Setup Required** - Pre-configured demo environment
+- **Real-time Results** - See actual security scans in action
+
+#### **Demo Scenarios**
+- **Small E-commerce Store** - Protect customer payment data
+- **SaaS Startup** - Secure multi-tenant application
+- **Healthcare Practice** - HIPAA compliance made simple
+- **Financial Services** - SOC 2 Type II compliance
+
+### Screenshots Gallery
+
+#### **Main Dashboard**
+![Main Dashboard](docs/screenshots/main-dashboard.png)
+*Central hub showing security score, recent alerts, and resource overview*
+
+#### **Cloud Accounts Management**
+![Cloud Accounts](docs/screenshots/cloud-accounts.png)
+*Manage all your cloud providers from one unified interface*
+
+#### **Vulnerability Scanner**
+![Vulnerability Scanner](docs/screenshots/vulnerability-scanner.png)
+*Real-time vulnerability detection with severity classification*
+
+#### **Compliance Reports**
+![Compliance Reports](docs/screenshots/compliance-reports.png)
+*Automated compliance reporting for audits and certifications*
+
+#### **AI Chat Interface**
+![AI Chat](docs/screenshots/ai-chat-interface.png)
+*Get instant security guidance from our AI assistant*
+
+### Demo Data & Examples
+
+#### **Sample Security Findings**
+- **Critical**: Unencrypted S3 bucket with public access
+- **High**: Missing MFA on admin accounts
+- **Medium**: Outdated SSL certificates
+- **Low**: Unused security groups
+
+#### **Compliance Examples**
+- **GDPR**: Data encryption and access controls
+- **SOC 2**: Security monitoring and incident response
+- **HIPAA**: Protected health information safeguards
+
+### Getting Started with Demo
+
+1. **Visit Demo Site**: [demo.cloudsecureai.com](https://demo.cloudsecureai.com)
+2. **Use Demo Credentials**: 
+   - Username: `demo@cloudsecureai.com`
+   - Password: `DemoUser123!`
+3. **Explore Features**: Try all platform capabilities
+4. **Contact Support**: Get help from our team
+
+---
+
 ## Contact & Support
 
 - **Email**: duxinpi@gmail.com, ddxhvm@gmail.com

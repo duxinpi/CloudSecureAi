@@ -1,0 +1,22 @@
+# Screenshots Directory
+
+This directory will contain demo screenshots for CloudSecure AI.
+
+## Required Screenshots:
+- dashboard-overview.png
+- cloud-account-setup.png
+- security-scan.png
+- compliance-dashboard.png
+- ai-chat.png
+- main-dashboard.png
+- cloud-accounts.png
+- vulnerability-scanner.png
+- compliance-reports.png
+- ai-chat-interface.png
+
+## Instructions:
+1. Take screenshots of the live application
+2. Ensure all sensitive data is masked
+3. Use consistent resolution (1920x1080)
+4. Save as PNG format
+5. Keep file sizes under 2MB each
