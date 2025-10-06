@@ -355,12 +355,12 @@
               <span class="value">{{ selectedDevice.operatingSystem }}</span>
             </div>
             <div class="detail-item">
-              <span class="label">Location:</span>
-              <span class="value">{{ selectedDevice.location }}</span>
+              <span class="label">Owner:</span>
+              <span class="value">{{ selectedDevice.ownerName }}</span>
             </div>
             <div class="detail-item">
-              <span class="label">Cloud Provider:</span>
-              <span class="value">{{ selectedDevice.cloudProvider }}</span>
+              <span class="label">Department:</span>
+              <span class="value">{{ selectedDevice.department }}</span>
             </div>
             <div class="detail-item">
               <span class="label">Last Seen:</span>
@@ -369,28 +369,31 @@
           </div>
           
           <div class="detail-section">
-            <h4>Performance Metrics</h4>
-            <div class="metrics-grid">
-              <div class="metric-item">
-                <span class="metric-label">CPU Usage</span>
-                <div class="metric-bar">
-                  <div class="metric-fill" [style.width.%]="selectedDevice.cpuUsage"></div>
-                </div>
-                <span class="metric-value">{{ selectedDevice.cpuUsage }}%</span>
+            <h4>Security Status</h4>
+            <div class="security-grid">
+              <div class="security-item">
+                <span class="security-label">Encryption</span>
+                <span class="security-value" [class]="selectedDevice.encryptionEnabled ? 'enabled' : 'disabled'">
+                  {{ selectedDevice.encryptionEnabled ? 'Enabled' : 'Disabled' }}
+                </span>
               </div>
-              <div class="metric-item">
-                <span class="metric-label">Memory Usage</span>
-                <div class="metric-bar">
-                  <div class="metric-fill" [style.width.%]="selectedDevice.memoryUsage"></div>
-                </div>
-                <span class="metric-value">{{ selectedDevice.memoryUsage }}%</span>
+              <div class="security-item">
+                <span class="security-label">Screen Lock</span>
+                <span class="security-value" [class]="selectedDevice.screenLockEnabled ? 'enabled' : 'disabled'">
+                  {{ selectedDevice.screenLockEnabled ? 'Enabled' : 'Disabled' }}
+                </span>
               </div>
-              <div class="metric-item">
-                <span class="metric-label">Storage Usage</span>
-                <div class="metric-bar">
-                  <div class="metric-fill" [style.width.%]="selectedDevice.storageUsage"></div>
-                </div>
-                <span class="metric-value">{{ selectedDevice.storageUsage }}%</span>
+              <div class="security-item">
+                <span class="security-label">Jailbreak Status</span>
+                <span class="security-value" [class]="selectedDevice.isJailbroken ? 'warning' : 'safe'">
+                  {{ selectedDevice.isJailbroken ? 'Detected' : 'Clean' }}
+                </span>
+              </div>
+              <div class="security-item">
+                <span class="security-label">App Store</span>
+                <span class="security-value" [class]="selectedDevice.appStoreEnabled ? 'enabled' : 'disabled'">
+                  {{ selectedDevice.appStoreEnabled ? 'Enabled' : 'Restricted' }}
+                </span>
               </div>
             </div>
           </div>
