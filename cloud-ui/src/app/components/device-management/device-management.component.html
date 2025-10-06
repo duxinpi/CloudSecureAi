@@ -96,8 +96,8 @@
     <div class="device-card" *ngFor="let device of filteredDevices" [class]="getDeviceCardClass(device)">
       <div class="card-header">
         <div class="device-info">
-          <div class="device-icon" [class]="'device-' + device.type.toLowerCase()">
-            <i [class]="'icon-' + device.type.toLowerCase()"></i>
+          <div class="device-icon" [class]="'device-' + device.deviceType.toLowerCase()">
+            <i [class]="'icon-' + device.deviceType.toLowerCase()"></i>
           </div>
           <div class="device-details">
             <h3>{{ device.deviceName }}</h3>
