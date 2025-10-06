@@ -108,6 +108,23 @@ public class PresenterHelper {
         }
     }
 
+    /**
+     * Saves a BufferedImage to a file in BMP format.
+     *
+     * @param image the BufferedImage to save
+     * @param filePath the path where the BMP file should be stored
+     * @return true if saved successfully, false otherwise
+     */
+    public static boolean saveAsBitmap(BufferedImage image, String filePath) {
+        try {
+            File outputFile = new File(filePath);
+            return ImageIO.write(image, "bmp", outputFile);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
 
 
 }
