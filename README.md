@@ -130,6 +130,27 @@ CloudSecure AI provides **enterprise-grade security tools** that are:
 - **Customer Assurance** - Demonstrate security commitment to clients
 - **Investment Justification** - Show ROI of security investments
 
+### **Mobile Device Management (MDM) - Secure Employee Devices**
+**Purpose**: Manage and secure all employee devices across your organization
+
+**Key Features**:
+- **Device Enrollment** - Automatically register employee devices (laptops, phones, tablets)
+- **Security Controls** - Enforce password policies, encryption, and screen locks
+- **Remote Management** - Remote wipe for lost or stolen devices
+- **Compliance Monitoring** - Track device compliance with security policies
+- **Platform Support** - iOS, Android, Windows, macOS, Linux devices
+
+**Small Business Benefits**:
+- **Employee Device Security** - Protect company data on personal and work devices
+- **Compliance Assurance** - Meet regulatory requirements for device security
+- **Cost Control** - Manage device usage and prevent unauthorized access
+- **Risk Mitigation** - Identify and address security risks before they become problems
+- **Centralized Management** - Single dashboard for all employee devices
+
+**Example**: Track all employee smartphones, tablets, and laptops from a single dashboard, enforce security policies like encryption and screen locks, and remotely wipe lost devices to protect company data.
+
+![MDM Management](docs/screenshots/mdm-management.png)
+
 ---
 
 ## How CloudSecure AI Helps Small Businesses
