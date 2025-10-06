@@ -6,13 +6,10 @@
     android:layout_height="match_parent"
     tools:context="app.xdu.com.androidassessment.UI.MainActivity">
    <include layout="@layout/toolbar"/>
-
     <android.support.v7.widget.RecyclerView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/main_toolbar"
         android:id="@+id/rv"
         />
-
-
 </RelativeLayout>
