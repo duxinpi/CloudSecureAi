@@ -149,7 +149,6 @@ CloudSecure AI provides **enterprise-grade security tools** that are:
 
 **Example**: Track all employee smartphones, tablets, and laptops from a single dashboard, enforce security policies like encryption and screen locks, and remotely wipe lost devices to protect company data.
 
-![MDM Management](docs/screenshots/mdm-management.png)
 
 ---
 
