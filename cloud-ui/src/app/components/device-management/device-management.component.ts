@@ -6,19 +6,23 @@ interface Device {
   id: number;
   deviceName: string;
   deviceId: string;
-  deviceType: string;
+  deviceType: string; // e.g., Smartphone, Tablet, Laptop, Desktop, IoT
+  platform: string; // e.g., iOS, Android, Windows, macOS, Linux
   operatingSystem: string;
-  status: string;
-  healthStatus: string;
-  location: string;
-  cloudProvider: string;
+  osVersion: string;
+  ownerName: string;
+  department: string;
+  enrollmentStatus: 'Enrolled' | 'Pending' | 'Failed' | 'Unenrolled';
+  complianceStatus: 'Compliant' | 'Non-Compliant' | 'At-Risk' | 'Unknown';
+  encryptionEnabled: boolean;
+  screenLockEnabled: boolean;
+  isJailbroken: boolean;
+  appStoreEnabled: boolean;
+  remoteWipeEnabled: boolean;
   lastSeen: string;
-  cpuUsage: number;
-  memoryUsage: number;
-  storageUsage: number;
-  alertCount: number;
-  tags: string[];
+  securityAlerts: number;
   recentAlerts: Alert[];
+  tags: string[];
   description?: string;
   createdAt: string;
   updatedAt: string;
@@ -48,14 +52,15 @@ export class DeviceManagementComponent implements OnInit {
   deviceForm: FormGroup;
   
   // Statistics
-  onlineDevices = 0;
-  offlineDevices = 0;
-  criticalDevices = 0;
+  enrolledDevices = 0;
+  compliantDevices = 0;
+  nonCompliantDevices = 0;
   totalDevices = 0;
   
   // Filters
-  statusFilter = '';
+  complianceFilter = '';
   typeFilter = '';
+  platformFilter = '';
   searchTerm = '';
 
   private apiUrl = 'http://localhost:8080/api';
@@ -67,9 +72,11 @@ export class DeviceManagementComponent implements OnInit {
     this.deviceForm = this.fb.group({
       deviceName: ['', Validators.required],
       deviceType: ['', Validators.required],
+      platform: ['', Validators.required],
       operatingSystem: [''],
-      location: [''],
-      cloudProvider: [''],
+      osVersion: [''],
+      ownerName: ['', Validators.required],
+      department: ['', Validators.required],
       tags: [''],
       description: ['']
     });
@@ -94,83 +101,103 @@ export class DeviceManagementComponent implements OnInit {
   }
 
   loadMockData() {
-    // Mock device data for development
+    // Mock MDM device data for development
     this.devices = [
       {
         id: 1,
-        deviceName: 'Production Server 01',
-        deviceId: 'SRV-001',
-        deviceType: 'server',
-        operatingSystem: 'Ubuntu 22.04 LTS',
-        status: 'online',
-        healthStatus: 'healthy',
-        location: 'Data Center A',
-        cloudProvider: 'AWS',
+        deviceName: 'John Smith iPhone',
+        deviceId: 'iphone-js-001',
+        deviceType: 'Smartphone',
+        platform: 'iOS',
+        operatingSystem: 'iOS',
+        osVersion: '17.1',
+        ownerName: 'John Smith',
+        department: 'Sales',
+        enrollmentStatus: 'Enrolled',
+        complianceStatus: 'Compliant',
+        encryptionEnabled: true,
+        screenLockEnabled: true,
+        isJailbroken: false,
+        appStoreEnabled: true,
+        remoteWipeEnabled: true,
         lastSeen: new Date().toISOString(),
-        cpuUsage: 45,
-        memoryUsage: 67,
-        storageUsage: 23,
-        alertCount: 0,
-        tags: ['production', 'critical', 'web-server'],
+        securityAlerts: 0,
+        tags: ['sales', 'mobile', 'critical'],
         recentAlerts: [],
-        description: 'Main production web server',
+        description: 'Company iPhone for sales team',
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString()
       },
       {
         id: 2,
-        deviceName: 'Database Server',
-        deviceId: 'DB-002',
-        deviceType: 'server',
-        operatingSystem: 'CentOS 8',
-        status: 'online',
-        healthStatus: 'warning',
-        location: 'Data Center A',
-        cloudProvider: 'Azure',
+        deviceName: 'Sarah Johnson iPad',
+        deviceId: 'ipad-sj-002',
+        deviceType: 'Tablet',
+        platform: 'iOS',
+        operatingSystem: 'iPadOS',
+        osVersion: '17.1',
+        ownerName: 'Sarah Johnson',
+        department: 'Marketing',
+        enrollmentStatus: 'Enrolled',
+        complianceStatus: 'Non-Compliant',
+        encryptionEnabled: false,
+        screenLockEnabled: false,
+        isJailbroken: false,
+        appStoreEnabled: true,
+        remoteWipeEnabled: true,
         lastSeen: new Date(Date.now() - 300000).toISOString(), // 5 minutes ago
-        cpuUsage: 78,
-        memoryUsage: 89,
-        storageUsage: 67,
-        alertCount: 2,
-        tags: ['production', 'database', 'critical'],
+        securityAlerts: 2,
+        tags: ['marketing', 'tablet'],
         recentAlerts: [
           {
             id: 1,
-            message: 'High memory usage detected',
-            severity: 'warning',
+            message: 'Encryption not enabled',
+            severity: 'critical',
             timestamp: new Date(Date.now() - 600000).toISOString(),
-            deviceId: 'DB-002'
+            deviceId: 'ipad-sj-002'
           },
           {
             id: 2,
-            message: 'Storage space running low',
-            severity: 'critical',
+            message: 'Screen lock not configured',
+            severity: 'warning',
             timestamp: new Date(Date.now() - 300000).toISOString(),
-            deviceId: 'DB-002'
+            deviceId: 'ipad-sj-002'
           }
         ],
-        description: 'Primary database server',
+        description: 'Marketing team iPad for presentations',
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString()
       },
       {
         id: 3,
-        deviceName: 'Development Workstation',
-        deviceId: 'WS-003',
-        deviceType: 'workstation',
-        operatingSystem: 'Windows 11',
-        status: 'offline',
-        healthStatus: 'unknown',
-        location: 'Office Building B',
-        cloudProvider: 'On-Premise',
+        deviceName: 'Mike Chen Android',
+        deviceId: 'android-mc-003',
+        deviceType: 'Smartphone',
+        platform: 'Android',
+        operatingSystem: 'Android',
+        osVersion: '14',
+        ownerName: 'Mike Chen',
+        department: 'Engineering',
+        enrollmentStatus: 'Pending',
+        complianceStatus: 'Unknown',
+        encryptionEnabled: true,
+        screenLockEnabled: true,
+        isJailbroken: true,
+        appStoreEnabled: false,
+        remoteWipeEnabled: true,
         lastSeen: new Date(Date.now() - 3600000).toISOString(), // 1 hour ago
-        cpuUsage: 0,
-        memoryUsage: 0,
-        storageUsage: 0,
-        alertCount: 0,
-        tags: ['development', 'workstation'],
-        recentAlerts: [],
-        description: 'Developer workstation',
+        securityAlerts: 1,
+        tags: ['engineering', 'mobile', 'jailbroken'],
+        recentAlerts: [
+          {
+            id: 1,
+            message: 'Jailbreak detected - security risk',
+            severity: 'critical',
+            timestamp: new Date(Date.now() - 3600000).toISOString(),
+            deviceId: 'android-mc-003'
+          }
+        ],
+        description: 'Engineering team Android device',
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString()
       },
@@ -224,29 +251,32 @@ export class DeviceManagementComponent implements OnInit {
 
   calculateStatistics() {
     this.totalDevices = this.devices.length;
-    this.onlineDevices = this.devices.filter(d => d.status === 'online').length;
-    this.offlineDevices = this.devices.filter(d => d.status === 'offline').length;
-    this.criticalDevices = this.devices.filter(d => d.healthStatus === 'critical').length;
+    this.enrolledDevices = this.devices.filter(d => d.enrollmentStatus === 'Enrolled').length;
+    this.compliantDevices = this.devices.filter(d => d.complianceStatus === 'Compliant').length;
+    this.nonCompliantDevices = this.devices.filter(d => d.complianceStatus === 'Non-Compliant').length;
   }
 
   applyFilters() {
     this.filteredDevices = this.devices.filter(device => {
-      const matchesStatus = !this.statusFilter || device.status === this.statusFilter;
-      const matchesType = !this.typeFilter || device.deviceType === this.typeFilter;
+      const matchesCompliance = !this.complianceFilter || device.complianceStatus.toLowerCase() === this.complianceFilter;
+      const matchesType = !this.typeFilter || device.deviceType.toLowerCase() === this.typeFilter;
+      const matchesPlatform = !this.platformFilter || device.platform.toLowerCase() === this.platformFilter;
       const matchesSearch = !this.searchTerm || 
         device.deviceName.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
         device.deviceId.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
-        device.location.toLowerCase().includes(this.searchTerm.toLowerCase());
+        device.ownerName.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
+        device.department.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
+        (device.description && device.description.toLowerCase().includes(this.searchTerm.toLowerCase()));
       
-      return matchesStatus && matchesType && matchesSearch;
+      return matchesCompliance && matchesType && matchesPlatform && matchesSearch;
     });
   }
 
   getDeviceCardClass(device: Device): string {
     const baseClass = 'device-card';
-    const statusClass = `status-${device.status}`;
-    const healthClass = `health-${device.healthStatus}`;
-    return `${baseClass} ${statusClass} ${healthClass}`;
+    const enrollmentClass = `enrollment-${device.enrollmentStatus.toLowerCase()}`;
+    const complianceClass = `compliance-${device.complianceStatus.toLowerCase().replace('-', '')}`;
+    return `${baseClass} ${enrollmentClass} ${complianceClass}`;
   }
 
   formatLastSeen(lastSeen: string): string {
@@ -267,7 +297,7 @@ export class DeviceManagementComponent implements OnInit {
     return this.formatLastSeen(timestamp);
   }
 
-  openAddDeviceModal() {
+  openEnrollmentModal() {
     this.isEditingDevice = false;
     this.editingDevice = null;
     this.deviceForm.reset();
@@ -280,9 +310,11 @@ export class DeviceManagementComponent implements OnInit {
     this.deviceForm.patchValue({
       deviceName: device.deviceName,
       deviceType: device.deviceType,
+      platform: device.platform,
       operatingSystem: device.operatingSystem,
-      location: device.location,
-      cloudProvider: device.cloudProvider,
+      osVersion: device.osVersion,
+      ownerName: device.ownerName,
+      department: device.department,
       tags: device.tags.join(', '),
       description: device.description
     });
@@ -294,6 +326,36 @@ export class DeviceManagementComponent implements OnInit {
       this.closeDetailsModal();
       this.editDevice(this.selectedDevice);
     }
+  }
+
+  enforcePolicy(device: Device) {
+    console.log('Enforcing policy for device:', device.deviceName);
+    // TODO: Implement policy enforcement
+    alert(`Enforcing security policies for ${device.deviceName}`);
+  }
+
+  remoteWipe(device: Device) {
+    if (confirm(`Are you sure you want to remotely wipe ${device.deviceName}? This action cannot be undone.`)) {
+      console.log('Initiating remote wipe for device:', device.deviceName);
+      // TODO: Implement remote wipe
+      alert(`Remote wipe initiated for ${device.deviceName}`);
+    }
+  }
+
+  unenrollDevice(deviceId: number) {
+    if (confirm('Are you sure you want to unenroll this device? This will remove all management policies.')) {
+      console.log('Unenrolling device:', deviceId);
+      // TODO: Implement device unenrollment
+      this.devices = this.devices.filter(d => d.id !== deviceId);
+      this.applyFilters();
+      this.calculateStatistics();
+    }
+  }
+
+  runComplianceScan() {
+    console.log('Running compliance scan...');
+    // TODO: Implement compliance scan
+    alert('Compliance scan initiated. Results will be available shortly.');
   }
 
   viewDeviceDetails(device: Device) {

@@ -2,44 +2,44 @@
   <div class="page-header">
     <div class="header-content">
       <div class="header-text">
-        <h1>Device Management</h1>
-        <p>Monitor and manage all your connected devices across cloud environments</p>
+        <h1>Mobile Device Management (MDM)</h1>
+        <p>Secure, monitor, and manage employee devices with enterprise-grade mobile device management</p>
       </div>
       <div class="header-actions">
-        <button class="btn btn-primary" (click)="openAddDeviceModal()">
+        <button class="btn btn-primary" (click)="openEnrollmentModal()">
           <i class="icon-plus"></i>
-          Add Device
+          Enroll Device
         </button>
         <button class="btn btn-outline" (click)="refreshDevices()">
           <i class="icon-refresh"></i>
-          Refresh
+          Sync Devices
         </button>
-        <button class="btn btn-outline" (click)="runDeviceScan()">
+        <button class="btn btn-outline" (click)="runComplianceScan()">
           <i class="icon-scan"></i>
-          Scan Devices
+          Compliance Check
         </button>
       </div>
     </div>
   </div>
 
-  <!-- Device Statistics Overview -->
+  <!-- MDM Statistics Overview -->
   <div class="stats-overview">
     <div class="stat-card">
       <div class="stat-icon online">
         <i class="icon-check"></i>
       </div>
       <div class="stat-content">
-        <div class="stat-number">{{ onlineDevices }}</div>
-        <div class="stat-label">Online</div>
+        <div class="stat-number">{{ enrolledDevices }}</div>
+        <div class="stat-label">Enrolled</div>
       </div>
     </div>
     <div class="stat-card">
-      <div class="stat-icon offline">
-        <i class="icon-warning"></i>
+      <div class="stat-icon compliant">
+        <i class="icon-shield"></i>
       </div>
       <div class="stat-content">
-        <div class="stat-number">{{ offlineDevices }}</div>
-        <div class="stat-label">Offline</div>
+        <div class="stat-number">{{ compliantDevices }}</div>
+        <div class="stat-label">Compliant</div>
       </div>
     </div>
     <div class="stat-card">
@@ -47,8 +47,8 @@
         <i class="icon-alert"></i>
       </div>
       <div class="stat-content">
-        <div class="stat-number">{{ criticalDevices }}</div>
-        <div class="stat-label">Critical</div>
+        <div class="stat-number">{{ nonCompliantDevices }}</div>
+        <div class="stat-label">Non-Compliant</div>
       </div>
     </div>
     <div class="stat-card">
@@ -62,32 +62,43 @@
     </div>
   </div>
 
-  <!-- Device Filters -->
+  <!-- MDM Filters -->
   <div class="filters-section">
     <div class="filter-group">
-      <label>Filter by Status:</label>
-      <select [(ngModel)]="statusFilter" (change)="applyFilters()">
+      <label>Filter by Compliance:</label>
+      <select [(ngModel)]="complianceFilter" (change)="applyFilters()">
         <option value="">All Devices</option>
-        <option value="online">Online</option>
-        <option value="offline">Offline</option>
-        <option value="critical">Critical</option>
-        <option value="maintenance">Maintenance</option>
+        <option value="compliant">Compliant</option>
+        <option value="non-compliant">Non-Compliant</option>
+        <option value="at-risk">At Risk</option>
+        <option value="unknown">Unknown</option>
       </select>
     </div>
     <div class="filter-group">
-      <label>Filter by Type:</label>
+      <label>Filter by Device Type:</label>
       <select [(ngModel)]="typeFilter" (change)="applyFilters()">
         <option value="">All Types</option>
-        <option value="server">Server</option>
-        <option value="workstation">Workstation</option>
-        <option value="mobile">Mobile</option>
+        <option value="smartphone">Smartphone</option>
+        <option value="tablet">Tablet</option>
+        <option value="laptop">Laptop</option>
+        <option value="desktop">Desktop</option>
         <option value="iot">IoT Device</option>
-        <option value="network">Network Device</option>
+      </select>
+    </div>
+    <div class="filter-group">
+      <label>Filter by Platform:</label>
+      <select [(ngModel)]="platformFilter" (change)="applyFilters()">
+        <option value="">All Platforms</option>
+        <option value="ios">iOS</option>
+        <option value="android">Android</option>
+        <option value="windows">Windows</option>
+        <option value="macos">macOS</option>
+        <option value="linux">Linux</option>
       </select>
     </div>
     <div class="filter-group">
       <label>Search:</label>
-      <input type="text" [(ngModel)]="searchTerm" (input)="applyFilters()" placeholder="Search devices...">
+      <input type="text" [(ngModel)]="searchTerm" (input)="applyFilters()" placeholder="Search devices, users, or departments...">
     </div>
   </div>
 
@@ -105,47 +116,59 @@
           </div>
         </div>
         <div class="device-status">
-          <span class="status" [class]="device.status.toLowerCase()">{{ device.status }}</span>
-          <span class="health" [class]="device.healthStatus.toLowerCase()">{{ device.healthStatus }}</span>
+          <span class="status" [class]="device.enrollmentStatus.toLowerCase()">{{ device.enrollmentStatus }}</span>
+          <span class="compliance" [class]="device.complianceStatus.toLowerCase()">{{ device.complianceStatus }}</span>
         </div>
       </div>
       
       <div class="card-content">
         <div class="device-meta">
           <div class="meta-item">
+            <i class="icon-user"></i>
+            <span>{{ device.ownerName }}</span>
+          </div>
+          <div class="meta-item">
             <i class="icon-location"></i>
-            <span>{{ device.location }}</span>
+            <span>{{ device.department }}</span>
           </div>
           <div class="meta-item">
             <i class="icon-time"></i>
             <span>{{ formatLastSeen(device.lastSeen) }}</span>
           </div>
           <div class="meta-item">
-            <i class="icon-cloud"></i>
-            <span>{{ device.cloudProvider }}</span>
+            <i class="icon-shield"></i>
+            <span>{{ device.platform }} {{ device.osVersion }}</span>
           </div>
-          <div class="meta-item" *ngIf="device.alertCount > 0">
+          <div class="meta-item" *ngIf="device.securityAlerts > 0">
             <i class="icon-alert"></i>
-            <span>{{ device.alertCount }} alerts</span>
+            <span>{{ device.securityAlerts }} security alerts</span>
           </div>
         </div>
         
         <div class="device-specs">
           <div class="spec-item">
-            <span class="spec-label">OS:</span>
-            <span class="spec-value">{{ device.operatingSystem }}</span>
+            <span class="spec-label">Encryption:</span>
+            <span class="spec-value" [class]="device.encryptionEnabled ? 'enabled' : 'disabled'">
+              {{ device.encryptionEnabled ? 'Enabled' : 'Disabled' }}
+            </span>
           </div>
           <div class="spec-item">
-            <span class="spec-label">CPU:</span>
-            <span class="spec-value">{{ device.cpuUsage }}%</span>
+            <span class="spec-label">Screen Lock:</span>
+            <span class="spec-value" [class]="device.screenLockEnabled ? 'enabled' : 'disabled'">
+              {{ device.screenLockEnabled ? 'Enabled' : 'Disabled' }}
+            </span>
           </div>
           <div class="spec-item">
-            <span class="spec-label">Memory:</span>
-            <span class="spec-value">{{ device.memoryUsage }}%</span>
+            <span class="spec-label">Jailbreak:</span>
+            <span class="spec-value" [class]="device.isJailbroken ? 'warning' : 'safe'">
+              {{ device.isJailbroken ? 'Detected' : 'Clean' }}
+            </span>
           </div>
           <div class="spec-item">
-            <span class="spec-label">Storage:</span>
-            <span class="spec-value">{{ device.storageUsage }}%</span>
+            <span class="spec-label">App Store:</span>
+            <span class="spec-value" [class]="device.appStoreEnabled ? 'enabled' : 'disabled'">
+              {{ device.appStoreEnabled ? 'Enabled' : 'Restricted' }}
+            </span>
           </div>
         </div>
         
@@ -166,17 +189,17 @@
           <i class="icon-view"></i>
           Details
         </button>
-        <button class="btn btn-sm btn-outline" (click)="editDevice(device)">
-          <i class="icon-edit"></i>
-          Edit
+        <button class="btn btn-sm btn-outline" (click)="enforcePolicy(device)">
+          <i class="icon-shield"></i>
+          Enforce Policy
         </button>
-        <button class="btn btn-sm btn-outline" (click)="restartDevice(device)">
-          <i class="icon-refresh"></i>
-          Restart
+        <button class="btn btn-sm btn-warning" (click)="remoteWipe(device)" *ngIf="device.remoteWipeEnabled">
+          <i class="icon-alert"></i>
+          Remote Wipe
         </button>
-        <button class="btn btn-sm btn-danger" (click)="removeDevice(device)">
+        <button class="btn btn-sm btn-danger" (click)="unenrollDevice(device.id)">
           <i class="icon-delete"></i>
-          Remove
+          Unenroll
         </button>
       </div>
     </div>
@@ -188,16 +211,16 @@
       <div class="empty-icon">
         <i class="icon-device"></i>
       </div>
-      <h3>No Devices Found</h3>
-      <p>Start by adding your first device or running a device scan</p>
+      <h3>No Devices Enrolled</h3>
+      <p>Start by enrolling your first device or running a compliance scan</p>
       <div class="empty-actions">
-        <button class="btn btn-primary" (click)="openAddDeviceModal()">
+        <button class="btn btn-primary" (click)="openEnrollmentModal()">
           <i class="icon-plus"></i>
-          Add Device
+          Enroll Device
         </button>
-        <button class="btn btn-outline" (click)="runDeviceScan()">
+        <button class="btn btn-outline" (click)="runComplianceScan()">
           <i class="icon-scan"></i>
-          Scan for Devices
+          Run Compliance Scan
         </button>
       </div>
     </div>
@@ -207,7 +230,7 @@
   <div class="modal-overlay" *ngIf="showDeviceModal" (click)="closeDeviceModal()">
     <div class="modal-content" (click)="$event.stopPropagation()">
       <div class="modal-header">
-        <h3>{{ isEditingDevice ? 'Edit Device' : 'Add New Device' }}</h3>
+        <h3>{{ isEditingDevice ? 'Edit Device' : 'Enroll New Device' }}</h3>
         <button class="close-btn" (click)="closeDeviceModal()">
           <i class="icon-close"></i>
         </button>
@@ -224,33 +247,51 @@
             <label for="deviceType">Device Type *</label>
             <select id="deviceType" formControlName="deviceType">
               <option value="">Select device type</option>
-              <option value="server">Server</option>
-              <option value="workstation">Workstation</option>
-              <option value="mobile">Mobile Device</option>
-              <option value="iot">IoT Device</option>
-              <option value="network">Network Device</option>
+              <option value="Smartphone">Smartphone</option>
+              <option value="Tablet">Tablet</option>
+              <option value="Laptop">Laptop</option>
+              <option value="Desktop">Desktop</option>
+              <option value="IoT">IoT Device</option>
+            </select>
+          </div>
+          
+          <div class="form-group">
+            <label for="platform">Platform *</label>
+            <select id="platform" formControlName="platform">
+              <option value="">Select platform</option>
+              <option value="iOS">iOS</option>
+              <option value="Android">Android</option>
+              <option value="Windows">Windows</option>
+              <option value="macOS">macOS</option>
+              <option value="Linux">Linux</option>
             </select>
           </div>
           
           <div class="form-group">
             <label for="operatingSystem">Operating System</label>
-            <input type="text" id="operatingSystem" formControlName="operatingSystem" placeholder="e.g., Windows 11, Ubuntu 22.04">
+            <input type="text" id="operatingSystem" formControlName="operatingSystem" placeholder="e.g., iOS, Android, Windows 11">
           </div>
           
           <div class="form-group">
-            <label for="location">Location</label>
-            <input type="text" id="location" formControlName="location" placeholder="e.g., Office, Data Center, Remote">
+            <label for="osVersion">OS Version</label>
+            <input type="text" id="osVersion" formControlName="osVersion" placeholder="e.g., 17.1, 14, 11">
           </div>
           
           <div class="form-group">
-            <label for="cloudProvider">Cloud Provider</label>
-            <select id="cloudProvider" formControlName="cloudProvider">
-              <option value="">Select cloud provider</option>
-              <option value="AWS">AWS</option>
-              <option value="Azure">Azure</option>
-              <option value="GCP">Google Cloud</option>
-              <option value="On-Premise">On-Premise</option>
-              <option value="Hybrid">Hybrid</option>
+            <label for="ownerName">Owner Name *</label>
+            <input type="text" id="ownerName" formControlName="ownerName" placeholder="e.g., John Smith">
+          </div>
+          
+          <div class="form-group">
+            <label for="department">Department *</label>
+            <select id="department" formControlName="department">
+              <option value="">Select department</option>
+              <option value="Sales">Sales</option>
+              <option value="Marketing">Marketing</option>
+              <option value="Engineering">Engineering</option>
+              <option value="HR">Human Resources</option>
+              <option value="Finance">Finance</option>
+              <option value="IT">IT</option>
             </select>
           </div>
           
@@ -267,9 +308,9 @@
         
         <div class="modal-footer">
           <button type="button" class="btn btn-outline" (click)="closeDeviceModal()">Cancel</button>
-          <button type="submit" class="btn btn-primary" [disabled]="deviceForm.invalid">
-            {{ isEditingDevice ? 'Update Device' : 'Add Device' }}
-          </button>
+            <button type="submit" class="btn btn-primary" [disabled]="deviceForm.invalid">
+              {{ isEditingDevice ? 'Update Device' : 'Enroll Device' }}
+            </button>
         </div>
       </form>
     </div>
