@@ -1107,3 +1107,6 @@
 .icon-chevron-down::before { content: '▼'; }
 .icon-scan::before { content: '🔍'; }
 .icon-view::before { content: '👁️'; }
+
+/* Device Management Icons */
+.icon-device::before { content: '💻'; }

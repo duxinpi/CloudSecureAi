@@ -1,0 +1,385 @@
+<div class="page-container">
+  <div class="page-header">
+    <div class="header-content">
+      <div class="header-text">
+        <h1>Device Management</h1>
+        <p>Monitor and manage all your connected devices across cloud environments</p>
+      </div>
+      <div class="header-actions">
+        <button class="btn btn-primary" (click)="openAddDeviceModal()">
+          <i class="icon-plus"></i>
+          Add Device
+        </button>
+        <button class="btn btn-outline" (click)="refreshDevices()">
+          <i class="icon-refresh"></i>
+          Refresh
+        </button>
+        <button class="btn btn-outline" (click)="runDeviceScan()">
+          <i class="icon-scan"></i>
+          Scan Devices
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Device Statistics Overview -->
+  <div class="stats-overview">
+    <div class="stat-card">
+      <div class="stat-icon online">
+        <i class="icon-check"></i>
+      </div>
+      <div class="stat-content">
+        <div class="stat-number">{{ onlineDevices }}</div>
+        <div class="stat-label">Online</div>
+      </div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon offline">
+        <i class="icon-warning"></i>
+      </div>
+      <div class="stat-content">
+        <div class="stat-number">{{ offlineDevices }}</div>
+        <div class="stat-label">Offline</div>
+      </div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon critical">
+        <i class="icon-alert"></i>
+      </div>
+      <div class="stat-content">
+        <div class="stat-number">{{ criticalDevices }}</div>
+        <div class="stat-label">Critical</div>
+      </div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon total">
+        <i class="icon-device"></i>
+      </div>
+      <div class="stat-content">
+        <div class="stat-number">{{ totalDevices }}</div>
+        <div class="stat-label">Total Devices</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Device Filters -->
+  <div class="filters-section">
+    <div class="filter-group">
+      <label>Filter by Status:</label>
+      <select [(ngModel)]="statusFilter" (change)="applyFilters()">
+        <option value="">All Devices</option>
+        <option value="online">Online</option>
+        <option value="offline">Offline</option>
+        <option value="critical">Critical</option>
+        <option value="maintenance">Maintenance</option>
+      </select>
+    </div>
+    <div class="filter-group">
+      <label>Filter by Type:</label>
+      <select [(ngModel)]="typeFilter" (change)="applyFilters()">
+        <option value="">All Types</option>
+        <option value="server">Server</option>
+        <option value="workstation">Workstation</option>
+        <option value="mobile">Mobile</option>
+        <option value="iot">IoT Device</option>
+        <option value="network">Network Device</option>
+      </select>
+    </div>
+    <div class="filter-group">
+      <label>Search:</label>
+      <input type="text" [(ngModel)]="searchTerm" (input)="applyFilters()" placeholder="Search devices...">
+    </div>
+  </div>
+
+  <!-- Devices Grid -->
+  <div class="devices-grid" *ngIf="filteredDevices.length > 0; else noDevices">
+    <div class="device-card" *ngFor="let device of filteredDevices" [class]="getDeviceCardClass(device)">
+      <div class="card-header">
+        <div class="device-info">
+          <div class="device-icon" [class]="'device-' + device.type.toLowerCase()">
+            <i [class]="'icon-' + device.type.toLowerCase()"></i>
+          </div>
+          <div class="device-details">
+            <h3>{{ device.deviceName }}</h3>
+            <p class="device-id">{{ device.deviceId }}</p>
+          </div>
+        </div>
+        <div class="device-status">
+          <span class="status" [class]="device.status.toLowerCase()">{{ device.status }}</span>
+          <span class="health" [class]="device.healthStatus.toLowerCase()">{{ device.healthStatus }}</span>
+        </div>
+      </div>
+      
+      <div class="card-content">
+        <div class="device-meta">
+          <div class="meta-item">
+            <i class="icon-location"></i>
+            <span>{{ device.location }}</span>
+          </div>
+          <div class="meta-item">
+            <i class="icon-time"></i>
+            <span>{{ formatLastSeen(device.lastSeen) }}</span>
+          </div>
+          <div class="meta-item">
+            <i class="icon-cloud"></i>
+            <span>{{ device.cloudProvider }}</span>
+          </div>
+          <div class="meta-item" *ngIf="device.alertCount > 0">
+            <i class="icon-alert"></i>
+            <span>{{ device.alertCount }} alerts</span>
+          </div>
+        </div>
+        
+        <div class="device-specs">
+          <div class="spec-item">
+            <span class="spec-label">OS:</span>
+            <span class="spec-value">{{ device.operatingSystem }}</span>
+          </div>
+          <div class="spec-item">
+            <span class="spec-label">CPU:</span>
+            <span class="spec-value">{{ device.cpuUsage }}%</span>
+          </div>
+          <div class="spec-item">
+            <span class="spec-label">Memory:</span>
+            <span class="spec-value">{{ device.memoryUsage }}%</span>
+          </div>
+          <div class="spec-item">
+            <span class="spec-label">Storage:</span>
+            <span class="spec-value">{{ device.storageUsage }}%</span>
+          </div>
+        </div>
+        
+        <div class="device-tags" *ngIf="device.tags">
+          <span class="tag" *ngFor="let tag of device.tags">{{ tag }}</span>
+        </div>
+        
+        <div class="device-alerts" *ngIf="device.recentAlerts && device.recentAlerts.length > 0">
+          <div class="alert-item" *ngFor="let alert of device.recentAlerts.slice(0, 2)">
+            <i class="icon-warning"></i>
+            <span>{{ alert.message }}</span>
+          </div>
+        </div>
+      </div>
+      
+      <div class="card-actions">
+        <button class="btn btn-sm btn-outline" (click)="viewDeviceDetails(device)">
+          <i class="icon-view"></i>
+          Details
+        </button>
+        <button class="btn btn-sm btn-outline" (click)="editDevice(device)">
+          <i class="icon-edit"></i>
+          Edit
+        </button>
+        <button class="btn btn-sm btn-outline" (click)="restartDevice(device)">
+          <i class="icon-refresh"></i>
+          Restart
+        </button>
+        <button class="btn btn-sm btn-danger" (click)="removeDevice(device)">
+          <i class="icon-delete"></i>
+          Remove
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- No Devices State -->
+  <ng-template #noDevices>
+    <div class="empty-state">
+      <div class="empty-icon">
+        <i class="icon-device"></i>
+      </div>
+      <h3>No Devices Found</h3>
+      <p>Start by adding your first device or running a device scan</p>
+      <div class="empty-actions">
+        <button class="btn btn-primary" (click)="openAddDeviceModal()">
+          <i class="icon-plus"></i>
+          Add Device
+        </button>
+        <button class="btn btn-outline" (click)="runDeviceScan()">
+          <i class="icon-scan"></i>
+          Scan for Devices
+        </button>
+      </div>
+    </div>
+  </ng-template>
+
+  <!-- Device Details Modal -->
+  <div class="modal-overlay" *ngIf="showDeviceModal" (click)="closeDeviceModal()">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h3>{{ isEditingDevice ? 'Edit Device' : 'Add New Device' }}</h3>
+        <button class="close-btn" (click)="closeDeviceModal()">
+          <i class="icon-close"></i>
+        </button>
+      </div>
+      
+      <form [formGroup]="deviceForm" (ngSubmit)="saveDevice()">
+        <div class="modal-body">
+          <div class="form-group">
+            <label for="deviceName">Device Name *</label>
+            <input type="text" id="deviceName" formControlName="deviceName" placeholder="Enter device name">
+          </div>
+          
+          <div class="form-group">
+            <label for="deviceType">Device Type *</label>
+            <select id="deviceType" formControlName="deviceType">
+              <option value="">Select device type</option>
+              <option value="server">Server</option>
+              <option value="workstation">Workstation</option>
+              <option value="mobile">Mobile Device</option>
+              <option value="iot">IoT Device</option>
+              <option value="network">Network Device</option>
+            </select>
+          </div>
+          
+          <div class="form-group">
+            <label for="operatingSystem">Operating System</label>
+            <input type="text" id="operatingSystem" formControlName="operatingSystem" placeholder="e.g., Windows 11, Ubuntu 22.04">
+          </div>
+          
+          <div class="form-group">
+            <label for="location">Location</label>
+            <input type="text" id="location" formControlName="location" placeholder="e.g., Office, Data Center, Remote">
+          </div>
+          
+          <div class="form-group">
+            <label for="cloudProvider">Cloud Provider</label>
+            <select id="cloudProvider" formControlName="cloudProvider">
+              <option value="">Select cloud provider</option>
+              <option value="AWS">AWS</option>
+              <option value="Azure">Azure</option>
+              <option value="GCP">Google Cloud</option>
+              <option value="On-Premise">On-Premise</option>
+              <option value="Hybrid">Hybrid</option>
+            </select>
+          </div>
+          
+          <div class="form-group">
+            <label for="tags">Tags (comma-separated)</label>
+            <input type="text" id="tags" formControlName="tags" placeholder="e.g., production, critical, backup">
+          </div>
+          
+          <div class="form-group">
+            <label for="description">Description</label>
+            <textarea id="description" formControlName="description" rows="3" placeholder="Device description and notes"></textarea>
+          </div>
+        </div>
+        
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline" (click)="closeDeviceModal()">Cancel</button>
+          <button type="submit" class="btn btn-primary" [disabled]="deviceForm.invalid">
+            {{ isEditingDevice ? 'Update Device' : 'Add Device' }}
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Device Details View Modal -->
+  <div class="modal-overlay" *ngIf="showDetailsModal" (click)="closeDetailsModal()">
+    <div class="modal-content large" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h3>Device Details - {{ selectedDevice?.deviceName }}</h3>
+        <button class="close-btn" (click)="closeDetailsModal()">
+          <i class="icon-close"></i>
+        </button>
+      </div>
+      
+      <div class="modal-body" *ngIf="selectedDevice">
+        <div class="device-details-grid">
+          <div class="detail-section">
+            <h4>Basic Information</h4>
+            <div class="detail-item">
+              <span class="label">Device ID:</span>
+              <span class="value">{{ selectedDevice.deviceId }}</span>
+            </div>
+            <div class="detail-item">
+              <span class="label">Type:</span>
+              <span class="value">{{ selectedDevice.deviceType }}</span>
+            </div>
+            <div class="detail-item">
+              <span class="label">Status:</span>
+              <span class="value" [class]="selectedDevice.status.toLowerCase()">{{ selectedDevice.status }}</span>
+            </div>
+            <div class="detail-item">
+              <span class="label">Health:</span>
+              <span class="value" [class]="selectedDevice.healthStatus.toLowerCase()">{{ selectedDevice.healthStatus }}</span>
+            </div>
+          </div>
+          
+          <div class="detail-section">
+            <h4>System Information</h4>
+            <div class="detail-item">
+              <span class="label">OS:</span>
+              <span class="value">{{ selectedDevice.operatingSystem }}</span>
+            </div>
+            <div class="detail-item">
+              <span class="label">Location:</span>
+              <span class="value">{{ selectedDevice.location }}</span>
+            </div>
+            <div class="detail-item">
+              <span class="label">Cloud Provider:</span>
+              <span class="value">{{ selectedDevice.cloudProvider }}</span>
+            </div>
+            <div class="detail-item">
+              <span class="label">Last Seen:</span>
+              <span class="value">{{ formatLastSeen(selectedDevice.lastSeen) }}</span>
+            </div>
+          </div>
+          
+          <div class="detail-section">
+            <h4>Performance Metrics</h4>
+            <div class="metrics-grid">
+              <div class="metric-item">
+                <span class="metric-label">CPU Usage</span>
+                <div class="metric-bar">
+                  <div class="metric-fill" [style.width.%]="selectedDevice.cpuUsage"></div>
+                </div>
+                <span class="metric-value">{{ selectedDevice.cpuUsage }}%</span>
+              </div>
+              <div class="metric-item">
+                <span class="metric-label">Memory Usage</span>
+                <div class="metric-bar">
+                  <div class="metric-fill" [style.width.%]="selectedDevice.memoryUsage"></div>
+                </div>
+                <span class="metric-value">{{ selectedDevice.memoryUsage }}%</span>
+              </div>
+              <div class="metric-item">
+                <span class="metric-label">Storage Usage</span>
+                <div class="metric-bar">
+                  <div class="metric-fill" [style.width.%]="selectedDevice.storageUsage"></div>
+                </div>
+                <span class="metric-value">{{ selectedDevice.storageUsage }}%</span>
+              </div>
+            </div>
+          </div>
+          
+          <div class="detail-section" *ngIf="selectedDevice.tags && selectedDevice.tags.length > 0">
+            <h4>Tags</h4>
+            <div class="tags-list">
+              <span class="tag" *ngFor="let tag of selectedDevice.tags">{{ tag }}</span>
+            </div>
+          </div>
+          
+          <div class="detail-section" *ngIf="selectedDevice.recentAlerts && selectedDevice.recentAlerts.length > 0">
+            <h4>Recent Alerts</h4>
+            <div class="alerts-list">
+              <div class="alert-item" *ngFor="let alert of selectedDevice.recentAlerts">
+                <div class="alert-header">
+                  <span class="alert-severity" [class]="alert.severity.toLowerCase()">{{ alert.severity }}</span>
+                  <span class="alert-time">{{ formatAlertTime(alert.timestamp) }}</span>
+                </div>
+                <div class="alert-message">{{ alert.message }}</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="modal-footer">
+        <button class="btn btn-outline" (click)="closeDetailsModal()">Close</button>
+        <button class="btn btn-primary" (click)="editDevice(selectedDevice)">Edit Device</button>
+      </div>
+    </div>
+  </div>
+</div>
