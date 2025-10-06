@@ -1,10 +1,10 @@
-# CloudSecure AI - Empowering Small Businesses with Free Cloud Security
+# CloudSecure AI - Empowering Small Businesses with Free Cloud & Mobile Security
 
-**A comprehensive, free cloud security platform designed specifically for small and medium businesses (SMBs) to protect their digital assets without the need for expensive IT expertise.**
+**A comprehensive, free cloud and mobile device security platform designed specifically for small and medium businesses (SMBs) to protect their digital assets and employee devices without the need for expensive IT expertise.**
 
 ## Mission Statement
 
-CloudSecure AI is a **non-profit, community-driven initiative** dedicated to democratizing cloud security for small businesses worldwide. We believe that every business, regardless of size, deserves enterprise-grade security protection without the enterprise price tag.
+CloudSecure AI is a **non-profit, community-driven initiative** dedicated to democratizing cloud and mobile device security for small businesses worldwide. We believe that every business, regardless of size, deserves enterprise-grade security protection for their cloud infrastructure and employee devices without the enterprise price tag.
 
 ## Why Small Businesses Need CloudSecure AI
 
@@ -18,21 +18,21 @@ CloudSecure AI is a **non-profit, community-driven initiative** dedicated to dem
 CloudSecure AI provides **enterprise-grade security tools** that are:
 - **100% Free Forever** - No hidden costs or subscription fees
 - **Simple to Use** - No technical expertise required
-- **Comprehensive** - Covers all major cloud providers (AWS, Azure, GCP)
-- **AI-Powered** - Smart recommendations and automated protection
+- **Comprehensive** - Covers all major cloud providers (AWS, Azure, GCP) and mobile devices (iOS, Android, Windows, macOS)
+- **AI-Powered** - Smart recommendations and automated protection for cloud and mobile security
 
 ---
 
 ## Application Pages & Features
 
 ### **Home Page - Your Security Command Center**
-**Purpose**: Central hub for understanding your cloud security posture
+**Purpose**: Central hub for understanding your cloud and mobile device security posture
 
 **Key Features**:
-- **Real-time Security Score** - Instant visibility of your cloud health
-- **Quick Action Buttons** - One-click security scans and compliance checks
+- **Real-time Security Score** - Instant visibility of your cloud and mobile device health
+- **Quick Action Buttons** - One-click security scans and compliance checks for cloud and mobile
 - **Recent Alerts** - Latest security findings that need attention
-- **Resource Overview** - Total cloud resources being monitored
+- **Resource Overview** - Total cloud resources and mobile devices being monitored
 
 **Small Business Benefits**:
 - **Instant Peace of Mind** - Know your security status at a glance
@@ -101,7 +101,7 @@ CloudSecure AI provides **enterprise-grade security tools** that are:
 - **Insurance Benefits** - Better rates with proven security measures
 
 ### **Ask AI Anything - Your Personal Security Expert**
-**Purpose**: Get instant, expert advice on cloud security questions
+**Purpose**: Get instant, expert advice on cloud and mobile device security questions
 
 **Key Features**:
 - **Natural Language Queries** - Ask questions in plain English
@@ -499,4 +499,4 @@ SOFTWARE.
 
 ---
 
-*CloudSecure AI - Empowering Small Businesses with Enterprise-Grade Security*
+*CloudSecure AI - Empowering Small Businesses with Enterprise-Grade Cloud & Mobile Security*
