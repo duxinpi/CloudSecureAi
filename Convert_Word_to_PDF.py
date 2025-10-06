@@ -11,4 +11,4 @@ def convert_word_to_pdf(input_path, output_path=None):
     except Exception as e:
         print(f"Error during conversion: {e}")
 
-convert_word_to_pdf("fileName") # TO DO, get file name from user
+convert_word_to_pdf("./test_pdf.pdf") # TO DO, get file name from user
