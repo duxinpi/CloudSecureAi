@@ -378,7 +378,7 @@
       
       <div class="modal-footer">
         <button class="btn btn-outline" (click)="closeDetailsModal()">Close</button>
-        <button class="btn btn-primary" (click)="editDevice(selectedDevice)">Edit Device</button>
+        <button class="btn btn-primary" (click)="editSelectedDevice()" *ngIf="selectedDevice">Edit Device</button>
       </div>
     </div>
   </div>

@@ -289,6 +289,13 @@ export class DeviceManagementComponent implements OnInit {
     this.showDeviceModal = true;
   }
 
+  editSelectedDevice() {
+    if (this.selectedDevice) {
+      this.closeDetailsModal();
+      this.editDevice(this.selectedDevice);
+    }
+  }
+
   viewDeviceDetails(device: Device) {
     this.selectedDevice = device;
     this.showDetailsModal = true;
