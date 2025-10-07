@@ -1,0 +1,788 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CloudSecure AI - Presentation for Small Businesses</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        
+        .presentation-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        /* Slide styles */
+        .slide {
+            background: white;
+            border-radius: 20px;
+            padding: 60px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            min-height: 600px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        
+        /* Title slide */
+        .title-slide {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            text-align: center;
+        }
+        
+        .title-slide h1 {
+            font-size: 4em;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .title-slide .subtitle {
+            font-size: 1.8em;
+            margin-bottom: 30px;
+            color: #00d4aa;
+        }
+        
+        .title-slide .tagline {
+            font-size: 1.3em;
+            font-style: italic;
+            opacity: 0.9;
+        }
+        
+        /* Section headers */
+        h2 {
+            color: #1e3c72;
+            font-size: 2.5em;
+            margin-bottom: 30px;
+            border-bottom: 4px solid #00d4aa;
+            padding-bottom: 15px;
+        }
+        
+        h3 {
+            color: #2a5298;
+            font-size: 1.8em;
+            margin: 25px 0 15px 0;
+        }
+        
+        /* Feature sections */
+        .feature-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            align-items: start;
+            margin: 30px 0;
+        }
+        
+        .feature-content {
+            padding: 20px;
+        }
+        
+        .feature-screenshot {
+            text-align: center;
+        }
+        
+        .feature-screenshot img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 12px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+            border: 3px solid #00d4aa;
+        }
+        
+        .screenshot-caption {
+            font-size: 0.9em;
+            color: #666;
+            margin-top: 10px;
+            font-style: italic;
+        }
+        
+        /* Benefits boxes */
+        .benefit-box {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            padding: 25px;
+            border-radius: 12px;
+            margin: 15px 0;
+            border-left: 5px solid #00d4aa;
+        }
+        
+        .benefit-box h4 {
+            color: #1e3c72;
+            font-size: 1.3em;
+            margin-bottom: 10px;
+        }
+        
+        .benefit-box p {
+            font-size: 1.1em;
+            line-height: 1.6;
+        }
+        
+        /* Key points */
+        .key-points {
+            background: #fff9e6;
+            border-left: 5px solid #FFD93D;
+            padding: 25px;
+            margin: 20px 0;
+            border-radius: 8px;
+        }
+        
+        .key-points ul {
+            list-style: none;
+            padding-left: 0;
+        }
+        
+        .key-points li {
+            padding: 12px 0;
+            font-size: 1.1em;
+            border-bottom: 1px solid #f0e6c6;
+        }
+        
+        .key-points li:before {
+            content: "✓ ";
+            color: #00d4aa;
+            font-weight: bold;
+            font-size: 1.3em;
+            margin-right: 10px;
+        }
+        
+        /* Statistics */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            margin: 30px 0;
+        }
+        
+        .stat-box {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 12px;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+        
+        .stat-number {
+            font-size: 2.5em;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #00d4aa;
+        }
+        
+        .stat-label {
+            font-size: 1em;
+            opacity: 0.95;
+        }
+        
+        /* Call to action */
+        .cta-section {
+            background: linear-gradient(135deg, #00d4aa 0%, #00a8cc 100%);
+            color: white;
+            padding: 40px;
+            border-radius: 15px;
+            text-align: center;
+            margin: 30px 0;
+        }
+        
+        .cta-section h3 {
+            color: white;
+            font-size: 2em;
+            margin-bottom: 20px;
+        }
+        
+        .cta-button {
+            display: inline-block;
+            background: white;
+            color: #1e3c72;
+            padding: 15px 40px;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 1.2em;
+            margin: 10px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            transition: transform 0.3s ease;
+        }
+        
+        .cta-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+        }
+        
+        /* Problem/Solution split */
+        .split-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin: 30px 0;
+        }
+        
+        .problem-box {
+            background: #fff5f5;
+            border-left: 5px solid #ff6b6b;
+            padding: 30px;
+            border-radius: 8px;
+        }
+        
+        .problem-box h4 {
+            color: #c92a2a;
+            font-size: 1.5em;
+            margin-bottom: 15px;
+        }
+        
+        .solution-box {
+            background: #f0fff4;
+            border-left: 5px solid #00d4aa;
+            padding: 30px;
+            border-radius: 8px;
+        }
+        
+        .solution-box h4 {
+            color: #087f5b;
+            font-size: 1.5em;
+            margin-bottom: 15px;
+        }
+        
+        /* Navigation */
+        .slide-number {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: rgba(0,0,0,0.7);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 20px;
+            font-size: 0.9em;
+        }
+        
+        /* Print styles */
+        @media print {
+            body {
+                background: white;
+            }
+            .slide {
+                page-break-after: always;
+                margin-bottom: 0;
+            }
+            .slide-number {
+                display: none;
+            }
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .slide {
+                padding: 30px 20px;
+                min-height: auto;
+            }
+            .feature-grid,
+            .split-section,
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+            .title-slide h1 {
+                font-size: 2.5em;
+            }
+            h2 {
+                font-size: 1.8em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="presentation-container">
+        
+        <!-- SLIDE 1: Title Slide -->
+        <div class="slide title-slide">
+            <h1>☁️ CloudSecure AI</h1>
+            <div class="subtitle">Empowering Small Businesses with Free Cloud & Mobile Security</div>
+            <div class="tagline">Enterprise-Grade Protection Without the Enterprise Price Tag</div>
+        </div>
+        
+        <!-- SLIDE 2: The Problem -->
+        <div class="slide">
+            <h2>🚨 The Challenge Small Businesses Face</h2>
+            
+            <div class="stats-grid">
+                <div class="stat-box">
+                    <div class="stat-number">60%</div>
+                    <div class="stat-label">of small businesses close within 6 months after a cyber attack</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-number">43%</div>
+                    <div class="stat-label">of cyber attacks target small businesses</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-number">$200K+</div>
+                    <div class="stat-label">average cost of a data breach for SMBs</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-number">14%</div>
+                    <div class="stat-label">of small businesses are prepared for cyber threats</div>
+                </div>
+            </div>
+            
+            <div class="split-section">
+                <div class="problem-box">
+                    <h4>❌ Traditional Security Challenges</h4>
+                    <ul>
+                        <li>Expensive security tools ($10,000+ annually)</li>
+                        <li>Requires specialized IT expertise</li>
+                        <li>Complex setup and maintenance</li>
+                        <li>Separate tools for different clouds</li>
+                        <li>No mobile device management</li>
+                    </ul>
+                </div>
+                <div class="solution-box">
+                    <h4>✅ CloudSecure AI Solution</h4>
+                    <ul>
+                        <li>100% Free Forever - No hidden costs</li>
+                        <li>Simple, user-friendly interface</li>
+                        <li>Automated setup and monitoring</li>
+                        <li>Unified multi-cloud dashboard</li>
+                        <li>Comprehensive mobile device security</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        
+        <!-- SLIDE 3: Dashboard Overview -->
+        <div class="slide">
+            <h2>📊 Dashboard - Your Security Command Center</h2>
+            
+            <div class="feature-grid">
+                <div class="feature-content">
+                    <h3>Real-Time Security Overview</h3>
+                    <p style="font-size: 1.1em; margin-bottom: 20px;">Get instant visibility into your entire security posture from a single dashboard.</p>
+                    
+                    <div class="benefit-box">
+                        <h4>🎯 How It Helps Small Businesses:</h4>
+                        <p><strong>No Technical Expertise Needed</strong> - See your security status at a glance with simple, color-coded indicators.</p>
+                        <p><strong>Save Time</strong> - No need to check multiple tools or cloud consoles. Everything in one place.</p>
+                        <p><strong>Quick Action</strong> - Instant access to run scans, check compliance, or address alerts.</p>
+                    </div>
+                    
+                    <div class="key-points">
+                        <ul>
+                            <li>Security Score - Know your protection level instantly</li>
+                            <li>Recent Alerts - See critical issues that need attention</li>
+                            <li>Resource Count - Track all monitored cloud assets</li>
+                            <li>Quick Actions - One-click security operations</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="feature-screenshot">
+                    <img src="docs/screenshots/dashboard-overview.png" alt="Dashboard Overview" />
+                    <div class="screenshot-caption">CloudSecure AI Dashboard - See your entire security posture at a glance</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- SLIDE 4: Cloud Accounts Management -->
+        <div class="slide">
+            <h2>☁️ Cloud Accounts - Multi-Cloud Management</h2>
+            
+            <div class="feature-grid">
+                <div class="feature-screenshot">
+                    <img src="docs/screenshots/cloud-accounts.png" alt="Cloud Accounts Management" />
+                    <div class="screenshot-caption">Manage all your cloud providers from one unified interface</div>
+                </div>
+                
+                <div class="feature-content">
+                    <h3>Unified Multi-Cloud Control</h3>
+                    <p style="font-size: 1.1em; margin-bottom: 20px;">Connect and manage AWS, Azure, Google Cloud, and more from a single dashboard.</p>
+                    
+                    <div class="benefit-box">
+                        <h4>💼 How It Helps Small Businesses:</h4>
+                        <p><strong>Cost Control</strong> - Track spending across all cloud providers in one place.</p>
+                        <p><strong>Simplified Management</strong> - No need to log into multiple cloud consoles.</p>
+                        <p><strong>Health Monitoring</strong> - Real-time status of all your cloud accounts.</p>
+                    </div>
+                    
+                    <div class="key-points">
+                        <ul>
+                            <li>Multi-cloud support: AWS, Azure, GCP, DigitalOcean</li>
+                            <li>Account health monitoring with status indicators</li>
+                            <li>Cost tracking and spending analysis</li>
+                            <li>Resource inventory across all clouds</li>
+                            <li>Easy account connection with API keys</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- SLIDE 5: Compliance Rules -->
+        <div class="slide">
+            <h2>✅ Compliance Rules - Stay Compliant, Stay Protected</h2>
+            
+            <div class="feature-grid">
+                <div class="feature-content">
+                    <h3>Automated Compliance Checking</h3>
+                    <p style="font-size: 1.1em; margin-bottom: 20px;">Continuous monitoring against GDPR, SOC 2, HIPAA, ISO 27001, and CIS Benchmarks.</p>
+                    
+                    <div class="benefit-box">
+                        <h4>🏆 How It Helps Small Businesses:</h4>
+                        <p><strong>Win More Clients</strong> - Show customers you meet industry security standards.</p>
+                        <p><strong>Avoid Penalties</strong> - Stay compliant with regulations to avoid fines.</p>
+                        <p><strong>Audit Ready</strong> - Always prepared for compliance audits with reports.</p>
+                        <p><strong>Competitive Edge</strong> - Stand out from competitors with certified practices.</p>
+                    </div>
+                    
+                    <div class="key-points">
+                        <ul>
+                            <li>GDPR compliance for customer data protection</li>
+                            <li>SOC 2 Type II for security controls</li>
+                            <li>HIPAA-lite for healthcare data</li>
+                            <li>ISO 27001 information security standards</li>
+                            <li>CIS Benchmarks for best practices</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="feature-screenshot">
+                    <img src="docs/screenshots/compliance-dashboard.png" alt="Compliance Dashboard" />
+                    <div class="screenshot-caption">Track compliance status with color-coded indicators</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- SLIDE 6: Vulnerability Scanning -->
+        <div class="slide">
+            <h2>🔒 Vulnerability Scan - Proactive Security Protection</h2>
+            
+            <div class="feature-grid">
+                <div class="feature-screenshot">
+                    <img src="docs/screenshots/security-scan.png" alt="Security Scan" />
+                    <div class="screenshot-caption">Find and fix security vulnerabilities before hackers do</div>
+                </div>
+                
+                <div class="feature-content">
+                    <h3>Automated Security Scanning</h3>
+                    <p style="font-size: 1.1em; margin-bottom: 20px;">Schedule daily, weekly, or monthly scans to find vulnerabilities before they become problems.</p>
+                    
+                    <div class="benefit-box">
+                        <h4>🛡️ How It Helps Small Businesses:</h4>
+                        <p><strong>Prevent Breaches</strong> - Find security holes before hackers exploit them.</p>
+                        <p><strong>Easy Fixes</strong> - Get step-by-step instructions to fix issues (no tech skills needed).</p>
+                        <p><strong>Lower Insurance</strong> - Prove security measures for better insurance rates.</p>
+                        <p><strong>Peace of Mind</strong> - Sleep better knowing your systems are secure.</p>
+                    </div>
+                    
+                    <div class="key-points">
+                        <ul>
+                            <li>Automated scanning on your schedule</li>
+                            <li>Severity classification: Critical, High, Medium, Low</li>
+                            <li>Clear fix recommendations for each issue</li>
+                            <li>Track security improvements over time</li>
+                            <li>Email alerts for critical vulnerabilities</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- SLIDE 7: AI Assistant -->
+        <div class="slide">
+            <h2>🤖 Ask AI Anything - Your Personal Security Expert</h2>
+            
+            <div class="feature-grid">
+                <div class="feature-content">
+                    <h3>24/7 AI Security Consultant</h3>
+                    <p style="font-size: 1.1em; margin-bottom: 20px;">Get instant, expert advice on any cloud or mobile security question in plain English.</p>
+                    
+                    <div class="benefit-box">
+                        <h4>💡 How It Helps Small Businesses:</h4>
+                        <p><strong>No Consultants Needed</strong> - Save $200+ per hour on security consultants.</p>
+                        <p><strong>Instant Answers</strong> - Get help 24/7 whenever you need it.</p>
+                        <p><strong>Learn While You Work</strong> - Improve your team's security knowledge.</p>
+                        <p><strong>Plain English</strong> - No confusing technical jargon.</p>
+                    </div>
+                    
+                    <div class="key-points">
+                        <ul>
+                            <li>Ask questions in natural language</li>
+                            <li>Get instant explanations of security alerts</li>
+                            <li>Learn best practices for cloud security</li>
+                            <li>Receive custom recommendations for your setup</li>
+                            <li>Available 24/7 at no cost</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="feature-screenshot">
+                    <img src="docs/screenshots/ai-chat-interface.png" alt="AI Chat Interface" />
+                    <div class="screenshot-caption">Chat with AI to get instant security guidance</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- SLIDE 8: Mobile Device Management -->
+        <div class="slide">
+            <h2>📱 Mobile Device Management - Secure Employee Devices</h2>
+            
+            <div class="feature-grid">
+                <div class="feature-screenshot">
+                    <img src="docs/screenshots/mdm-management.png" alt="MDM Management" />
+                    <div class="screenshot-caption">Manage and secure all employee devices from one dashboard</div>
+                </div>
+                
+                <div class="feature-content">
+                    <h3>Comprehensive Device Security</h3>
+                    <p style="font-size: 1.1em; margin-bottom: 20px;">Protect company data on employee smartphones, tablets, and laptops across all platforms.</p>
+                    
+                    <div class="benefit-box">
+                        <h4>📲 How It Helps Small Businesses:</h4>
+                        <p><strong>BYOD Protection</strong> - Secure personal devices used for work (Bring Your Own Device).</p>
+                        <p><strong>Lost Device Safety</strong> - Remotely wipe data if a device is lost or stolen.</p>
+                        <p><strong>Policy Enforcement</strong> - Automatically enforce password and encryption policies.</p>
+                        <p><strong>Compliance Tracking</strong> - Ensure all devices meet security requirements.</p>
+                    </div>
+                    
+                    <div class="key-points">
+                        <ul>
+                            <li>Support for iOS, Android, Windows, macOS, Linux</li>
+                            <li>Automatic device enrollment and registration</li>
+                            <li>Remote wipe for lost or stolen devices</li>
+                            <li>Enforce encryption and screen lock policies</li>
+                            <li>Track device compliance with security policies</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- SLIDE 9: Security Reports -->
+        <div class="slide">
+            <h2>📈 Security Reports - Executive-Level Insights</h2>
+            
+            <div class="feature-grid">
+                <div class="feature-content">
+                    <h3>Professional Security Reports</h3>
+                    <p style="font-size: 1.1em; margin-bottom: 20px;">Generate comprehensive reports for stakeholders, investors, and insurance companies.</p>
+                    
+                    <div class="benefit-box">
+                        <h4>📊 How It Helps Small Businesses:</h4>
+                        <p><strong>Impress Investors</strong> - Show professional security practices to attract funding.</p>
+                        <p><strong>Win Enterprise Clients</strong> - Demonstrate compliance for B2B contracts.</p>
+                        <p><strong>Lower Insurance Costs</strong> - Provide proof of security for better rates.</p>
+                        <p><strong>Board Presentations</strong> - Ready-made reports for stakeholder meetings.</p>
+                    </div>
+                    
+                    <div class="key-points">
+                        <ul>
+                            <li>Executive dashboards with high-level metrics</li>
+                            <li>Compliance status reports with gap analysis</li>
+                            <li>Cost analysis and ROI calculations</li>
+                            <li>Risk assessment and mitigation strategies</li>
+                            <li>Export to PDF for sharing</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="feature-screenshot">
+                    <img src="docs/screenshots/compliance-reports.png" alt="Security Reports" />
+                    <div class="screenshot-caption">Generate professional reports for any stakeholder</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- SLIDE 10: Real Business Impact -->
+        <div class="slide">
+            <h2>💼 Real Business Impact - Success Stories</h2>
+            
+            <h3 style="text-align: center; margin-bottom: 30px;">How Small Businesses Benefit Across Industries</h3>
+            
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 25px; margin: 30px 0;">
+                <div class="benefit-box">
+                    <h4>🛒 Retail & E-commerce</h4>
+                    <p>• Protect customer payment data and transactions<br>
+                    • Secure cloud-based inventory systems<br>
+                    • GDPR compliance for customer information<br>
+                    • Build trust with security certifications</p>
+                </div>
+                
+                <div class="benefit-box">
+                    <h4>🏥 Healthcare & Medical</h4>
+                    <p>• HIPAA compliance for patient records<br>
+                    • Secure telemedicine platforms<br>
+                    • Protect connected medical devices<br>
+                    • Secure prescription and pharmacy systems</p>
+                </div>
+                
+                <div class="benefit-box">
+                    <h4>💰 Financial Services</h4>
+                    <p>• Secure client financial records<br>
+                    • Meet banking regulations automatically<br>
+                    • Fraud prevention and detection<br>
+                    • Audit-ready documentation</p>
+                </div>
+                
+                <div class="benefit-box">
+                    <h4>🏭 Manufacturing</h4>
+                    <p>• Protect supply chain data<br>
+                    • Secure IoT and connected equipment<br>
+                    • Safeguard intellectual property<br>
+                    • Secure quality management systems</p>
+                </div>
+            </div>
+            
+            <div class="cta-section">
+                <h3>💡 Every Industry Benefits from CloudSecure AI</h3>
+                <p style="font-size: 1.2em; margin: 20px 0;">Whether you're in retail, healthcare, finance, or any other sector,<br>CloudSecure AI provides the security you need to grow confidently.</p>
+            </div>
+        </div>
+        
+        <!-- SLIDE 11: Cost Savings -->
+        <div class="slide">
+            <h2>💰 Cost Savings - Free vs. Paid Solutions</h2>
+            
+            <h3 style="text-align: center; margin-bottom: 30px;">See How Much You Save with CloudSecure AI</h3>
+            
+            <div style="background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%); padding: 40px; border-radius: 15px; margin: 30px 0;">
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 40px;">
+                    <div>
+                        <h3 style="color: #c92a2a;">❌ Traditional Security Costs</h3>
+                        <div style="font-size: 1.1em; line-height: 2;">
+                            <p>• Cloud Security Tool: <strong>$5,000/year</strong></p>
+                            <p>• Compliance Software: <strong>$3,000/year</strong></p>
+                            <p>• Vulnerability Scanner: <strong>$2,000/year</strong></p>
+                            <p>• Security Consultant: <strong>$10,000/year</strong></p>
+                            <p>• MDM Solution: <strong>$3,000/year</strong></p>
+                            <hr style="margin: 20px 0; border: 2px solid #c92a2a;">
+                            <p style="font-size: 1.5em; color: #c92a2a;"><strong>Total: $23,000/year</strong></p>
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <h3 style="color: #087f5b;">✅ CloudSecure AI Cost</h3>
+                        <div style="font-size: 1.1em; line-height: 2;">
+                            <p>• Cloud Security Tool: <strong>FREE</strong></p>
+                            <p>• Compliance Software: <strong>FREE</strong></p>
+                            <p>• Vulnerability Scanner: <strong>FREE</strong></p>
+                            <p>• AI Security Consultant: <strong>FREE</strong></p>
+                            <p>• MDM Solution: <strong>FREE</strong></p>
+                            <hr style="margin: 20px 0; border: 2px solid #087f5b;">
+                            <p style="font-size: 1.5em; color: #087f5b;"><strong>Total: $0/year</strong></p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div style="text-align: center; margin-top: 40px; padding: 30px; background: white; border-radius: 12px;">
+                    <h3 style="color: #00d4aa; font-size: 2.5em; margin-bottom: 10px;">💵 Save $23,000 Annually!</h3>
+                    <p style="font-size: 1.3em; color: #333;">That's money you can invest in growing your business instead!</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- SLIDE 12: Getting Started -->
+        <div class="slide">
+            <h2>🚀 Getting Started - Simple 3-Step Process</h2>
+            
+            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 30px; margin: 40px 0;">
+                <div style="text-align: center; padding: 30px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border-radius: 15px;">
+                    <div style="font-size: 4em; margin-bottom: 20px;">1️⃣</div>
+                    <h3 style="color: white; margin-bottom: 15px;">Sign Up</h3>
+                    <p style="font-size: 1.1em;">Create your free account in 2 minutes. No credit card required. No commitment.</p>
+                </div>
+                
+                <div style="text-align: center; padding: 30px; background: linear-gradient(135deg, #00d4aa 0%, #00a8cc 100%); color: white; border-radius: 15px;">
+                    <div style="font-size: 4em; margin-bottom: 20px;">2️⃣</div>
+                    <h3 style="color: white; margin-bottom: 15px;">Connect Clouds</h3>
+                    <p style="font-size: 1.1em;">Add your cloud accounts with simple API keys. Guided setup takes 5 minutes.</p>
+                </div>
+                
+                <div style="text-align: center; padding: 30px; background: linear-gradient(135deg, #FFD93D 0%, #ffa600 100%); color: white; border-radius: 15px;">
+                    <div style="font-size: 4em; margin-bottom: 20px;">3️⃣</div>
+                    <h3 style="color: white; margin-bottom: 15px;">Run First Scan</h3>
+                    <p style="font-size: 1.1em;">Click "Scan Now" and get instant results. Start protecting your business immediately.</p>
+                </div>
+            </div>
+            
+            <div style="background: #f0fff4; border: 3px solid #00d4aa; padding: 40px; border-radius: 15px; margin: 40px 0; text-align: center;">
+                <h3 style="color: #087f5b; font-size: 2em; margin-bottom: 20px;">⏱️ From Sign-Up to Protected: 8 Minutes</h3>
+                <p style="font-size: 1.3em; color: #333; margin-bottom: 30px;">That's all it takes to get enterprise-grade security for your small business!</p>
+                
+                <div class="key-points" style="text-align: left; max-width: 600px; margin: 0 auto;">
+                    <ul>
+                        <li>No technical expertise required</li>
+                        <li>No credit card needed</li>
+                        <li>No long-term contracts</li>
+                        <li>Cancel anytime (but why would you?)</li>
+                        <li>24/7 support available</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        
+        <!-- SLIDE 13: Call to Action -->
+        <div class="slide title-slide">
+            <h1 style="font-size: 3em; margin-bottom: 40px;">🎯 Protect Your Business Today</h1>
+            
+            <div style="background: rgba(255,255,255,0.1); padding: 50px; border-radius: 20px; margin: 40px 0;">
+                <h2 style="color: white; border: none; padding: 0; margin-bottom: 30px; font-size: 2em;">Join 1,000+ Small Businesses Already Protected</h2>
+                
+                <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; margin: 40px 0;">
+                    <div style="text-align: center;">
+                        <div style="font-size: 3em; color: #00d4aa; margin-bottom: 10px;">🛡️</div>
+                        <p style="font-size: 1.2em;">100% Free Forever</p>
+                    </div>
+                    <div style="text-align: center;">
+                        <div style="font-size: 3em; color: #00d4aa; margin-bottom: 10px;">⚡</div>
+                        <p style="font-size: 1.2em;">8-Minute Setup</p>
+                    </div>
+                    <div style="text-align: center;">
+                        <div style="font-size: 3em; color: #00d4aa; margin-bottom: 10px;">🤝</div>
+                        <p style="font-size: 1.2em;">No Contracts</p>
+                    </div>
+                    <div style="text-align: center;">
+                        <div style="font-size: 3em; color: #00d4aa; margin-bottom: 10px;">🎓</div>
+                        <p style="font-size: 1.2em;">No Tech Skills Needed</p>
+                    </div>
+                </div>
+                
+                <div style="margin-top: 50px;">
+                    <a href="http://localhost:4200" class="cta-button" style="font-size: 1.5em; padding: 20px 50px;">
+                        🚀 Start Free Trial Now
+                    </a>
+                </div>
+                
+                <p style="margin-top: 30px; font-size: 1.2em; opacity: 0.9;">
+                    Questions? Email us: duxinpi@gmail.com | ddxhvm@gmail.com
+                </p>
+            </div>
+            
+            <div style="margin-top: 50px; font-size: 1.5em; font-style: italic; opacity: 0.95;">
+                "Security shouldn't be a luxury. Every business deserves to be protected."
+            </div>
+        </div>
+        
+    </div>
+    
+    <div class="slide-number">
+        CloudSecure AI Presentation
+    </div>
+    
+    <script>
+        // Print functionality
+        window.addEventListener('keydown', function(e) {
+            if (e.ctrlKey && e.key === 'p') {
+                window.print();
+            }
+        });
+    </script>
+</body>
+</html>
