@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, NavigationEnd } from '@angular/router';
 import { AuthService } from './services/auth.service';
 import { LoginRequest, RegisterRequest } from './models/auth.model';
 
@@ -28,6 +28,7 @@ export class AppComponent implements OnInit {
   isCollapsed = false;
   errorMessage = '';
   currentUser: any = null;
+  isSecurityRoute = false;
   
   loginData: LoginData = {
     username: '',
@@ -60,6 +61,13 @@ export class AppComponent implements OnInit {
     if (this.isAuthenticated) {
       this.currentUser = this.authService.currentUserValue;
     }
+
+    // Track current route for landing-page conditional rendering
+    this.router.events.subscribe((event) => {
+      if (event instanceof NavigationEnd) {
+        this.isSecurityRoute = event.urlAfterRedirects.startsWith('/security');
+      }
+    });
   }
 
   showLogin() {
