@@ -304,8 +304,8 @@ Open your browser and navigate to: **http://localhost:4200**
 
 | Username | Password | Role  | Email |
 |----------|----------|-------|-------|
-| `admin`  | `admin123` | ADMIN | admin@cloudsecure.com |
-| `user`   | `user123`  | USER  | user@cloudsecure.com |
+| `admin`  | `admin123` | ADMIN |  |
+| `user`   | `user123`  | USER  |  |
 
 ---
 
