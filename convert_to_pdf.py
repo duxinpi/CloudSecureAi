@@ -13,7 +13,7 @@ def convert_html_to_pdf():
         return False
     
     try:
-        # Try using wkhtmltopdf if available
+        # Try using wkhtmltopdf if available   
         result = subprocess.run(['which', 'wkhtmltopdf'], capture_output=True, text=True)
         if result.returncode == 0:
             subprocess.run(['wkhtmltopdf', html_file, pdf_file], check=True)
