@@ -15,6 +15,7 @@ import { AiChatComponent } from './components/ai-chat/ai-chat.component';
 import { ReportsComponent } from './components/reports/reports.component';
 import { ProfileComponent } from './components/profile/profile.component';
 import { DeviceManagementComponent } from './components/device-management/device-management.component';
+import { SecurityComponent } from './components/security/security.component';
 
 @NgModule({
   declarations: [
@@ -28,7 +29,8 @@ import { DeviceManagementComponent } from './components/device-management/device
     AiChatComponent,
     ReportsComponent,
     ProfileComponent,
-    DeviceManagementComponent
+    DeviceManagementComponent,
+    SecurityComponent
   ],
   imports: [
     BrowserModule,

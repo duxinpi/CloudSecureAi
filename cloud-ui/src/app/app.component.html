@@ -108,8 +108,8 @@
     </nav>
   </header>
 
-  <!-- Hero Section -->
-  <section class="hero">
+  <!-- When navigating to security while unauthenticated, show routed content instead of hero -->
+  <section class="hero" *ngIf="!isSecurityRoute">
     <div class="container">
       <div class="hero-content">
         <h1 class="hero-title">
@@ -230,6 +230,13 @@
     </div>
   </section>
 
+  <!-- Routed content area for unauthenticated routes like /security -->
+  <section *ngIf="isSecurityRoute" class="landing-routed">
+    <div class="container">
+      <router-outlet></router-outlet>
+    </div>
+  </section>
+
   <!-- Footer -->
   <footer class="footer">
     <div class="container">
@@ -248,7 +255,7 @@
           <h4 class="footer-title">Product</h4>
           <ul class="footer-links">
             <li><a href="#">Features</a></li>
-            <li><a href="#">Security</a></li>
+            <li><a routerLink="/security">Security</a></li>
             <li><a href="#">Pricing</a></li>
             <li><a href="#">Documentation</a></li>
           </ul>
