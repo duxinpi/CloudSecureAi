@@ -4,6 +4,37 @@
   padding: 40px 20px;
 }
 
+.back-button-wrapper {
+  margin-bottom: 20px;
+}
+
+.btn-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 20px;
+  font-size: 15px;
+  font-weight: 500;
+  color: #555;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.btn-back:hover {
+  color: #4CAF50;
+  border-color: #4CAF50;
+  background: #f8fdf8;
+  transform: translateX(-4px);
+}
+
+.back-arrow {
+  font-size: 18px;
+  font-weight: 600;
+}
+
 .support-header {
   text-align: center;
   margin-bottom: 40px;

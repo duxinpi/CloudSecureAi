@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { Location } from '@angular/common';
 
 @Component({
   selector: 'app-support',
@@ -19,7 +20,10 @@ export class SupportComponent {
   errorMessage: string = '';
   isSubmitting: boolean = false;
 
-  constructor(private http: HttpClient) {}
+  constructor(
+    private http: HttpClient,
+    private location: Location
+  ) {}
 
   onSubmit() {
     // Reset messages
@@ -57,6 +61,10 @@ export class SupportComponent {
           this.isSubmitting = false;
         }
       });
+  }
+
+  goBack() {
+    this.location.back();
   }
 }
 
