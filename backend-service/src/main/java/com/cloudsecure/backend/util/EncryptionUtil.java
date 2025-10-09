@@ -44,7 +44,7 @@ public class EncryptionUtil {
     public static void main(String[] args) {
         // Use this to encrypt your email password
         String masterPassword = "CloudSecureAI2025DefaultKey";
-        String emailPassword = "ctrqphddymmqfaot"; // Your Gmail app password
+        String emailPassword = "ozxamjyqxlvqejgo"; // Your Gmail app password
         
         String encrypted = encrypt(emailPassword, masterPassword);
         System.out.println("==============================================");
