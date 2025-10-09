@@ -47,6 +47,12 @@ email:
     host: smtp.gmail.com
     port: 587
   username: waynegone299@gmail.com
-  password: ${EMAIL_PASSWORD:}
+  password: ENC(evgB9ly06giCwAFtzX9wkSnBlzziRQYN5mpTxjoWo6M=)
   from: waynegone299@gmail.com
   to: waynegone299@gmail.com
+
+# Jasypt Encryption Configuration
+jasypt:
+  encryptor:
+    password: ${JASYPT_ENCRYPTOR_PASSWORD:CloudSecureAI2025DefaultKey}
+    algorithm: PBEWithMD5AndDES
