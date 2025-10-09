@@ -62,6 +62,7 @@ public class WebSecurityConfig {
             .authorizeHttpRequests(auth -> 
                 auth.requestMatchers(new AntPathRequestMatcher("/auth/**")).permitAll()
                     .requestMatchers(new AntPathRequestMatcher("/h2-console/**")).permitAll()
+                    .requestMatchers(new AntPathRequestMatcher("/support/**")).permitAll()
                     .requestMatchers(new AntPathRequestMatcher("/api/cloud-accounts/**")).permitAll()
                     .requestMatchers(new AntPathRequestMatcher("/api/cloud-resources/**")).permitAll()
                     .requestMatchers(new AntPathRequestMatcher("/api/**")).permitAll()
