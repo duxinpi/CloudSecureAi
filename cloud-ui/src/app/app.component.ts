@@ -29,6 +29,7 @@ export class AppComponent implements OnInit {
   errorMessage = '';
   currentUser: any = null;
   isSecurityRoute = false;
+  isPublicRoute = false;
   
   loginData: LoginData = {
     username: '',
@@ -66,6 +67,9 @@ export class AppComponent implements OnInit {
     this.router.events.subscribe((event) => {
       if (event instanceof NavigationEnd) {
         this.isSecurityRoute = event.urlAfterRedirects.startsWith('/security');
+        // Check for public routes that should show content when not authenticated
+        this.isPublicRoute = event.urlAfterRedirects.startsWith('/security') || 
+                            event.urlAfterRedirects.startsWith('/support');
       }
     });
   }
