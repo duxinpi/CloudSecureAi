@@ -16,6 +16,7 @@ import { ReportsComponent } from './components/reports/reports.component';
 import { ProfileComponent } from './components/profile/profile.component';
 import { DeviceManagementComponent } from './components/device-management/device-management.component';
 import { SecurityComponent } from './components/security/security.component';
+import { SupportComponent } from './components/support/support.component';
 
 @NgModule({
   declarations: [
@@ -30,7 +31,8 @@ import { SecurityComponent } from './components/security/security.component';
     ReportsComponent,
     ProfileComponent,
     DeviceManagementComponent,
-    SecurityComponent
+    SecurityComponent,
+    SupportComponent
   ],
   imports: [
     BrowserModule,
