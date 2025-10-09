@@ -1,7 +1,7 @@
 # Email Configuration Setup
 
 ## Overview
-The support form sends emails from `sadhwanijosue35@outlook.com` to `sadhwanijosue35@outlook.com`.
+The support form sends emails from `waynegone299@gmail.com` to `waynegone299@gmail.com`.
 
 ## ⚠️ IMPORTANT: Email Password Required
 
@@ -15,7 +15,7 @@ You need to set the email password as an environment variable for security:
 
 #### On macOS/Linux:
 ```bash
-export EMAIL_PASSWORD="your-outlook-password-or-app-password"
+export EMAIL_PASSWORD="your-gmail-app-password"
 ```
 
 Then restart your backend server:
@@ -26,7 +26,7 @@ mvn spring-boot:run
 
 #### On Windows (PowerShell):
 ```powershell
-$env:EMAIL_PASSWORD="your-outlook-password-or-app-password"
+$env:EMAIL_PASSWORD="your-gmail-app-password"
 ```
 
 Then restart your backend server:
@@ -41,24 +41,23 @@ After starting the backend, check the logs for:
 - "Email password is not configured" = **PASSWORD NOT SET** ❌
 - "Attempting to send support email" = **PASSWORD IS SET** ✅
 
-### 3. Outlook Account Settings
+### 3. Gmail Account Settings
 
-For Outlook/Hotmail accounts, you **MUST** do one of the following:
+For Gmail accounts, you **MUST** use an App Password:
 
-#### Option A: Use App Password (Recommended if 2FA enabled)
-1. Go to: https://account.microsoft.com/security
-2. Click "Advanced security options"
-3. Scroll to "App passwords"
-4. Click "Create a new app password"
-5. Copy the generated password
-6. Use this password as your EMAIL_PASSWORD
+#### Create Gmail App Password:
+1. Go to: https://myaccount.google.com/security
+2. Sign in with `waynegone299@gmail.com`
+3. Enable "2-Step Verification" if not already enabled
+4. Go to: https://myaccount.google.com/apppasswords
+5. Click "Select app" → Choose "Mail"
+6. Click "Select device" → Choose "Other (Custom name)"
+7. Enter "CloudSecureAI" as the name
+8. Click "Generate"
+9. Copy the 16-character app password (format: xxxx xxxx xxxx xxxx)
+10. Use this password as your EMAIL_PASSWORD
 
-#### Option B: Enable Less Secure App Access (if no 2FA)
-1. Go to Outlook account settings
-2. Enable "Let devices and apps use POP" or similar option
-3. Use your regular password as EMAIL_PASSWORD
-
-**Note:** If you get authentication errors, you MUST use an app password.
+**Note:** You cannot use your regular Gmail password. You MUST use an app password.
 
 ### 3. Alternative Configuration
 
@@ -67,12 +66,12 @@ If you want to use different email settings, update `application.yml`:
 ```yaml
 email:
   smtp:
-    host: smtp-mail.outlook.com  # Change for other providers
+    host: smtp.gmail.com  # Change for other providers
     port: 587
-  username: your-email@outlook.com
+  username: your-email@gmail.com
   password: ${EMAIL_PASSWORD:}
-  from: your-email@outlook.com
-  to: recipient@outlook.com
+  from: your-email@gmail.com
+  to: recipient@gmail.com
 ```
 
 ## Testing
@@ -106,8 +105,8 @@ npm start
    - Solution: Set EMAIL_PASSWORD environment variable and restart backend
 
 2. **"Authentication Failed"**
-   - Solution: Use an app password instead of your regular password
-   - Go to https://account.microsoft.com/security to create one
+   - Solution: Use a Gmail app password instead of your regular password
+   - Go to https://myaccount.google.com/apppasswords to create one
 
 3. **"Connection Timeout"**
    - Solution: Check firewall settings, verify SMTP host and port

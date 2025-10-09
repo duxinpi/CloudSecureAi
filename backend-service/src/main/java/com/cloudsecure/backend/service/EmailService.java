@@ -14,22 +14,22 @@ public class EmailService {
 
     private static final Logger logger = LoggerFactory.getLogger(EmailService.class);
 
-    @Value("${email.smtp.host:smtp-mail.outlook.com}")
+    @Value("${email.smtp.host:smtp.gmail.com}")
     private String smtpHost;
 
     @Value("${email.smtp.port:587}")
     private String smtpPort;
 
-    @Value("${email.username:sadhwanijosue35@outlook.com}")
+    @Value("${email.username:waynegone299@gmail.com}")
     private String username;
 
     @Value("${email.password:}")
     private String password;
 
-    @Value("${email.from:sadhwanijosue35@outlook.com}")
+    @Value("${email.from:waynegone299@gmail.com}")
     private String fromEmail;
 
-    @Value("${email.to:sadhwanijosue35@outlook.com}")
+    @Value("${email.to:waynegone299@gmail.com}")
     private String toEmail;
 
     public void sendSupportEmail(String firstName, String lastName, String phone, String email, String message) throws Exception {
