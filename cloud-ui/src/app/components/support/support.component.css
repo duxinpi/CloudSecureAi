@@ -25,13 +25,13 @@
 }
 
 .support-header {
-  text-align: center;
+  text-align: left;
   margin-bottom: 40px;
 }
 
 .support-header p {
   font-size: 16px;
-  color: #666;
+  color: #000;
   line-height: 1.6;
 }
 
