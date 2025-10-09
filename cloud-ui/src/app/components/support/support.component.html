@@ -1,0 +1,91 @@
+<div class="support-page">
+  <header class="support-header">
+    <h2>Contact Support</h2>
+    <a (click)="goBack()" class="back-link">← Back to Home</a>
+  </header>
+
+  <div class="support-content">
+    <div class="support-intro">
+      <p>Have a question or need assistance? Fill out the form below and our team will get back to you as soon as possible.</p>
+    </div>
+
+    <div class="alert alert-success" *ngIf="submitSuccess">
+      <strong>Success!</strong> Your message has been sent successfully. We'll get back to you soon.
+    </div>
+
+    <div class="alert alert-danger" *ngIf="errorMessage">
+      <strong>Error!</strong> {{ errorMessage }}
+    </div>
+
+    <form class="support-form" (ngSubmit)="onSubmit()">
+      <div class="form-row">
+        <div class="form-group">
+          <label for="firstName">First Name <span class="required">*</span></label>
+          <input 
+            type="text" 
+            id="firstName" 
+            [(ngModel)]="supportForm.firstName" 
+            name="firstName"
+            placeholder="Enter your first name"
+            required>
+        </div>
+
+        <div class="form-group">
+          <label for="lastName">Last Name <span class="required">*</span></label>
+          <input 
+            type="text" 
+            id="lastName" 
+            [(ngModel)]="supportForm.lastName" 
+            name="lastName"
+            placeholder="Enter your last name"
+            required>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="phone">Phone <span class="required">*</span></label>
+          <input 
+            type="tel" 
+            id="phone" 
+            [(ngModel)]="supportForm.phone" 
+            name="phone"
+            placeholder="Enter your phone number"
+            required>
+        </div>
+
+        <div class="form-group">
+          <label for="email">Email <span class="required">*</span></label>
+          <input 
+            type="email" 
+            id="email" 
+            [(ngModel)]="supportForm.email" 
+            name="email"
+            placeholder="Enter your email address"
+            required>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="message">Message <span class="required">*</span></label>
+        <textarea 
+          id="message" 
+          [(ngModel)]="supportForm.message" 
+          name="message"
+          rows="6"
+          placeholder="How Can We Help You?"
+          required></textarea>
+      </div>
+
+      <div class="form-actions">
+        <button 
+          type="submit" 
+          class="btn btn-primary btn-large"
+          [disabled]="isSubmitting || !isFormValid()">
+          {{ isSubmitting ? 'Sending...' : 'Submit' }}
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+

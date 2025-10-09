@@ -65,7 +65,8 @@ export class AppComponent implements OnInit {
     // Track current route for landing-page conditional rendering
     this.router.events.subscribe((event) => {
       if (event instanceof NavigationEnd) {
-        this.isSecurityRoute = event.urlAfterRedirects.startsWith('/security');
+        this.isSecurityRoute = event.urlAfterRedirects.startsWith('/security') || 
+                               event.urlAfterRedirects.startsWith('/support');
       }
     });
   }
