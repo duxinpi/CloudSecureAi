@@ -47,7 +47,7 @@ email:
     host: smtp.gmail.com
     port: 587
   username: waynegone299@gmail.com
-  password: ENC(h9mp4z0GgMJr4Q5acPNWXC7m56n27QAFS/Qak5VXzdg=)
+  password: ENC(asz5LgvIb70euLNMwvOSLkxDwvDmPeyobedCHTAtuBQ=)
   from: waynegone299@gmail.com
   to: waynegone299@gmail.com
 

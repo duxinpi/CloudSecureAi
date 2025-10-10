@@ -44,9 +44,15 @@ logging:
 # Email Configuration
 email:
   smtp:
-    host: smtp-mail.outlook.com
+    host: smtp.gmail.com
     port: 587
-  username: sadhwanijosue35@outlook.com
-  password: ${EMAIL_PASSWORD:}
-  from: sadhwanijosue35@outlook.com
-  to: sadhwanijosue35@outlook.com
+  username: waynegone299@gmail.com
+  password: ENC(asz5LgvIb70euLNMwvOSLkxDwvDmPeyobedCHTAtuBQ=)
+  from: waynegone299@gmail.com
+  to: waynegone299@gmail.com
+
+# Jasypt Encryption Configuration
+jasypt:
+  encryptor:
+    password: ${JASYPT_ENCRYPTOR_PASSWORD:CloudSecureAI2025DefaultKey}
+    algorithm: PBEWithMD5AndDES
