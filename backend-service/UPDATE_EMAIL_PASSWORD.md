@@ -1,6 +1,10 @@
 # How to Update Email Password
 
-The email password is encrypted and stored in `application.yml`. To update it:
+The email password is encrypted and stored in both:
+- `src/main/resources/secure.properties` - Encrypted password storage
+- `src/main/resources/application.yml` - Used by the application
+
+To update the password:
 
 ## Step 1: Get Gmail App Password
 
@@ -20,21 +24,24 @@ Run this command to encrypt your Gmail app password:
 cd backend-service
 
 # Replace YOUR_GMAIL_APP_PASSWORD with the actual password from Step 1
-mvn exec:java -Dexec.mainClass="com.cloudsecure.backend.util.EncryptionUtil" \
+mvn compile && mvn exec:java \
+  -Dexec.mainClass="com.cloudsecure.backend.util.EncryptionUtil" \
   -Dexec.args="YOUR_GMAIL_APP_PASSWORD" \
   -Dexec.classpathScope=compile
 ```
 
-**OR** manually update the `EncryptionUtil.java` file:
-- Open: `src/main/java/com/cloudsecure/backend/util/EncryptionUtil.java`
-- Change line: `String emailPassword = "ctrqphddymmqfaot";`
-- Replace with your Gmail app password
-- Run: `mvn compile && mvn exec:java -Dexec.mainClass="com.cloudsecure.backend.util.EncryptionUtil"`
+This will output the encrypted password.
 
-## Step 3: Update application.yml
+## Step 3: Update Configuration Files
 
-Copy the encrypted output and update `src/main/resources/application.yml`:
+Copy the encrypted output and update **BOTH** files:
 
+**File 1: `src/main/resources/secure.properties`**
+```properties
+email.app.password.encrypted=your-encrypted-password-here
+```
+
+**File 2: `src/main/resources/application.yml`**
 ```yaml
 email:
   password: ENC(your-encrypted-password-here)
@@ -60,4 +67,17 @@ mvn spring-boot:run
 - **From/To:** waynegone299@gmail.com
 - **Encryption:** Jasypt PBEWithMD5AndDES
 - **Master Key:** CloudSecureAI2025DefaultKey (default) or JASYPT_ENCRYPTOR_PASSWORD (custom)
+- **Encrypted Storage:** `src/main/resources/secure.properties`
+- **Current Encrypted Password:** `h9mp4z0GgMJr4Q5acPNWXC7m56n27QAFS/Qak5VXzdg=`
+
+## Verify Configuration
+
+To verify your encrypted password is valid:
+
+```bash
+cd backend-service
+mvn compile && mvn exec:java -Dexec.mainClass="com.cloudsecure.backend.util.EncryptionUtil"
+```
+
+You should see: `✅ Email password configuration is VALID`
 
