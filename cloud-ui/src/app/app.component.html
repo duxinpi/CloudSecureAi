@@ -108,8 +108,8 @@
     </nav>
   </header>
 
-  <!-- When navigating to security while unauthenticated, show routed content instead of hero -->
-  <section class="hero" *ngIf="!isSecurityRoute">
+  <!-- When navigating to security/support while unauthenticated, show routed content instead of hero -->
+  <section class="hero" *ngIf="!isPublicRoute">
     <div class="container">
       <div class="hero-content">
         <h1 class="hero-title">
@@ -230,8 +230,8 @@
     </div>
   </section>
 
-  <!-- Routed content area for unauthenticated routes like /security -->
-  <section *ngIf="isSecurityRoute" class="landing-routed">
+  <!-- Routed content area for unauthenticated routes like /security and /support -->
+  <section *ngIf="isPublicRoute" class="landing-routed">
     <div class="container">
       <router-outlet></router-outlet>
     </div>
@@ -267,7 +267,7 @@
             <li><a href="#">About Us</a></li>
             <li><a href="#">Mission</a></li>
             <li><a href="#">Contact</a></li>
-            <li><a href="#">Support</a></li>
+            <li><a routerLink="/support">Support</a></li>
           </ul>
         </div>
         

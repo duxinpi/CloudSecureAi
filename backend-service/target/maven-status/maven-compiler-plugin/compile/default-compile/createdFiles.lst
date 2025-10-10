@@ -1,11 +1,13 @@
 com/cloudsecure/backend/config/WebSecurityConfig.class
 com/cloudsecure/backend/repository/CloudResourceRepository.class
+com/cloudsecure/backend/service/EmailService.class
 com/cloudsecure/backend/entity/CloudResource.class
 com/cloudsecure/backend/service/CloudResourceService.class
 com/cloudsecure/backend/controller/CloudAccountController.class
 com/cloudsecure/backend/dto/CloudResourceDto.class
 com/cloudsecure/backend/controller/UserController$UserProfileUpdateRequest.class
 com/cloudsecure/backend/config/DataInitializer.class
+com/cloudsecure/backend/controller/SupportController$SupportRequest.class
 com/cloudsecure/backend/entity/CloudAccount.class
 com/cloudsecure/backend/service/UserDetailsServiceImpl.class
 com/cloudsecure/backend/dto/CloudAccountDto.class
@@ -21,9 +23,11 @@ com/cloudsecure/backend/controller/AuthController.class
 com/cloudsecure/backend/repository/CloudAccountRepository.class
 com/cloudsecure/backend/repository/UserRepository.class
 com/cloudsecure/backend/controller/CloudResourceController.class
+com/cloudsecure/backend/controller/SupportController.class
 com/cloudsecure/backend/service/AuthService.class
 com/cloudsecure/backend/security/JwtUtils.class
 com/cloudsecure/backend/service/CloudAccountService.class
+com/cloudsecure/backend/service/EmailService$1.class
 com/cloudsecure/backend/dto/AuthResponse.class
 com/cloudsecure/backend/entity/User.class
 com/cloudsecure/backend/service/DataInitializationService.class

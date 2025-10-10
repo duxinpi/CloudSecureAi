@@ -40,3 +40,13 @@ logging:
   level:
     com.cloudsecure: DEBUG
     org.springframework.security: DEBUG
+
+# Email Configuration
+email:
+  smtp:
+    host: smtp-mail.outlook.com
+    port: 587
+  username: sadhwanijosue35@outlook.com
+  password: ${EMAIL_PASSWORD:}
+  from: sadhwanijosue35@outlook.com
+  to: sadhwanijosue35@outlook.com

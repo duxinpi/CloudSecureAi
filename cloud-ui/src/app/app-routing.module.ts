@@ -11,6 +11,7 @@ import { ReportsComponent } from './components/reports/reports.component';
 import { ProfileComponent } from './components/profile/profile.component';
 import { DeviceManagementComponent } from './components/device-management/device-management.component';
 import { SecurityComponent } from './components/security/security.component';
+import { SupportComponent } from './components/support/support.component';
 
 const routes: Routes = [
   { path: '', redirectTo: '/dashboard', pathMatch: 'full' },
@@ -25,7 +26,8 @@ const routes: Routes = [
   { path: 'device-management', component: DeviceManagementComponent },
   { path: 'security', component: SecurityComponent },
   { path: 'settings', component: AdminComponent },
-  { path: 'profile', component: ProfileComponent }
+  { path: 'profile', component: ProfileComponent },
+  { path: 'support', component: SupportComponent }
 ];
 
 @NgModule({
