@@ -40,3 +40,19 @@ logging:
   level:
     com.cloudsecure: DEBUG
     org.springframework.security: DEBUG
+
+# Email Configuration
+email:
+  smtp:
+    host: smtp.gmail.com
+    port: 587
+  username: waynegone299@gmail.com
+  password: ENC(asz5LgvIb70euLNMwvOSLkxDwvDmPeyobedCHTAtuBQ=)
+  from: waynegone299@gmail.com
+  to: waynegone299@gmail.com
+
+# Jasypt Encryption Configuration
+jasypt:
+  encryptor:
+    password: ${JASYPT_ENCRYPTOR_PASSWORD:CloudSecureAI2025DefaultKey}
+    algorithm: PBEWithMD5AndDES
