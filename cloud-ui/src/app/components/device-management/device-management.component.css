@@ -93,6 +93,16 @@
   color: white;
 }
 
+.stat-icon.warning {
+  background: linear-gradient(135deg, #ffa726, #ffb74d);
+  color: white;
+}
+
+.stat-icon.compliant {
+  background: linear-gradient(135deg, #00d4aa, #00a8cc);
+  color: white;
+}
+
 .stat-content {
   flex: 1;
 }
