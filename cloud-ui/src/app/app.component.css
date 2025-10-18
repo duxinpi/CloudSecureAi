@@ -248,15 +248,55 @@
   font-size: 13px;
   text-transform: uppercase;
   letter-spacing: 0.5px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.nav-group-title:hover {
+  background-color: #e9ecef;
+  color: #495057;
+}
+
+.expand-icon {
+  margin-left: auto;
+  font-size: 10px;
+  transition: transform 0.3s ease;
+  transform: rotate(-90deg);
+}
+
+.expand-icon.expanded {
+  transform: rotate(0deg);
 }
 
 .nav-sub-items {
   padding-left: 0;
+  overflow: hidden;
+  animation: slideDown 0.3s ease-out;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    max-height: 0;
+  }
+  to {
+    opacity: 1;
+    max-height: 500px;
+  }
 }
 
 .nav-sub-items .nav-item {
   padding-left: 36px;
   font-size: 14px;
+}
+
+.el-aside.collapsed .expand-icon {
+  display: none;
+}
+
+.el-aside.collapsed .nav-group-title {
+  cursor: default;
 }
 
 /* Icon styles */

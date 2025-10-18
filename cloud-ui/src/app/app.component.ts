@@ -30,6 +30,7 @@ export class AppComponent implements OnInit {
   currentUser: any = null;
   isSecurityRoute = false;
   isPublicRoute = false;
+  isCloudSecurityExpanded = false;
   
   loginData: LoginData = {
     username: '',
@@ -163,6 +164,10 @@ export class AppComponent implements OnInit {
 
   toggleSidebar() {
     this.isCollapsed = !this.isCollapsed;
+  }
+
+  toggleCloudSecurity() {
+    this.isCloudSecurityExpanded = !this.isCloudSecurityExpanded;
   }
 
   goDashboard() {
