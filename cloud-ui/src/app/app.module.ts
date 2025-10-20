@@ -17,6 +17,7 @@ import { ProfileComponent } from './components/profile/profile.component';
 import { DeviceManagementComponent } from './components/device-management/device-management.component';
 import { SecurityComponent } from './components/security/security.component';
 import { SupportComponent } from './components/support/support.component';
+import { DocumentationComponent } from './components/documentation/documentation.component';
 
 @NgModule({
   declarations: [
@@ -32,7 +33,8 @@ import { SupportComponent } from './components/support/support.component';
     ProfileComponent,
     DeviceManagementComponent,
     SecurityComponent,
-    SupportComponent
+    SupportComponent,
+    DocumentationComponent
   ],
   imports: [
     BrowserModule,

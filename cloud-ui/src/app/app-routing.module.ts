@@ -12,6 +12,7 @@ import { ProfileComponent } from './components/profile/profile.component';
 import { DeviceManagementComponent } from './components/device-management/device-management.component';
 import { SecurityComponent } from './components/security/security.component';
 import { SupportComponent } from './components/support/support.component';
+import { DocumentationComponent } from './components/documentation/documentation.component';
 
 const routes: Routes = [
   { path: '', redirectTo: '/dashboard', pathMatch: 'full' },
@@ -27,7 +28,8 @@ const routes: Routes = [
   { path: 'security', component: SecurityComponent },
   { path: 'settings', component: AdminComponent },
   { path: 'profile', component: ProfileComponent },
-  { path: 'support', component: SupportComponent }
+  { path: 'support', component: SupportComponent },
+  { path: 'documentation', component: DocumentationComponent }
 ];
 
 @NgModule({
