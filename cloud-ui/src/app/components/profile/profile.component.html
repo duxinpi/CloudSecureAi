@@ -1,43 +1,285 @@
-<div class="page-container">
-  <div class="page-header">
-    <h1>User Profile</h1>
-    <p>Manage your account settings and preferences</p>
+<div class="profile-page">
+  <!-- Profile Header -->
+  <div class="profile-header">
+    <div class="profile-avatar">
+      <div class="avatar-circle">
+        <span class="avatar-text">{{ getInitials(profileData.name) }}</span>
+      </div>
+      <div class="avatar-status online"></div>
+    </div>
+    <div class="profile-info">
+      <h1 class="profile-name">{{ profileData.name }}</h1>
+      <p class="profile-title">{{ profileData.title }}</p>
+      <div class="profile-meta">
+        <span class="meta-item">
+          <i class="icon-email"></i>
+          {{ profileData.email }}
+        </span>
+        <span class="meta-item">
+          <i class="icon-department"></i>
+          {{ profileData.department }}
+        </span>
+        <span class="meta-item">
+          <i class="icon-time"></i>
+          Last active {{ profileData.lastActive }}
+        </span>
+      </div>
+    </div>
+    <div class="profile-actions">
+      <button class="btn btn-outline" (click)="editProfile()">
+        <i class="icon-edit"></i>
+        Edit Profile
+      </button>
+      <button class="btn btn-primary" (click)="openSettings()">
+        <i class="icon-settings"></i>
+        Settings
+      </button>
+    </div>
   </div>
-  
-  <div class="content-grid">
-    <div class="card">
+
+  <!-- Profile Content -->
+  <div class="profile-content">
+    <!-- Personal Information Card -->
+    <div class="profile-card">
       <div class="card-header">
-        <h3>Personal Information</h3>
+        <div class="header-icon">
+          <i class="icon-user"></i>
+        </div>
+        <div class="header-content">
+          <h3>Personal Information</h3>
+          <p>Manage your personal details and contact information</p>
+        </div>
+        <button class="btn-icon">
+          <i class="icon-edit"></i>
+        </button>
       </div>
-      <div class="card-content">
-        <p><strong>Name:</strong> John Doe</p>
-        <p><strong>Email:</strong> john.doe@company.com</p>
-        <p><strong>Role:</strong> Security Administrator</p>
-        <p><strong>Department:</strong> IT Security</p>
+      <div class="card-body">
+        <div class="info-grid">
+          <div class="info-item">
+            <div class="info-label">
+              <i class="icon-user"></i>
+              Full Name
+            </div>
+            <div class="info-value">{{ profileData.name }}</div>
+          </div>
+          <div class="info-item">
+            <div class="info-label">
+              <i class="icon-email"></i>
+              Email Address
+            </div>
+            <div class="info-value">{{ profileData.email }}</div>
+          </div>
+          <div class="info-item">
+            <div class="info-label">
+              <i class="icon-phone"></i>
+              Phone Number
+            </div>
+            <div class="info-value">{{ profileData.phone }}</div>
+          </div>
+          <div class="info-item">
+            <div class="info-label">
+              <i class="icon-location"></i>
+              Location
+            </div>
+            <div class="info-value">{{ profileData.location }}</div>
+          </div>
+          <div class="info-item">
+            <div class="info-label">
+              <i class="icon-calendar"></i>
+              Member Since
+            </div>
+            <div class="info-value">{{ profileData.memberSince }}</div>
+          </div>
+          <div class="info-item">
+            <div class="info-label">
+              <i class="icon-badge"></i>
+              Employee ID
+            </div>
+            <div class="info-value">{{ profileData.employeeId }}</div>
+          </div>
+        </div>
       </div>
     </div>
-    
-    <div class="card">
+
+    <!-- Security Settings Card -->
+    <div class="profile-card">
       <div class="card-header">
-        <h3>Security Settings</h3>
+        <div class="header-icon security">
+          <i class="icon-shield"></i>
+        </div>
+        <div class="header-content">
+          <h3>Security Settings</h3>
+          <p>Manage your account security and authentication</p>
+        </div>
+        <button class="btn-icon">
+          <i class="icon-settings"></i>
+        </button>
       </div>
-      <div class="card-content">
-        <p><strong>Two-Factor Auth:</strong> Enabled</p>
-        <p><strong>Last Login:</strong> 2 hours ago</p>
-        <p><strong>Password Changed:</strong> 30 days ago</p>
-        <p><strong>Session Timeout:</strong> 8 hours</p>
+      <div class="card-body">
+        <div class="security-grid">
+          <div class="security-item">
+            <div class="security-icon">
+              <i class="icon-shield-check"></i>
+            </div>
+            <div class="security-content">
+              <h4>Two-Factor Authentication</h4>
+              <p>Add an extra layer of security to your account</p>
+              <div class="security-status" [class.enabled]="securitySettings.twoFactorAuth">
+                <span class="status-dot"></span>
+                {{ securitySettings.twoFactorAuth ? 'Enabled' : 'Disabled' }}
+              </div>
+            </div>
+            <button class="btn-toggle" [class.active]="securitySettings.twoFactorAuth" (click)="toggleTwoFactorAuth()">
+              <span class="toggle-slider"></span>
+            </button>
+          </div>
+          
+          <div class="security-item">
+            <div class="security-icon">
+              <i class="icon-key"></i>
+            </div>
+            <div class="security-content">
+              <h4>Password</h4>
+              <p>Last changed {{ securitySettings.lastPasswordChange }}</p>
+              <div class="security-status">
+                <span class="status-dot"></span>
+                {{ securitySettings.passwordStrength }}
+              </div>
+            </div>
+            <button class="btn-outline" (click)="changePassword()">Change</button>
+          </div>
+          
+          <div class="security-item">
+            <div class="security-icon">
+              <i class="icon-clock"></i>
+            </div>
+            <div class="security-content">
+              <h4>Session Timeout</h4>
+              <p>Automatically log out after inactivity</p>
+              <div class="security-status">
+                <span class="status-dot"></span>
+                {{ securitySettings.sessionTimeout }}
+              </div>
+            </div>
+            <button class="btn-outline" (click)="configureSessionTimeout()">Configure</button>
+          </div>
+          
+          <div class="security-item">
+            <div class="security-icon">
+              <i class="icon-device"></i>
+            </div>
+            <div class="security-content">
+              <h4>Active Sessions</h4>
+              <p>Manage your logged-in devices</p>
+              <div class="security-status">
+                <span class="status-dot"></span>
+                {{ securitySettings.activeSessions }} devices
+              </div>
+            </div>
+            <button class="btn-outline" (click)="viewActiveSessions()">View All</button>
+          </div>
+        </div>
       </div>
     </div>
-    
-    <div class="card">
+
+    <!-- Preferences Card -->
+    <div class="profile-card">
       <div class="card-header">
-        <h3>Preferences</h3>
+        <div class="header-icon preferences">
+          <i class="icon-settings"></i>
+        </div>
+        <div class="header-content">
+          <h3>Preferences</h3>
+          <p>Customize your experience and notifications</p>
+        </div>
+        <button class="btn-icon">
+          <i class="icon-edit"></i>
+        </button>
       </div>
-      <div class="card-content">
-        <p><strong>Language:</strong> English</p>
-        <p><strong>Timezone:</strong> PST (UTC-8)</p>
-        <p><strong>Notifications:</strong> Email + SMS</p>
-        <p><strong>Theme:</strong> Dark Mode</p>
+      <div class="card-body">
+        <div class="preferences-grid">
+          <div class="preference-item">
+            <div class="preference-content">
+              <h4>Language & Region</h4>
+              <p>{{ preferences.language }}</p>
+            </div>
+            <button class="btn-outline" (click)="changeLanguage()">Change</button>
+          </div>
+          
+          <div class="preference-item">
+            <div class="preference-content">
+              <h4>Timezone</h4>
+              <p>{{ preferences.timezone }}</p>
+            </div>
+            <button class="btn-outline" (click)="changeTimezone()">Change</button>
+          </div>
+          
+          <div class="preference-item">
+            <div class="preference-content">
+              <h4>Theme</h4>
+              <p>{{ preferences.theme }}</p>
+            </div>
+            <button class="btn-toggle" [class.active]="preferences.theme === 'Dark Mode'" (click)="toggleTheme()">
+              <span class="toggle-slider"></span>
+            </button>
+          </div>
+          
+          <div class="preference-item">
+            <div class="preference-content">
+              <h4>Email Notifications</h4>
+              <p>Security alerts and updates</p>
+            </div>
+            <button class="btn-toggle" [class.active]="preferences.emailNotifications" (click)="toggleEmailNotifications()">
+              <span class="toggle-slider"></span>
+            </button>
+          </div>
+          
+          <div class="preference-item">
+            <div class="preference-content">
+              <h4>SMS Notifications</h4>
+              <p>Critical security alerts only</p>
+            </div>
+            <button class="btn-toggle" [class.active]="preferences.smsNotifications" (click)="toggleSmsNotifications()">
+              <span class="toggle-slider"></span>
+            </button>
+          </div>
+          
+          <div class="preference-item">
+            <div class="preference-content">
+              <h4>Dashboard Layout</h4>
+              <p>{{ preferences.dashboardLayout }}</p>
+            </div>
+            <button class="btn-outline" (click)="customizeDashboard()">Customize</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Activity Card -->
+    <div class="profile-card">
+      <div class="card-header">
+        <div class="header-icon activity">
+          <i class="icon-activity"></i>
+        </div>
+        <div class="header-content">
+          <h3>Recent Activity</h3>
+          <p>Your latest actions and security events</p>
+        </div>
+        <button class="btn-outline">View All</button>
+      </div>
+      <div class="card-body">
+        <div class="activity-list">
+          <div class="activity-item" *ngFor="let activity of recentActivity">
+            <div class="activity-icon" [ngClass]="activity.icon">
+              <i [class]="'icon-' + activity.icon"></i>
+            </div>
+            <div class="activity-content">
+              <h4>{{ activity.title }}</h4>
+              <p>{{ activity.description }}</p>
+              <span class="activity-time">{{ activity.time }}</span>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
