@@ -36,11 +36,12 @@
         </div>
         
         <div class="nav-group">
-          <div class="nav-group-title">
+          <div class="nav-group-title" (click)="toggleCloudSecurity()">
             <i class="nav-icon icon-cloud"></i>
             <span class="nav-text">Cloud Security</span>
+            <i class="expand-icon" [class.expanded]="isCloudSecurityExpanded">▼</i>
           </div>
-          <div class="nav-sub-items">
+          <div class="nav-sub-items" *ngIf="isCloudSecurityExpanded">
             <div class="nav-item" routerLink="/cloud-accounts" routerLinkActive="active">
               <i class="nav-icon icon-account"></i>
               <span class="nav-text">Cloud Accounts</span>
