@@ -69,7 +69,8 @@ export class AppComponent implements OnInit {
         this.isSecurityRoute = event.urlAfterRedirects.startsWith('/security');
         // Check for public routes that should show content when not authenticated
         this.isPublicRoute = event.urlAfterRedirects.startsWith('/security') || 
-                            event.urlAfterRedirects.startsWith('/support');
+                            event.urlAfterRedirects.startsWith('/support') ||
+                            event.urlAfterRedirects.startsWith('/documentation');
       }
     });
   }
