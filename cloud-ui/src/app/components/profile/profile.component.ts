@@ -7,6 +7,10 @@ import { Component, OnInit } from '@angular/core';
 })
 export class ProfileComponent implements OnInit {
   
+  // Edit mode state
+  isEditingPersonalInfo = false;
+  isEditingProfile = false;
+  
   // Profile data
   profileData = {
     name: 'John Doe',
@@ -19,6 +23,9 @@ export class ProfileComponent implements OnInit {
     employeeId: 'EMP-2023-001',
     lastActive: '2 hours ago'
   };
+
+  // Editable profile data (copy for editing)
+  editableProfileData = { ...this.profileData };
 
   // Security settings
   securitySettings = {
@@ -96,8 +103,33 @@ export class ProfileComponent implements OnInit {
 
   // Action methods
   editProfile(): void {
-    console.log('Edit profile clicked');
-    // Implement edit profile functionality
+    this.isEditingProfile = true;
+    this.editableProfileData = { ...this.profileData };
+  }
+
+  editPersonalInfo(): void {
+    this.isEditingPersonalInfo = true;
+    this.editableProfileData = { ...this.profileData };
+  }
+
+  savePersonalInfo(): void {
+    // Update the profile data with edited values
+    this.profileData = { ...this.editableProfileData };
+    this.isEditingPersonalInfo = false;
+    console.log('Personal information saved:', this.profileData);
+  }
+
+  saveProfile(): void {
+    // Update the profile data with edited values
+    this.profileData = { ...this.editableProfileData };
+    this.isEditingProfile = false;
+    console.log('Profile saved:', this.profileData);
+  }
+
+  cancelEdit(): void {
+    this.isEditingPersonalInfo = false;
+    this.isEditingProfile = false;
+    this.editableProfileData = { ...this.profileData };
   }
 
   openSettings(): void {

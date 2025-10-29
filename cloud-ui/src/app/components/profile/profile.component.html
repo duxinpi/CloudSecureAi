@@ -39,8 +39,10 @@
 
   <!-- Profile Content -->
   <div class="profile-content">
-    <!-- Personal Information Card -->
-    <div class="profile-card">
+    <!-- Left Column -->
+    <div class="profile-left">
+      <!-- Personal Information Card -->
+      <div class="profile-card">
       <div class="card-header">
         <div class="header-icon">
           <i class="icon-user"></i>
@@ -49,9 +51,19 @@
           <h3>Personal Information</h3>
           <p>Manage your personal details and contact information</p>
         </div>
-        <button class="btn-icon">
-          <i class="icon-edit"></i>
-        </button>
+        <div class="header-actions" *ngIf="!isEditingPersonalInfo">
+          <button class="btn-icon btn-edit" (click)="editPersonalInfo()" title="Edit Personal Information">
+            <i class="icon-edit"></i>
+          </button>
+        </div>
+        <div class="header-actions" *ngIf="isEditingPersonalInfo">
+          <button class="btn-icon btn-save" (click)="savePersonalInfo()" title="Save Changes">
+            <i class="icon-check">✓</i>
+          </button>
+          <button class="btn-icon btn-cancel" (click)="cancelEdit()" title="Cancel">
+            <i class="icon-close">✕</i>
+          </button>
+        </div>
       </div>
       <div class="card-body">
         <div class="info-grid">
@@ -60,28 +72,36 @@
               <i class="icon-user"></i>
               Full Name
             </div>
-            <div class="info-value">{{ profileData.name }}</div>
+            <div class="info-value" *ngIf="!isEditingPersonalInfo">{{ profileData.name }}</div>
+            <input type="text" class="info-input" *ngIf="isEditingPersonalInfo" 
+                   [(ngModel)]="editableProfileData.name" placeholder="Enter full name">
           </div>
           <div class="info-item">
             <div class="info-label">
               <i class="icon-email"></i>
               Email Address
             </div>
-            <div class="info-value">{{ profileData.email }}</div>
+            <div class="info-value" *ngIf="!isEditingPersonalInfo">{{ profileData.email }}</div>
+            <input type="email" class="info-input" *ngIf="isEditingPersonalInfo" 
+                   [(ngModel)]="editableProfileData.email" placeholder="Enter email address">
           </div>
           <div class="info-item">
             <div class="info-label">
               <i class="icon-phone"></i>
               Phone Number
             </div>
-            <div class="info-value">{{ profileData.phone }}</div>
+            <div class="info-value" *ngIf="!isEditingPersonalInfo">{{ profileData.phone }}</div>
+            <input type="tel" class="info-input" *ngIf="isEditingPersonalInfo" 
+                   [(ngModel)]="editableProfileData.phone" placeholder="Enter phone number">
           </div>
           <div class="info-item">
             <div class="info-label">
               <i class="icon-location"></i>
               Location
             </div>
-            <div class="info-value">{{ profileData.location }}</div>
+            <div class="info-value" *ngIf="!isEditingPersonalInfo">{{ profileData.location }}</div>
+            <input type="text" class="info-input" *ngIf="isEditingPersonalInfo" 
+                   [(ngModel)]="editableProfileData.location" placeholder="Enter location">
           </div>
           <div class="info-item">
             <div class="info-label">
@@ -100,8 +120,11 @@
         </div>
       </div>
     </div>
+    </div>
 
-    <!-- Security Settings Card -->
+    <!-- Right Column -->
+    <div class="profile-right">
+      <!-- Security Settings Card -->
     <div class="profile-card">
       <div class="card-header">
         <div class="header-icon security">
@@ -281,6 +304,7 @@
           </div>
         </div>
       </div>
+    </div>
     </div>
   </div>
 </div>
