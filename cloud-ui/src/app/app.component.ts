@@ -24,6 +24,7 @@ export class AppComponent implements OnInit {
   title = 'could-secure-ai-ui';
   showLoginModal = false;
   showSignupModal = false;
+  showAboutModal = false;
   isAuthenticated = false;
   isCollapsed = false;
   errorMessage = '';
@@ -89,6 +90,7 @@ export class AppComponent implements OnInit {
   closeModal(event?: Event) {
     this.showLoginModal = false;
     this.showSignupModal = false;
+    this.showAboutModal = false;
     this.errorMessage = '';
   }
 
@@ -190,7 +192,6 @@ export class AppComponent implements OnInit {
   }
 
   showAbout() {
-    // Show about modal or navigate to about page
-    alert('About CouldSecureAI - Enterprise Cloud Security Platform');
+    this.showAboutModal = true;
   }
 }
