@@ -583,6 +583,8 @@
 .icon-edit::before { content: "✏"; }
 .icon-activity::before { content: "📊"; }
 .icon-login::before { content: "🔐"; }
+.icon-check::before { content: "✓"; }
+.icon-close::before { content: "✕"; }
 
 /* Responsive Design */
 @media (max-width: 768px) {

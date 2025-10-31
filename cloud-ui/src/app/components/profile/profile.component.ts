@@ -104,6 +104,7 @@ export class ProfileComponent implements OnInit {
   // Action methods
   editProfile(): void {
     this.isEditingProfile = true;
+    this.isEditingPersonalInfo = true;
     this.editableProfileData = { ...this.profileData };
   }
 
@@ -123,6 +124,7 @@ export class ProfileComponent implements OnInit {
     // Update the profile data with edited values
     this.profileData = { ...this.editableProfileData };
     this.isEditingProfile = false;
+    this.isEditingPersonalInfo = false;
     console.log('Profile saved:', this.profileData);
   }
 
