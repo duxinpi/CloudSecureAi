@@ -26,11 +26,19 @@
       </div>
     </div>
     <div class="profile-actions">
-      <button class="btn btn-outline" (click)="editProfile()">
+      <button class="btn btn-outline" *ngIf="!isEditingProfile" (click)="editProfile()">
         <i class="icon-edit"></i>
         Edit Profile
       </button>
-      <button class="btn btn-primary" (click)="openSettings()">
+      <button class="btn btn-primary" *ngIf="isEditingProfile" (click)="saveProfile()">
+        <i class="icon-check"></i>
+        Save Changes
+      </button>
+      <button class="btn btn-outline" *ngIf="isEditingProfile" (click)="cancelEdit()">
+        <i class="icon-close"></i>
+        Cancel
+      </button>
+      <button class="btn btn-primary" *ngIf="!isEditingProfile" (click)="openSettings()">
         <i class="icon-settings"></i>
         Settings
       </button>
@@ -58,10 +66,10 @@
         </div>
         <div class="header-actions" *ngIf="isEditingPersonalInfo">
           <button class="btn-icon btn-save" (click)="savePersonalInfo()" title="Save Changes">
-            <i class="icon-check">✓</i>
+            <i class="icon-check"></i>
           </button>
           <button class="btn-icon btn-cancel" (click)="cancelEdit()" title="Cancel">
-            <i class="icon-close">✕</i>
+            <i class="icon-close"></i>
           </button>
         </div>
       </div>
