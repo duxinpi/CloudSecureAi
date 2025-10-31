@@ -1150,3 +1150,117 @@
 
 /* Device Management Icons */
 .icon-device::before { content: '💻'; }
+
+/* About Modal Styles */
+.about-modal {
+  max-width: 600px;
+}
+
+.about-content {
+  text-align: center;
+}
+
+.about-logo {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.about-logo .logo {
+  height: 80px;
+  width: 80px;
+  margin-right: 0;
+}
+
+.about-subtitle {
+  color: #0066cc;
+  font-size: 20px;
+  font-weight: 600;
+  margin-bottom: 16px;
+}
+
+.about-description {
+  color: #495057;
+  line-height: 1.6;
+  margin-bottom: 24px;
+}
+
+.about-section {
+  text-align: left;
+  margin-top: 24px;
+  padding-top: 24px;
+  border-top: 1px solid #e9ecef;
+}
+
+.about-section h5 {
+  color: #00d4aa;
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 12px;
+}
+
+.about-section p {
+  color: #495057;
+  line-height: 1.6;
+  margin: 0;
+}
+
+.about-features,
+.about-tech {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.about-features li,
+.about-tech li {
+  color: #495057;
+  padding: 8px 0;
+  padding-left: 24px;
+  position: relative;
+  line-height: 1.6;
+}
+
+.about-features li::before {
+  content: '✓';
+  position: absolute;
+  left: 0;
+  color: #00d4aa;
+  font-weight: bold;
+}
+
+.about-tech li::before {
+  content: '•';
+  position: absolute;
+  left: 0;
+  color: #0066cc;
+  font-weight: bold;
+}
+
+.about-footer {
+  margin-top: 32px;
+  padding-top: 24px;
+  border-top: 2px solid #00d4aa;
+}
+
+.about-contact {
+  color: #495057;
+  line-height: 1.6;
+  margin-bottom: 12px;
+}
+
+.about-contact a {
+  color: #00d4aa;
+  text-decoration: none;
+}
+
+.about-contact a:hover {
+  color: #0066cc;
+  text-decoration: underline;
+}
+
+.about-copyright {
+  color: #6c757d;
+  font-size: 14px;
+  margin: 0;
+}

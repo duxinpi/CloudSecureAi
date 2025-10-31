@@ -394,3 +394,63 @@
     </form>
   </div>
 </div>
+
+<!-- About Modal -->
+<div class="modal-overlay" [class.active]="showAboutModal" (click)="closeModal($event)">
+  <div class="modal-content about-modal" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h3>About CouldSecureAI</h3>
+      <button class="close-btn" (click)="closeModal()">&times;</button>
+    </div>
+    <div class="about-content">
+      <div class="about-logo">
+        <img src="assets/logo.svg" alt="CouldSecureAI Logo" class="logo">
+      </div>
+      <h4 class="about-subtitle">Enterprise Cloud Security Platform</h4>
+      <p class="about-description">
+        CouldSecureAI is a comprehensive, non-profit platform designed to empower small and medium businesses 
+        with enterprise-level cloud resource management and security tools.
+      </p>
+      
+      <div class="about-section">
+        <h5>Our Mission</h5>
+        <p>
+          We believe that every business, regardless of size, should have access to powerful tools for managing 
+          and securing their cloud resources. Our mission is to provide free, comprehensive cloud security 
+          solutions that help businesses grow sustainably without the burden of high costs.
+        </p>
+      </div>
+
+      <div class="about-section">
+        <h5>Key Features</h5>
+        <ul class="about-features">
+          <li>Smart Data Protection across AWS, Azure, and Google Cloud</li>
+          <li>Unified Cloud Dashboard for all your cloud accounts</li>
+          <li>One-Click Security Scanning and vulnerability detection</li>
+          <li>Compliance Management for GDPR, SOC2, HIPAA, and more</li>
+          <li>AI-Powered Insights and Recommendations</li>
+          <li>Mobile Device Management</li>
+        </ul>
+      </div>
+
+      <div class="about-section">
+        <h5>Technical Details</h5>
+        <ul class="about-tech">
+          <li><strong>Version:</strong> 1.0.0</li>
+          <li><strong>License:</strong> Open Source</li>
+          <li><strong>Platform:</strong> Web-based (Angular Frontend, Spring Boot Backend)</li>
+          <li><strong>Security:</strong> Enterprise-grade encryption and authentication</li>
+        </ul>
+      </div>
+
+      <div class="about-footer">
+        <p class="about-contact">
+          <strong>Need Help?</strong> Visit our 
+          <a routerLink="/support" (click)="closeModal()">Support Center</a> or 
+          contact us at support@couldsecureai.org
+        </p>
+        <p class="about-copyright">&copy; 2022-2025 CouldSecureAI. All rights reserved.</p>
+      </div>
+    </div>
+  </div>
+</div>
