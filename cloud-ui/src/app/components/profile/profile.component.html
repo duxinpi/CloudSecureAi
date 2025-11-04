@@ -315,4 +315,38 @@
     </div>
     </div>
   </div>
+
+  <!-- Session Timeout Configuration Modal -->
+  <div class="modal-overlay" [class.active]="showSessionTimeoutModal" (click)="cancelSessionTimeoutConfig()">
+    <div class="modal-content session-timeout-modal" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h3>Configure Session Timeout</h3>
+        <button class="close-btn" (click)="cancelSessionTimeoutConfig()">&times;</button>
+      </div>
+      <div class="modal-body">
+        <p class="modal-description">
+          Set how long your session will remain active when you're not using the application. 
+          After this period of inactivity, you'll be automatically logged out for security.
+        </p>
+        <div class="timeout-options">
+          <div class="timeout-option" 
+               *ngFor="let option of sessionTimeoutOptions"
+               [class.selected]="selectedSessionTimeout === option.value"
+               (click)="selectedSessionTimeout = option.value">
+            <div class="option-content">
+              <span class="option-value">{{ option.value }}</span>
+              <span class="option-detail">{{ option.minutes }} minutes</span>
+            </div>
+            <div class="option-check" *ngIf="selectedSessionTimeout === option.value">
+              <i class="icon-check"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-outline" (click)="cancelSessionTimeoutConfig()">Cancel</button>
+        <button class="btn btn-primary" (click)="saveSessionTimeout()">Save Changes</button>
+      </div>
+    </div>
+  </div>
 </div>
