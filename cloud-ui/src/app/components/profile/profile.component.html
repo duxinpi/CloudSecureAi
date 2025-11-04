@@ -349,4 +349,124 @@
       </div>
     </div>
   </div>
+
+  <!-- Change Password Modal -->
+  <div class="modal-overlay" [class.active]="showChangePasswordModal" (click)="closeChangePasswordModal()">
+    <div class="modal-content change-password-modal" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h3>Change Password</h3>
+        <button class="close-btn" (click)="closeChangePasswordModal()">&times;</button>
+      </div>
+      <div class="alert alert-danger" *ngIf="passwordChangeError">{{ passwordChangeError }}</div>
+      <form class="change-password-form" (ngSubmit)="onSubmitChangePassword()">
+        <div class="form-group">
+          <label for="currentPassword">Current Password</label>
+          <input 
+            type="password" 
+            id="currentPassword" 
+            [(ngModel)]="changePasswordData.currentPassword"
+            name="currentPassword"
+            placeholder="Enter your current password"
+            required
+            autocomplete="current-password">
+        </div>
+        
+        <div class="form-group">
+          <label for="newPassword">New Password</label>
+          <input 
+            type="password" 
+            id="newPassword" 
+            [(ngModel)]="changePasswordData.newPassword"
+            (input)="checkPasswordStrength(changePasswordData.newPassword)"
+            name="newPassword"
+            placeholder="Enter new password"
+            required
+            autocomplete="new-password">
+          
+          <!-- Password Strength Indicator -->
+          <div class="password-strength" *ngIf="changePasswordData.newPassword">
+            <div class="strength-bar">
+              <div class="strength-fill" 
+                   [class.weak]="passwordStrengthText === 'Weak'"
+                   [class.medium]="passwordStrengthText === 'Medium'"
+                   [class.strong]="passwordStrengthText === 'Strong' || passwordStrengthText === 'Very Strong'"
+                   [style.width.%]="getStrengthWidth()">
+              </div>
+            </div>
+            <div class="strength-text" [class]="'strength-' + passwordStrengthText.toLowerCase().replace(' ', '-')">
+              {{ passwordStrengthText }}
+            </div>
+            
+            <!-- Password Requirements -->
+            <div class="password-requirements">
+              <div class="requirement" [class.met]="passwordStrength.length">
+                <i class="icon-check" *ngIf="passwordStrength.length">✓</i>
+                <span class="check-placeholder" *ngIf="!passwordStrength.length">○</span>
+                At least 12 characters (max 128)
+              </div>
+              <div class="requirement" [class.met]="passwordStrength.uppercase">
+                <i class="icon-check" *ngIf="passwordStrength.uppercase">✓</i>
+                <span class="check-placeholder" *ngIf="!passwordStrength.uppercase">○</span>
+                One uppercase letter
+              </div>
+              <div class="requirement" [class.met]="passwordStrength.lowercase">
+                <i class="icon-check" *ngIf="passwordStrength.lowercase">✓</i>
+                <span class="check-placeholder" *ngIf="!passwordStrength.lowercase">○</span>
+                One lowercase letter
+              </div>
+              <div class="requirement" [class.met]="passwordStrength.number">
+                <i class="icon-check" *ngIf="passwordStrength.number">✓</i>
+                <span class="check-placeholder" *ngIf="!passwordStrength.number">○</span>
+                One number
+              </div>
+              <div class="requirement" [class.met]="passwordStrength.special">
+                <i class="icon-check" *ngIf="passwordStrength.special">✓</i>
+                <span class="check-placeholder" *ngIf="!passwordStrength.special">○</span>
+                One special character (!@#$%^&*...)
+              </div>
+              <div class="requirement" [class.met]="passwordStrength.notCommon">
+                <i class="icon-check" *ngIf="passwordStrength.notCommon">✓</i>
+                <span class="check-placeholder" *ngIf="!passwordStrength.notCommon">○</span>
+                Not a common/weak password
+              </div>
+              <div class="requirement" [class.met]="passwordStrength.notSequential">
+                <i class="icon-check" *ngIf="passwordStrength.notSequential">✓</i>
+                <span class="check-placeholder" *ngIf="!passwordStrength.notSequential">○</span>
+                No sequential or repeated characters
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="form-group">
+          <label for="confirmPassword">Confirm New Password</label>
+          <input 
+            type="password" 
+            id="confirmPassword" 
+            [(ngModel)]="changePasswordData.confirmPassword"
+            name="confirmPassword"
+            placeholder="Confirm new password"
+            required
+            autocomplete="new-password">
+          <div class="password-match" *ngIf="changePasswordData.confirmPassword">
+            <span class="match-text" 
+                  [class.match]="changePasswordData.newPassword === changePasswordData.confirmPassword"
+                  [class.mismatch]="changePasswordData.newPassword !== changePasswordData.confirmPassword && changePasswordData.confirmPassword.length > 0">
+              <i class="icon-check" *ngIf="changePasswordData.newPassword === changePasswordData.confirmPassword">✓</i>
+              <span *ngIf="changePasswordData.newPassword === changePasswordData.confirmPassword">Passwords match</span>
+              <span *ngIf="changePasswordData.newPassword !== changePasswordData.confirmPassword && changePasswordData.confirmPassword.length > 0">Passwords do not match</span>
+            </span>
+          </div>
+        </div>
+        
+        <div class="form-actions">
+          <button type="button" class="btn btn-outline" (click)="closeChangePasswordModal()" [disabled]="isChangingPassword">Cancel</button>
+          <button type="submit" class="btn btn-primary" [disabled]="!isPasswordStrong() || changePasswordData.newPassword !== changePasswordData.confirmPassword || isChangingPassword">
+            <span *ngIf="!isChangingPassword">Change Password</span>
+            <span *ngIf="isChangingPassword">Changing Password...</span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
 </div>

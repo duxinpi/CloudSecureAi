@@ -1,4 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
+import { AuthService } from '../../services/auth.service';
+import { ChangePasswordRequest, ChangePasswordResponse } from '../../models/auth.model';
 
 @Component({
   selector: 'app-profile',
@@ -11,7 +14,34 @@ export class ProfileComponent implements OnInit {
   isEditingPersonalInfo = false;
   isEditingProfile = false;
   showSessionTimeoutModal = false;
+  showChangePasswordModal = false;
   
+  // Password change security
+  passwordChangeAttempts = 0;
+  maxPasswordChangeAttempts = 5;
+  isChangingPassword = false;
+  lastPasswordChangeAttempt: number | null = null;
+  passwordChangeError = '';
+  
+  // Password change data
+  changePasswordData = {
+    currentPassword: '',
+    newPassword: '',
+    confirmPassword: ''
+  };
+  
+  passwordStrength = {
+    length: false,
+    uppercase: false,
+    lowercase: false,
+    number: false,
+    special: false,
+    notCommon: false,
+    notSequential: false
+  };
+  
+  passwordStrengthText = '';
+
   // Profile data
   profileData = {
     name: 'John Doe',
@@ -92,7 +122,10 @@ export class ProfileComponent implements OnInit {
     }
   ];
 
-  constructor() { }
+  constructor(
+    private authService: AuthService,
+    private router: Router
+  ) { }
 
   ngOnInit(): void {
     // Initialize component
@@ -154,8 +187,277 @@ export class ProfileComponent implements OnInit {
   }
 
   changePassword(): void {
-    console.log('Change password clicked');
-    // Implement change password functionality
+    // Check if user is locked out
+    if (this.passwordChangeAttempts >= this.maxPasswordChangeAttempts) {
+      const lockoutDuration = 15 * 60 * 1000; // 15 minutes
+      if (this.lastPasswordChangeAttempt && 
+          Date.now() - this.lastPasswordChangeAttempt < lockoutDuration) {
+        const remainingMinutes = Math.ceil((lockoutDuration - (Date.now() - this.lastPasswordChangeAttempt)) / 60000);
+        this.passwordChangeError = `Too many failed attempts. Please try again in ${remainingMinutes} minute(s).`;
+        this.showChangePasswordModal = true;
+        return;
+      } else {
+        // Reset attempts after lockout period
+        this.passwordChangeAttempts = 0;
+        this.lastPasswordChangeAttempt = null;
+      }
+    }
+    
+    this.showChangePasswordModal = true;
+    this.passwordChangeError = '';
+    this.resetPasswordForm();
+  }
+
+  resetPasswordForm(): void {
+    // Clear all password fields securely
+    this.changePasswordData = {
+      currentPassword: '',
+      newPassword: '',
+      confirmPassword: ''
+    };
+    this.passwordStrength = {
+      length: false,
+      uppercase: false,
+      lowercase: false,
+      number: false,
+      special: false,
+      notCommon: false,
+      notSequential: false
+    };
+    this.passwordStrengthText = '';
+    this.isChangingPassword = false;
+  }
+
+  closeChangePasswordModal(): void {
+    this.showChangePasswordModal = false;
+    this.passwordChangeError = '';
+    this.resetPasswordForm();
+  }
+
+  // Common weak passwords to check against
+  private commonPasswords = [
+    'password', 'password123', '12345678', '123456789', '1234567890',
+    'qwerty', 'qwerty123', 'abc123', 'admin', 'admin123',
+    'letmein', 'welcome', 'monkey', 'dragon', 'master',
+    'sunshine', 'password1', 'princess', 'football', 'iloveyou'
+  ];
+
+  // Check if password contains sequential characters
+  private hasSequentialChars(password: string): boolean {
+    const sequences = ['abcdefghijklmnopqrstuvwxyz', '01234567890', 'qwertyuiopasdfghjklzxcvbnm'];
+    const lowerPassword = password.toLowerCase();
+    
+    for (let i = 0; i < lowerPassword.length - 2; i++) {
+      for (const seq of sequences) {
+        const substr = lowerPassword.substring(i, i + 3);
+        if (seq.includes(substr) || seq.split('').reverse().join('').includes(substr)) {
+          return true;
+        }
+      }
+    }
+    return false;
+  }
+
+  // Check if password is common/weak
+  private isCommonPassword(password: string): boolean {
+    const lowerPassword = password.toLowerCase();
+    return this.commonPasswords.some(common => 
+      lowerPassword.includes(common) || common.includes(lowerPassword)
+    );
+  }
+
+  // Check if password contains repeated characters
+  private hasRepeatedChars(password: string): boolean {
+    for (let i = 0; i < password.length - 2; i++) {
+      if (password[i] === password[i + 1] && password[i] === password[i + 2]) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  checkPasswordStrength(password: string): void {
+    if (!password) {
+      this.passwordStrength = {
+        length: false,
+        uppercase: false,
+        lowercase: false,
+        number: false,
+        special: false,
+        notCommon: false,
+        notSequential: false
+      };
+      this.passwordStrengthText = '';
+      return;
+    }
+
+    const minLength = 12;
+    const maxLength = 128;
+    
+    this.passwordStrength = {
+      length: password.length >= minLength && password.length <= maxLength,
+      uppercase: /[A-Z]/.test(password),
+      lowercase: /[a-z]/.test(password),
+      number: /[0-9]/.test(password),
+      special: /[!@#$%^&*(),.?":{}|<>_+\-=\[\]\\;'\/~`|]/.test(password),
+      notCommon: !this.isCommonPassword(password),
+      notSequential: !this.hasSequentialChars(password) && !this.hasRepeatedChars(password)
+    };
+
+    const strengthCount = Object.values(this.passwordStrength).filter(v => v).length;
+    
+    if (strengthCount === 0) {
+      this.passwordStrengthText = '';
+    } else if (strengthCount <= 3) {
+      this.passwordStrengthText = 'Weak';
+    } else if (strengthCount <= 5) {
+      this.passwordStrengthText = 'Medium';
+    } else if (strengthCount === 6) {
+      this.passwordStrengthText = 'Strong';
+    } else {
+      this.passwordStrengthText = 'Very Strong';
+    }
+  }
+
+  isPasswordStrong(): boolean {
+    return Object.values(this.passwordStrength).every(v => v);
+  }
+
+  getStrengthWidth(): number {
+    const strengthCount = Object.values(this.passwordStrength).filter(v => v).length;
+    const maxStrength = Object.keys(this.passwordStrength).length;
+    return (strengthCount / maxStrength) * 100;
+  }
+
+  onSubmitChangePassword(): void {
+    if (this.isChangingPassword) {
+      return; // Prevent double submission
+    }
+
+    this.passwordChangeError = '';
+
+    // Check lockout status
+    if (this.passwordChangeAttempts >= this.maxPasswordChangeAttempts) {
+      const lockoutDuration = 15 * 60 * 1000;
+      if (this.lastPasswordChangeAttempt && 
+          Date.now() - this.lastPasswordChangeAttempt < lockoutDuration) {
+        const remainingMinutes = Math.ceil((lockoutDuration - (Date.now() - this.lastPasswordChangeAttempt)) / 60000);
+        this.passwordChangeError = `Too many failed attempts. Please try again in ${remainingMinutes} minute(s).`;
+        return;
+      } else {
+        this.passwordChangeAttempts = 0;
+        this.lastPasswordChangeAttempt = null;
+      }
+    }
+
+    // Validation
+    if (!this.changePasswordData.currentPassword) {
+      this.passwordChangeError = 'Current password is required';
+      return;
+    }
+
+    if (!this.changePasswordData.newPassword) {
+      this.passwordChangeError = 'New password is required';
+      return;
+    }
+
+    if (this.changePasswordData.newPassword.length < 12) {
+      this.passwordChangeError = 'New password must be at least 12 characters long';
+      this.passwordChangeAttempts++;
+      this.lastPasswordChangeAttempt = Date.now();
+      return;
+    }
+
+    if (this.changePasswordData.newPassword.length > 128) {
+      this.passwordChangeError = 'New password must be no more than 128 characters';
+      return;
+    }
+
+    if (!this.isPasswordStrong()) {
+      this.passwordChangeError = 'New password does not meet security requirements';
+      this.passwordChangeAttempts++;
+      this.lastPasswordChangeAttempt = Date.now();
+      return;
+    }
+
+    if (this.changePasswordData.newPassword !== this.changePasswordData.confirmPassword) {
+      this.passwordChangeError = 'New password and confirmation do not match';
+      return;
+    }
+
+    if (this.changePasswordData.currentPassword === this.changePasswordData.newPassword) {
+      this.passwordChangeError = 'New password must be different from your current password';
+      this.passwordChangeAttempts++;
+      this.lastPasswordChangeAttempt = Date.now();
+      return;
+    }
+
+    // Check if password contains username or email
+    const currentUser = this.authService.currentUserValue;
+    if (currentUser) {
+      const username = currentUser.username?.toLowerCase() || '';
+      const email = currentUser.email?.toLowerCase() || '';
+      const newPasswordLower = this.changePasswordData.newPassword.toLowerCase();
+      
+      if (username && newPasswordLower.includes(username)) {
+        this.passwordChangeError = 'New password cannot contain your username';
+        this.passwordChangeAttempts++;
+        this.lastPasswordChangeAttempt = Date.now();
+        return;
+      }
+      
+      if (email) {
+        const emailParts = email.split('@');
+        if (emailParts[0] && newPasswordLower.includes(emailParts[0])) {
+          this.passwordChangeError = 'New password cannot contain your email';
+          this.passwordChangeAttempts++;
+          this.lastPasswordChangeAttempt = Date.now();
+          return;
+        }
+      }
+    }
+
+    // All validations passed
+    this.isChangingPassword = true;
+    this.passwordChangeError = '';
+
+    const changePasswordRequest: ChangePasswordRequest = {
+      currentPassword: this.changePasswordData.currentPassword,
+      newPassword: this.changePasswordData.newPassword
+    };
+
+    // IMPORTANT: Do NOT log passwords - only log generic operation status
+    this.authService.changePassword(changePasswordRequest).subscribe({
+      next: (response: ChangePasswordResponse) => {
+        this.isChangingPassword = false;
+        this.passwordChangeAttempts = 0;
+        this.lastPasswordChangeAttempt = null;
+        
+        // Clear sensitive data immediately
+        this.resetPasswordForm();
+        this.closeChangePasswordModal();
+        
+        // Update last password change time
+        this.securitySettings.lastPasswordChange = 'Just now';
+        
+        alert('Password changed successfully! Please login again.');
+        // Force logout for security
+        this.authService.logout();
+        this.router.navigate(['/']);
+      },
+      error: (error: any) => {
+        this.isChangingPassword = false;
+        this.passwordChangeAttempts++;
+        this.lastPasswordChangeAttempt = Date.now();
+        
+        // Generic error message - do NOT expose specific validation details
+        const errorMsg = error.error?.message || 'Failed to change password. Please verify your current password and try again.';
+        this.passwordChangeError = errorMsg;
+        
+        // Clear current password field for security
+        this.changePasswordData.currentPassword = '';
+      }
+    });
   }
 
   configureSessionTimeout(): void {

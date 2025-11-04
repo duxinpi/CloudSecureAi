@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, BehaviorSubject } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { LoginRequest, RegisterRequest, AuthResponse, User } from '../models/auth.model';
+import { LoginRequest, RegisterRequest, AuthResponse, User, ChangePasswordRequest, ChangePasswordResponse } from '../models/auth.model';
 
 @Injectable({
   providedIn: 'root'
@@ -95,6 +95,18 @@ export class AuthService {
   isAdmin(): boolean {
     const user = this.currentUserValue;
     return user?.role === 'ADMIN';
+  }
+
+  changePassword(changePasswordRequest: ChangePasswordRequest): Observable<ChangePasswordResponse> {
+    const token = localStorage.getItem('token');
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+    
+    // IMPORTANT: Never log passwords or sensitive data
+    return this.http.post<ChangePasswordResponse>(
+      `${this.apiUrl}/user/change-password`,
+      changePasswordRequest,
+      { headers }
+    );
   }
 }
 
