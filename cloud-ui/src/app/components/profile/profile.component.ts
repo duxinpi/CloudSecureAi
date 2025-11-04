@@ -10,6 +10,7 @@ export class ProfileComponent implements OnInit {
   // Edit mode state
   isEditingPersonalInfo = false;
   isEditingProfile = false;
+  showSessionTimeoutModal = false;
   
   // Profile data
   profileData = {
@@ -35,6 +36,19 @@ export class ProfileComponent implements OnInit {
     sessionTimeout: '8 hours',
     activeSessions: 2
   };
+
+  // Session timeout configuration
+  sessionTimeoutOptions = [
+    { value: '15 minutes', minutes: 15 },
+    { value: '30 minutes', minutes: 30 },
+    { value: '1 hour', minutes: 60 },
+    { value: '2 hours', minutes: 120 },
+    { value: '4 hours', minutes: 240 },
+    { value: '8 hours', minutes: 480 },
+    { value: '12 hours', minutes: 720 },
+    { value: '24 hours', minutes: 1440 }
+  ];
+  selectedSessionTimeout: string = '8 hours';
 
   // Preferences
   preferences = {
@@ -145,8 +159,20 @@ export class ProfileComponent implements OnInit {
   }
 
   configureSessionTimeout(): void {
-    console.log('Configure session timeout clicked');
-    // Implement session timeout configuration
+    this.selectedSessionTimeout = this.securitySettings.sessionTimeout;
+    this.showSessionTimeoutModal = true;
+  }
+
+  saveSessionTimeout(): void {
+    this.securitySettings.sessionTimeout = this.selectedSessionTimeout;
+    this.showSessionTimeoutModal = false;
+    console.log('Session timeout updated to:', this.securitySettings.sessionTimeout);
+    // TODO: Call API to save session timeout to backend
+  }
+
+  cancelSessionTimeoutConfig(): void {
+    this.showSessionTimeoutModal = false;
+    this.selectedSessionTimeout = this.securitySettings.sessionTimeout;
   }
 
   viewActiveSessions(): void {
