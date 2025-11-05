@@ -469,4 +469,92 @@
       </form>
     </div>
   </div>
+
+  <!-- Active Sessions Modal -->
+  <div class="modal-overlay" [class.active]="showActiveSessionsModal" (click)="closeActiveSessionsModal()">
+    <div class="modal-content active-sessions-modal" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h3>Active Sessions</h3>
+        <button class="close-btn" (click)="closeActiveSessionsModal()">&times;</button>
+      </div>
+      <div class="modal-body">
+        <p class="modal-description">
+          Review and manage all devices where you're currently logged in. You can terminate individual sessions or all other sessions for enhanced security.
+        </p>
+        
+        <div class="sessions-list" *ngIf="activeSessions.length > 0">
+          <div class="session-item" *ngFor="let session of activeSessions" [class.current-session]="session.isCurrent">
+            <div class="session-info">
+              <div class="session-header">
+                <div class="session-device">
+                  <i class="icon-device"></i>
+                  <div>
+                    <h4>{{ session.device }}</h4>
+                    <span class="session-badge current" *ngIf="session.isCurrent">Current Session</span>
+                  </div>
+                </div>
+                <button 
+                  class="btn-terminate" 
+                  *ngIf="!session.isCurrent"
+                  (click)="terminateSession(session.id)"
+                  title="Terminate this session">
+                  <i class="icon-close"></i>
+                  Terminate
+                </button>
+              </div>
+              
+              <div class="session-details">
+                <div class="detail-row">
+                  <span class="detail-label">
+                    <i class="icon-browser"></i>
+                    Browser:
+                  </span>
+                  <span class="detail-value">{{ session.browser }}</span>
+                </div>
+                <div class="detail-row">
+                  <span class="detail-label">
+                    <i class="icon-location"></i>
+                    Location:
+                  </span>
+                  <span class="detail-value">{{ session.location }}</span>
+                </div>
+                <div class="detail-row">
+                  <span class="detail-label">
+                    <i class="icon-ip"></i>
+                    IP Address:
+                  </span>
+                  <span class="detail-value">{{ session.ipAddress }}</span>
+                </div>
+                <div class="detail-row">
+                  <span class="detail-label">
+                    <i class="icon-time"></i>
+                    Last Active:
+                  </span>
+                  <span class="detail-value">{{ session.lastActive }}</span>
+                </div>
+                <div class="detail-row">
+                  <span class="detail-label">
+                    <i class="icon-calendar"></i>
+                    Login Time:
+                  </span>
+                  <span class="detail-value">{{ session.loginTime }}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="no-sessions" *ngIf="activeSessions.length === 0">
+          <i class="icon-device"></i>
+          <p>No active sessions found.</p>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-outline" (click)="terminateAllOtherSessions()" [disabled]="!hasOtherSessions()">
+          Terminate All Other Sessions
+        </button>
+        <button class="btn btn-primary" (click)="closeActiveSessionsModal()">Close</button>
+      </div>
+    </div>
+  </div>
 </div>
