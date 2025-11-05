@@ -81,6 +81,44 @@ public class UserController {
         return ResponseEntity.ok("Admin Board.");
     }
     
+    @PostMapping("/change-password")
+    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
+    public ResponseEntity<?> changePassword(@RequestBody ChangePasswordRequest request) {
+        User currentUser = authService.getCurrentUser();
+        if (currentUser == null) {
+            return ResponseEntity.badRequest().body(new ChangePasswordResponse(false, "User not found"));
+        }
+
+        // Validate request
+        if (request.getCurrentPassword() == null || request.getCurrentPassword().trim().isEmpty()) {
+            return ResponseEntity.badRequest().body(new ChangePasswordResponse(false, "Current password is required"));
+        }
+
+        if (request.getNewPassword() == null || request.getNewPassword().trim().isEmpty()) {
+            return ResponseEntity.badRequest().body(new ChangePasswordResponse(false, "New password is required"));
+        }
+
+        // Get fresh user from database to ensure we have the latest password hash
+        User user = authService.getUserById(currentUser.getId());
+        if (user == null) {
+            return ResponseEntity.badRequest().body(new ChangePasswordResponse(false, "User not found"));
+        }
+
+        // Change password - IMPORTANT: No password logging
+        String errorMessage = authService.changePassword(
+            request.getCurrentPassword(),
+            request.getNewPassword(),
+            user
+        );
+
+        if (errorMessage != null) {
+            return ResponseEntity.badRequest().body(new ChangePasswordResponse(false, errorMessage));
+        }
+
+        // IMPORTANT: Do not log success with any password details
+        return ResponseEntity.ok(new ChangePasswordResponse(true, "Password changed successfully"));
+    }
+    
     // Inner class for user profile update request
     public static class UserProfileUpdateRequest {
         private String firstName;
@@ -128,5 +166,36 @@ public class UserController {
         public String getLastName() { return lastName; }
         public String getRole() { return role; }
         public java.time.LocalDateTime getCreatedAt() { return createdAt; }
+    }
+
+    // Inner class for change password request
+    public static class ChangePasswordRequest {
+        private String currentPassword;
+        private String newPassword;
+
+        public ChangePasswordRequest() {}
+
+        public String getCurrentPassword() { return currentPassword; }
+        public void setCurrentPassword(String currentPassword) { this.currentPassword = currentPassword; }
+
+        public String getNewPassword() { return newPassword; }
+        public void setNewPassword(String newPassword) { this.newPassword = newPassword; }
+    }
+
+    // Inner class for change password response
+    public static class ChangePasswordResponse {
+        private boolean success;
+        private String message;
+
+        public ChangePasswordResponse(boolean success, String message) {
+            this.success = success;
+            this.message = message;
+        }
+
+        public boolean isSuccess() { return success; }
+        public void setSuccess(boolean success) { this.success = success; }
+
+        public String getMessage() { return message; }
+        public void setMessage(String message) { this.message = message; }
     }
 }
