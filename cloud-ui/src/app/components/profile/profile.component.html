@@ -470,6 +470,41 @@
     </div>
   </div>
 
+  <!-- Language Selection Modal -->
+  <div class="modal-overlay" [class.active]="showLanguageModal" (click)="cancelLanguageChange()">
+    <div class="modal-content language-modal" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h3>Select Language & Region</h3>
+        <button class="close-btn" (click)="cancelLanguageChange()">&times;</button>
+      </div>
+      <div class="modal-body">
+        <p class="modal-description">
+          Choose the language and regional format used across the CloudSecure AI interface.
+        </p>
+
+        <div class="language-options">
+          <div 
+            class="language-option" 
+            *ngFor="let option of languageOptions" 
+            [class.selected]="selectedLanguage === option.value"
+            (click)="selectLanguage(option.value)">
+            <div class="language-info">
+              <h4>{{ option.label }}</h4>
+              <p>{{ option.description }}</p>
+            </div>
+            <div class="language-check">
+              <i class="icon-check" *ngIf="selectedLanguage === option.value"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-outline" (click)="cancelLanguageChange()">Cancel</button>
+        <button class="btn btn-primary" (click)="saveLanguageSelection()" [disabled]="!isLanguageSelectionChanged()">Save Changes</button>
+      </div>
+    </div>
+  </div>
+
   <!-- Active Sessions Modal -->
   <div class="modal-overlay" [class.active]="showActiveSessionsModal" (click)="closeActiveSessionsModal()">
     <div class="modal-content active-sessions-modal" (click)="$event.stopPropagation()">
