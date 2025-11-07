@@ -15,6 +15,7 @@ export class ProfileComponent implements OnInit {
   isEditingProfile = false;
   showSessionTimeoutModal = false;
   showChangePasswordModal = false;
+  showActiveSessionsModal = false;
   
   // Password change security
   passwordChangeAttempts = 0;
@@ -119,6 +120,30 @@ export class ProfileComponent implements OnInit {
       description: 'Password successfully updated',
       time: '30 days ago',
       icon: 'password'
+    }
+  ];
+
+  // Active sessions data
+  activeSessions = [
+    {
+      id: '1',
+      device: 'MacBook Pro',
+      browser: 'Chrome 120.0',
+      location: 'San Francisco, CA',
+      ipAddress: '192.168.1.100',
+      lastActive: '2 minutes ago',
+      isCurrent: true,
+      loginTime: '2 hours ago'
+    },
+    {
+      id: '2',
+      device: 'iPhone 15 Pro',
+      browser: 'Safari Mobile',
+      location: 'San Francisco, CA',
+      ipAddress: '192.168.1.105',
+      lastActive: '1 hour ago',
+      isCurrent: false,
+      loginTime: '1 day ago'
     }
   ];
 
@@ -478,8 +503,60 @@ export class ProfileComponent implements OnInit {
   }
 
   viewActiveSessions(): void {
-    console.log('View active sessions clicked');
-    // Implement view active sessions functionality
+    this.showActiveSessionsModal = true;
+    // TODO: Fetch active sessions from backend API
+  }
+
+  closeActiveSessionsModal(): void {
+    this.showActiveSessionsModal = false;
+  }
+
+  terminateSession(sessionId: string): void {
+    if (confirm('Are you sure you want to terminate this session? You will be logged out from that device.')) {
+      // Find the session
+      const session = this.activeSessions.find(s => s.id === sessionId);
+      if (session) {
+        // If terminating current session, logout completely
+        if (session.isCurrent) {
+          alert('You cannot terminate your current session. Please use the logout button instead.');
+          return;
+        }
+        
+        // Remove session from list
+        this.activeSessions = this.activeSessions.filter(s => s.id !== sessionId);
+        this.securitySettings.activeSessions = this.activeSessions.length;
+        
+        // TODO: Call backend API to terminate session
+        console.log('Terminating session:', sessionId);
+        
+        // Show success message
+        alert('Session terminated successfully.');
+      }
+    }
+  }
+
+  terminateAllOtherSessions(): void {
+    const otherSessions = this.activeSessions.filter(s => !s.isCurrent);
+    if (otherSessions.length === 0) {
+      alert('No other active sessions to terminate.');
+      return;
+    }
+    
+    if (confirm(`Are you sure you want to terminate all other sessions (${otherSessions.length})? You will be logged out from all other devices.`)) {
+      // Keep only current session
+      this.activeSessions = this.activeSessions.filter(s => s.isCurrent);
+      this.securitySettings.activeSessions = this.activeSessions.length;
+      
+      // TODO: Call backend API to terminate all other sessions
+      console.log('Terminating all other sessions');
+      
+      // Show success message
+      alert(`Successfully terminated ${otherSessions.length} session(s).`);
+    }
+  }
+
+  hasOtherSessions(): boolean {
+    return this.activeSessions.filter(s => !s.isCurrent).length > 0;
   }
 
   changeLanguage(): void {
