@@ -16,6 +16,7 @@ export class ProfileComponent implements OnInit {
   showSessionTimeoutModal = false;
   showChangePasswordModal = false;
   showActiveSessionsModal = false;
+  showLanguageModal = false;
   
   // Password change security
   passwordChangeAttempts = 0;
@@ -91,6 +92,17 @@ export class ProfileComponent implements OnInit {
     dashboardLayout: 'Compact view with all widgets'
   };
 
+  languageOptions = [
+    { label: 'English (United States)', value: 'en-US', description: 'English language with United States locale settings' },
+    { label: 'English (United Kingdom)', value: 'en-GB', description: 'English language with United Kingdom locale settings' },
+    { label: 'French (France)', value: 'fr-FR', description: 'Langue française avec paramètres régionaux français' },
+    { label: 'German (Germany)', value: 'de-DE', description: 'Deutsche Sprache mit deutschem Regionalschema' },
+    { label: 'Chinese (Simplified, China)', value: 'zh-CN', description: '简体中文（中国区域设置）' },
+    { label: 'Spanish (Latin America)', value: 'es-419', description: 'Español con configuración regional latinoamericana' }
+  ];
+
+  selectedLanguage = '';
+
   // Recent activity
   recentActivity = [
     {
@@ -154,6 +166,7 @@ export class ProfileComponent implements OnInit {
 
   ngOnInit(): void {
     // Initialize component
+    this.selectedLanguage = this.mapLanguageLabelToValue(this.preferences.language);
   }
 
   // Toggle methods for interactive elements
@@ -560,8 +573,40 @@ export class ProfileComponent implements OnInit {
   }
 
   changeLanguage(): void {
-    console.log('Change language clicked');
-    // Implement language change functionality
+    this.selectedLanguage = this.mapLanguageLabelToValue(this.preferences.language);
+    this.showLanguageModal = true;
+  }
+
+  selectLanguage(languageValue: string): void {
+    this.selectedLanguage = languageValue;
+  }
+
+  saveLanguageSelection(): void {
+    const selectedLabel = this.mapLanguageValueToLabel(this.selectedLanguage);
+    this.preferences.language = selectedLabel;
+    console.log('Language updated to:', { label: selectedLabel, value: this.selectedLanguage });
+    // TODO: Persist language preference to backend or user settings service
+    this.showLanguageModal = false;
+  }
+
+  cancelLanguageChange(): void {
+    this.showLanguageModal = false;
+    this.selectedLanguage = this.mapLanguageLabelToValue(this.preferences.language);
+  }
+
+  isLanguageSelectionChanged(): boolean {
+    const currentValue = this.mapLanguageLabelToValue(this.preferences.language);
+    return currentValue !== this.selectedLanguage;
+  }
+
+  private mapLanguageLabelToValue(label: string): string {
+    const option = this.languageOptions.find(lang => lang.label === label);
+    return option ? option.value : this.languageOptions[0].value;
+  }
+
+  private mapLanguageValueToLabel(value: string): string {
+    const option = this.languageOptions.find(lang => lang.value === value);
+    return option ? option.label : this.languageOptions[0].label;
   }
 
   changeTimezone(): void {
