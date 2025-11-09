@@ -505,6 +505,41 @@
     </div>
   </div>
 
+  <!-- Timezone Selection Modal -->
+  <div class="modal-overlay" [class.active]="showTimezoneModal" (click)="cancelTimezoneChange()">
+    <div class="modal-content language-modal timezone-modal" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h3>Select Timezone</h3>
+        <button class="close-btn" (click)="cancelTimezoneChange()">&times;</button>
+      </div>
+      <div class="modal-body">
+        <p class="modal-description">
+          Choose the timezone that matches your preferred working hours.
+        </p>
+
+        <div class="language-options">
+          <div
+            class="language-option"
+            *ngFor="let option of timezoneOptions"
+            [class.selected]="selectedTimezone === option.value"
+            (click)="selectTimezone(option.value)">
+            <div class="language-info">
+              <h4>{{ option.label }}</h4>
+              <p>{{ option.description }}</p>
+            </div>
+            <div class="language-check">
+              <i class="icon-check" *ngIf="selectedTimezone === option.value"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-outline" (click)="cancelTimezoneChange()">Cancel</button>
+        <button class="btn btn-primary" (click)="saveTimezoneSelection()">Save Changes</button>
+      </div>
+    </div>
+  </div>
+
   <!-- Active Sessions Modal -->
   <div class="modal-overlay" [class.active]="showActiveSessionsModal" (click)="closeActiveSessionsModal()">
     <div class="modal-content active-sessions-modal" (click)="$event.stopPropagation()">
