@@ -487,6 +487,10 @@
   max-width: 800px;
 }
 
+.modal-content.confirmation {
+  max-width: 420px;
+}
+
 .modal-header {
   padding: 24px;
   border-bottom: 2px solid #00d4aa;
@@ -518,6 +522,34 @@
 
 .modal-body {
   padding: 24px;
+}
+
+.confirmation-body {
+  text-align: center;
+  padding: 32px 24px;
+}
+
+.confirmation-icon {
+  width: 72px;
+  height: 72px;
+  margin: 0 auto 16px auto;
+  border-radius: 36px;
+  background: #fff3e0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #f57c00;
+  font-size: 32px;
+}
+
+.confirmation-body p {
+  color: #444;
+  line-height: 1.6;
+  margin: 0;
+}
+
+.confirmation-body strong {
+  color: #1e3c72;
 }
 
 .modal-footer {

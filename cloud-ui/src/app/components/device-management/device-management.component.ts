@@ -47,6 +47,8 @@ export class DeviceManagementComponent implements OnInit {
   selectedDevice: Device | null = null;
   showDeviceModal = false;
   showDetailsModal = false;
+  showUnenrollModal = false;
+  devicePendingUnenroll: Device | null = null;
   isEditingDevice = false;
   editingDevice: Device | null = null;
   deviceForm: FormGroup;
@@ -358,13 +360,52 @@ export class DeviceManagementComponent implements OnInit {
     }
   }
 
-  unenrollDevice(deviceId: number) {
-    if (confirm('Are you sure you want to unenroll this device? This will remove all management policies.')) {
-      console.log('Unenrolling device:', deviceId);
-      // TODO: Implement device unenrollment
-      this.devices = this.devices.filter(d => d.id !== deviceId);
-      this.applyFilters();
-      this.calculateStatistics();
+  openUnenrollModal(device: Device, event?: Event) {
+    event?.stopPropagation();
+    this.devicePendingUnenroll = device;
+    this.showUnenrollModal = true;
+  }
+
+  cancelUnenroll() {
+    this.showUnenrollModal = false;
+    this.devicePendingUnenroll = null;
+  }
+
+  confirmUnenroll() {
+    if (!this.devicePendingUnenroll) {
+      return;
+    }
+
+    const device = this.devicePendingUnenroll;
+    this.showUnenrollModal = false;
+    this.devicePendingUnenroll = null;
+
+    this.performUnenroll(device);
+  }
+
+  private performUnenroll(device: Device) {
+    const endpoint = `${this.apiUrl}/devices/${device.id}/unenroll`;
+
+    this.http.post<Device>(endpoint, {}).subscribe({
+      next: () => {
+        this.removeDeviceFromCollections(device.id);
+        alert(`${device.deviceName} has been unenrolled.`);
+      },
+      error: (error) => {
+        console.error('Error unenrolling device:', error);
+        this.removeDeviceFromCollections(device.id);
+        alert(`${device.deviceName} has been unenrolled locally. Please verify backend connectivity.`);
+      }
+    });
+  }
+
+  private removeDeviceFromCollections(deviceId: number) {
+    this.devices = this.devices.filter(existingDevice => existingDevice.id !== deviceId);
+    this.applyFilters();
+    this.calculateStatistics();
+
+    if (this.selectedDevice?.id === deviceId) {
+      this.closeDetailsModal();
     }
   }
 
