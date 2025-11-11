@@ -197,7 +197,7 @@
           <i class="icon-alert"></i>
           Remote Wipe
         </button>
-        <button class="btn btn-sm btn-danger" (click)="unenrollDevice(device.id)">
+        <button class="btn btn-sm btn-danger" (click)="openUnenrollModal(device, $event)">
           <i class="icon-delete"></i>
           Unenroll
         </button>
@@ -423,6 +423,32 @@
       <div class="modal-footer">
         <button class="btn btn-outline" (click)="closeDetailsModal()">Close</button>
         <button class="btn btn-primary" (click)="editSelectedDevice()" *ngIf="selectedDevice">Edit Device</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Unenroll Confirmation Modal -->
+  <div class="modal-overlay" *ngIf="showUnenrollModal" (click)="cancelUnenroll()">
+    <div class="modal-content confirmation" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h3>Unenroll Device</h3>
+        <button class="close-btn" (click)="cancelUnenroll()">
+          <i class="icon-close"></i>
+        </button>
+      </div>
+      <div class="modal-body confirmation-body">
+        <div class="confirmation-icon">
+          <i class="icon-warning"></i>
+        </div>
+        <p>
+          Are you sure you want to unenroll
+          <strong>{{ devicePendingUnenroll?.deviceName }}</strong>? This will remove all management
+          policies for the device and disable remote wipe capabilities.
+        </p>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-outline" (click)="cancelUnenroll()">Cancel</button>
+        <button class="btn btn-danger" (click)="confirmUnenroll()">Unenroll</button>
       </div>
     </div>
   </div>
