@@ -17,6 +17,7 @@ export class ProfileComponent implements OnInit {
   showChangePasswordModal = false;
   showActiveSessionsModal = false;
   showLanguageModal = false;
+  showTimezoneModal = false;
   
   // Password change security
   passwordChangeAttempts = 0;
@@ -102,6 +103,50 @@ export class ProfileComponent implements OnInit {
   ];
 
   selectedLanguage = '';
+  selectedTimezone = '';
+
+  timezoneOptions = [
+    {
+      value: 'America/Los_Angeles',
+      label: 'Pacific Standard Time (PST)',
+      description: 'Los Angeles, Seattle, Vancouver'
+    },
+    {
+      value: 'America/Denver',
+      label: 'Mountain Standard Time (MST)',
+      description: 'Denver, Calgary, Phoenix'
+    },
+    {
+      value: 'America/Chicago',
+      label: 'Central Standard Time (CST)',
+      description: 'Chicago, Dallas, Mexico City'
+    },
+    {
+      value: 'America/New_York',
+      label: 'Eastern Standard Time (EST)',
+      description: 'New York, Toronto, Bogotá'
+    },
+    {
+      value: 'Europe/London',
+      label: 'Greenwich Mean Time (GMT)',
+      description: 'London, Dublin, Lisbon'
+    },
+    {
+      value: 'Europe/Paris',
+      label: 'Central European Time (CET)',
+      description: 'Paris, Berlin, Rome'
+    },
+    {
+      value: 'Asia/Shanghai',
+      label: 'China Standard Time (CST)',
+      description: 'Beijing, Shanghai, Hong Kong'
+    },
+    {
+      value: 'Asia/Tokyo',
+      label: 'Japan Standard Time (JST)',
+      description: 'Tokyo, Osaka, Sapporo'
+    }
+  ];
 
   // Recent activity
   recentActivity = [
@@ -167,6 +212,7 @@ export class ProfileComponent implements OnInit {
   ngOnInit(): void {
     // Initialize component
     this.selectedLanguage = this.mapLanguageLabelToValue(this.preferences.language);
+    this.selectedTimezone = this.mapTimezoneLabelToValue(this.preferences.timezone);
   }
 
   // Toggle methods for interactive elements
@@ -610,8 +656,27 @@ export class ProfileComponent implements OnInit {
   }
 
   changeTimezone(): void {
-    console.log('Change timezone clicked');
-    // Implement timezone change functionality
+    this.selectedTimezone = this.mapTimezoneLabelToValue(this.preferences.timezone);
+    this.showTimezoneModal = true;
+  }
+
+  selectTimezone(timezoneValue: string): void {
+    this.selectedTimezone = timezoneValue;
+  }
+
+  saveTimezoneSelection(): void {
+    const selectedOption = this.timezoneOptions.find(option => option.value === this.selectedTimezone);
+    if (selectedOption) {
+      this.preferences.timezone = selectedOption.label;
+      console.log('Timezone updated to:', selectedOption);
+      // TODO: Persist timezone preference to backend or user settings service
+    }
+    this.showTimezoneModal = false;
+  }
+
+  cancelTimezoneChange(): void {
+    this.showTimezoneModal = false;
+    this.selectedTimezone = this.mapTimezoneLabelToValue(this.preferences.timezone);
   }
 
   customizeDashboard(): void {
@@ -627,5 +692,15 @@ export class ProfileComponent implements OnInit {
   // Utility method to get user initials
   getInitials(name: string): string {
     return name.split(' ').map(n => n[0]).join('').toUpperCase();
+  }
+
+  private mapTimezoneLabelToValue(label: string): string {
+    const option = this.timezoneOptions.find(tz => tz.label === label);
+    return option ? option.value : this.timezoneOptions[0].value;
+  }
+
+  private mapTimezoneValueToLabel(value: string): string {
+    const option = this.timezoneOptions.find(tz => tz.value === value);
+    return option ? option.label : this.timezoneOptions[0].label;
   }
 }
