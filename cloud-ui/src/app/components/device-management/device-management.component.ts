@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
+import { finalize } from 'rxjs/operators';
 
 interface Device {
   id: number;
@@ -49,9 +50,17 @@ export class DeviceManagementComponent implements OnInit {
   showDetailsModal = false;
   showUnenrollModal = false;
   devicePendingUnenroll: Device | null = null;
+  isSyncingDevices = false;
+  isRunningComplianceScan = false;
   isEditingDevice = false;
   editingDevice: Device | null = null;
   deviceForm: FormGroup;
+  actionModal = {
+    visible: false,
+    title: '',
+    message: '',
+    status: 'info' as 'success' | 'error' | 'info'
+  };
   
   // Statistics
   enrolledDevices = 0;
@@ -389,12 +398,20 @@ export class DeviceManagementComponent implements OnInit {
     this.http.post<Device>(endpoint, {}).subscribe({
       next: () => {
         this.removeDeviceFromCollections(device.id);
-        alert(`${device.deviceName} has been unenrolled.`);
+        this.openActionModal(
+          'Device Unenrolled',
+          `${device.deviceName} has been unenrolled successfully.`,
+          'success'
+        );
       },
       error: (error) => {
         console.error('Error unenrolling device:', error);
         this.removeDeviceFromCollections(device.id);
-        alert(`${device.deviceName} has been unenrolled locally. Please verify backend connectivity.`);
+        this.openActionModal(
+          'Unenroll Completed Locally',
+          `${device.deviceName} has been unenrolled locally. Please verify backend connectivity.`,
+          'info'
+        );
       }
     });
   }
@@ -407,12 +424,6 @@ export class DeviceManagementComponent implements OnInit {
     if (this.selectedDevice?.id === deviceId) {
       this.closeDetailsModal();
     }
-  }
-
-  runComplianceScan() {
-    console.log('Running compliance scan...');
-    // TODO: Implement compliance scan
-    alert('Compliance scan initiated. Results will be available shortly.');
   }
 
   viewDeviceDetails(device: Device) {
@@ -530,10 +541,78 @@ export class DeviceManagementComponent implements OnInit {
     this.loadDevices();
   }
 
-  runDeviceScan() {
-    // Simulate device scan
-    console.log('Running device scan...');
-    // In a real implementation, this would call the backend API to scan for new devices
-    alert('Device scan initiated. This may take a few minutes to complete.');
+  syncDevices() {
+    if (this.isSyncingDevices) {
+      return;
+    }
+
+    this.isSyncingDevices = true;
+
+    this.http.post(`${this.apiUrl}/devices/sync`, {}).pipe(
+      finalize(() => {
+        this.isSyncingDevices = false;
+      })
+    ).subscribe({
+      next: () => {
+        this.loadDevices();
+        this.openActionModal(
+          'Device Sync Started',
+          'Device synchronization has been initiated. The list will refresh with the latest information.',
+          'success'
+        );
+      },
+      error: (error) => {
+        console.error('Error syncing devices:', error);
+        this.openActionModal(
+          'Unable to Sync Devices',
+          'We could not start a sync right now. Showing the most recent data available.',
+          'error'
+        );
+      }
+    });
+  }
+
+  runComplianceScan() {
+    if (this.isRunningComplianceScan) {
+      return;
+    }
+
+    this.isRunningComplianceScan = true;
+
+    this.http.post(`${this.apiUrl}/devices/compliance-scan`, {}).pipe(
+      finalize(() => {
+        this.isRunningComplianceScan = false;
+      })
+    ).subscribe({
+      next: () => {
+        this.openActionModal(
+          'Compliance Scan Started',
+          'Compliance scan started successfully. Devices will update with new compliance results shortly.',
+          'success'
+        );
+        this.loadDevices();
+      },
+      error: (error) => {
+        console.error('Error running compliance scan:', error);
+        this.openActionModal(
+          'Compliance Scan Failed',
+          'Unable to start a compliance scan right now. Please try again later.',
+          'error'
+        );
+      }
+    });
+  }
+
+  closeActionModal() {
+    this.actionModal.visible = false;
+  }
+
+  private openActionModal(title: string, message: string, status: 'success' | 'error' | 'info' = 'info') {
+    this.actionModal = {
+      visible: true,
+      title,
+      message,
+      status
+    };
   }
 }

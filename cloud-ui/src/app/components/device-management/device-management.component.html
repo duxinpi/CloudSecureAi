@@ -10,13 +10,23 @@
           <i class="icon-plus"></i>
           Enroll Device
         </button>
-        <button class="btn btn-outline" (click)="refreshDevices()">
-          <i class="icon-refresh"></i>
-          Sync Devices
+        <button class="btn btn-outline" (click)="syncDevices()" [disabled]="isSyncingDevices">
+          <ng-container *ngIf="isSyncingDevices; else syncIcon">
+            <span class="btn-spinner"></span>
+          </ng-container>
+          <ng-template #syncIcon>
+            <i class="icon-refresh"></i>
+          </ng-template>
+          <span>{{ isSyncingDevices ? 'Syncing...' : 'Sync Devices' }}</span>
         </button>
-        <button class="btn btn-outline" (click)="runComplianceScan()">
-          <i class="icon-scan"></i>
-          Compliance Check
+        <button class="btn btn-outline" (click)="runComplianceScan()" [disabled]="isRunningComplianceScan">
+          <ng-container *ngIf="isRunningComplianceScan; else complianceIcon">
+            <span class="btn-spinner"></span>
+          </ng-container>
+          <ng-template #complianceIcon>
+            <i class="icon-scan"></i>
+          </ng-template>
+          <span>{{ isRunningComplianceScan ? 'Running...' : 'Compliance Check' }}</span>
         </button>
       </div>
     </div>
@@ -437,8 +447,12 @@
         </button>
       </div>
       <div class="modal-body confirmation-body">
-        <div class="confirmation-icon">
-          <i class="icon-warning"></i>
+        <div class="confirmation-illustration">
+          <span class="bubble bubble-primary"></span>
+          <span class="bubble bubble-accent"></span>
+          <div class="illustration-icon">
+            <i class="icon-device"></i>
+          </div>
         </div>
         <p>
           Are you sure you want to unenroll
@@ -449,6 +463,37 @@
       <div class="modal-footer">
         <button class="btn btn-outline" (click)="cancelUnenroll()">Cancel</button>
         <button class="btn btn-danger" (click)="confirmUnenroll()">Unenroll</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Action Feedback Modal -->
+  <div class="modal-overlay" *ngIf="actionModal.visible" (click)="closeActionModal()">
+    <div class="modal-content status" [ngClass]="actionModal.status" (click)="$event.stopPropagation()">
+      <div class="modal-header action-header">
+        <div class="status-illustration" [ngClass]="actionModal.status">
+          <span class="status-orbit"></span>
+          <span class="status-glow"></span>
+          <div class="status-emblem">
+            <i
+              [ngClass]="{
+                'icon-check': actionModal.status === 'success',
+                'icon-alert': actionModal.status === 'error',
+                'icon-info': actionModal.status === 'info'
+              }"
+            ></i>
+          </div>
+        </div>
+        <button class="close-btn" (click)="closeActionModal()">
+          <i class="icon-close"></i>
+        </button>
+      </div>
+      <div class="modal-body status-body">
+        <h3>{{ actionModal.title }}</h3>
+        <p>{{ actionModal.message }}</p>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-primary" (click)="closeActionModal()">Got it</button>
       </div>
     </div>
   </div>
