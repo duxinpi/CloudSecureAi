@@ -5,6 +5,35 @@
   margin-bottom: 16px;
 }
 
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.export-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px;
+  border: none;
+  border-radius: 6px;
+  background: linear-gradient(135deg, #00d4aa 0%, #00a8cc 100%);
+  color: #fff;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.export-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 14px rgba(0, 168, 204, 0.25);
+}
+
+.export-btn i {
+  font-size: 14px;
+}
+
 .back-link {
   color: #3f51b5;
   text-decoration: none;

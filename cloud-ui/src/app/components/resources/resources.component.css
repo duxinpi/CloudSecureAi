@@ -436,6 +436,16 @@
   flex-direction: column;
 }
 
+.log-viewer-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(17, 24, 39, 0.35);
+  backdrop-filter: blur(2px);
+  z-index: 999;
+  display: flex;
+  justify-content: flex-end;
+}
+
 .panel-header,
 .viewer-header {
   padding: 20px;
