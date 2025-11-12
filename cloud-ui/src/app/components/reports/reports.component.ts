@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Inject, OnInit, Renderer2 } from '@angular/core';
+import { DOCUMENT } from '@angular/common';
 
 interface SummaryCard {
   id: string;
@@ -57,7 +58,10 @@ export class ReportsComponent implements OnInit {
   pieChartData: any = {};
   barChartData: any = {};
 
-  constructor() {}
+  constructor(
+    private renderer: Renderer2,
+    @Inject(DOCUMENT) private document: Document
+  ) {}
 
   ngOnInit() {
     this.loadSummaryCards();
@@ -258,8 +262,84 @@ export class ReportsComponent implements OnInit {
   }
 
   exportReport() {
-    console.log('Exporting security report...');
-    // Implement export functionality
+    const timestamp = new Date();
+
+    const formattedDate = timestamp.toLocaleDateString();
+    const formattedTime = timestamp.toLocaleTimeString();
+
+    const summaryLines = this.summaryCards.map(card => {
+      return `- ${card.title}: ${card.value} (${card.subtitle}, trend ${card.trendValue})`;
+    });
+
+    const providerLines = this.cloudProviders.map(provider => {
+      return [
+        `• ${provider.name} (${provider.status.toUpperCase()})`,
+        `  Accounts: ${provider.accounts}`,
+        `  Issues: ${provider.issues}`,
+        `  Compliance: ${provider.compliance}%`,
+        `  Last Scan: ${provider.lastScan}`,
+        `  Resources: ${provider.details.resources}`,
+        `  Vulnerabilities: ${provider.details.vulnerabilities}`,
+        `  Monthly Cost: $${provider.details.cost.toFixed(2)}`,
+        `  Regions: ${provider.details.region}`
+      ].join('\n');
+    });
+
+    const vulnerabilityLines = this.vulnerabilityData.map(item => {
+      return `- ${item.severity}: ${item.count}`;
+    });
+
+    const resourceLines = this.resourceData.map(item => {
+      return `- ${item.status}: ${item.count}`;
+    });
+
+    const reportSections = [
+      'CloudSecureAI Security Report',
+      '=============================',
+      `Generated: ${formattedDate} ${formattedTime}`,
+      '',
+      'Summary Overview',
+      '----------------',
+      ...summaryLines,
+      '',
+      'Cloud Provider Details',
+      '----------------------',
+      ...providerLines,
+      '',
+      'Vulnerabilities by Severity',
+      '---------------------------',
+      ...vulnerabilityLines,
+      '',
+      'Resource Security Distribution',
+      '------------------------------',
+      ...resourceLines,
+      '',
+      'End of report.'
+    ];
+
+    const blob = new Blob([reportSections.join('\n')], {
+      type: 'text/plain;charset=utf-8'
+    });
+
+    if ((navigator as any).msSaveOrOpenBlob) {
+      (navigator as any).msSaveOrOpenBlob(blob, 'security-report.txt');
+      return;
+    }
+
+    const url = window.URL.createObjectURL(blob);
+
+    const anchor = this.renderer.createElement('a');
+    anchor.href = url;
+    anchor.download = `security-report-${timestamp.getFullYear()}-${(timestamp.getMonth() + 1)
+      .toString()
+      .padStart(2, '0')}-${timestamp.getDate().toString().padStart(2, '0')}.txt`;
+    anchor.style.display = 'none';
+
+    this.renderer.appendChild(this.document.body, anchor);
+    anchor.click();
+    this.renderer.removeChild(this.document.body, anchor);
+
+    window.URL.revokeObjectURL(url);
   }
 
 
