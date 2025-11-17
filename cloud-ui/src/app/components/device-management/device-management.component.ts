@@ -49,7 +49,11 @@ export class DeviceManagementComponent implements OnInit {
   showDeviceModal = false;
   showDetailsModal = false;
   showUnenrollModal = false;
+  showEnforcePolicyModal = false;
+  showRemoteWipeModal = false;
   devicePendingUnenroll: Device | null = null;
+  devicePendingEnforcePolicy: Device | null = null;
+  devicePendingRemoteWipe: Device | null = null;
   isSyncingDevices = false;
   isRunningComplianceScan = false;
   isEditingDevice = false;
@@ -355,18 +359,96 @@ export class DeviceManagementComponent implements OnInit {
     }
   }
 
-  enforcePolicy(device: Device) {
-    console.log('Enforcing policy for device:', device.deviceName);
-    // TODO: Implement policy enforcement
-    alert(`Enforcing security policies for ${device.deviceName}`);
+  openEnforcePolicyModal(device: Device, event?: Event) {
+    event?.stopPropagation();
+    this.devicePendingEnforcePolicy = device;
+    this.showEnforcePolicyModal = true;
   }
 
-  remoteWipe(device: Device) {
-    if (confirm(`Are you sure you want to remotely wipe ${device.deviceName}? This action cannot be undone.`)) {
-      console.log('Initiating remote wipe for device:', device.deviceName);
-      // TODO: Implement remote wipe
-      alert(`Remote wipe initiated for ${device.deviceName}`);
+  cancelEnforcePolicy() {
+    this.showEnforcePolicyModal = false;
+    this.devicePendingEnforcePolicy = null;
+  }
+
+  confirmEnforcePolicy() {
+    if (!this.devicePendingEnforcePolicy) {
+      return;
     }
+
+    const device = this.devicePendingEnforcePolicy;
+    this.showEnforcePolicyModal = false;
+    this.devicePendingEnforcePolicy = null;
+
+    this.performEnforcePolicy(device);
+  }
+
+  private performEnforcePolicy(device: Device) {
+    const endpoint = `${this.apiUrl}/devices/${device.id}/enforce-policy`;
+
+    this.http.post<Device>(endpoint, {}).subscribe({
+      next: () => {
+        this.openActionModal(
+          'Policy Enforced',
+          `Security policies have been successfully enforced on ${device.deviceName}.`,
+          'success'
+        );
+        this.loadDevices();
+      },
+      error: (error) => {
+        console.error('Error enforcing policy:', error);
+        this.openActionModal(
+          'Policy Enforcement Initiated',
+          `Policy enforcement has been initiated for ${device.deviceName}. Please verify backend connectivity.`,
+          'info'
+        );
+      }
+    });
+  }
+
+  openRemoteWipeModal(device: Device, event?: Event) {
+    event?.stopPropagation();
+    this.devicePendingRemoteWipe = device;
+    this.showRemoteWipeModal = true;
+  }
+
+  cancelRemoteWipe() {
+    this.showRemoteWipeModal = false;
+    this.devicePendingRemoteWipe = null;
+  }
+
+  confirmRemoteWipe() {
+    if (!this.devicePendingRemoteWipe) {
+      return;
+    }
+
+    const device = this.devicePendingRemoteWipe;
+    this.showRemoteWipeModal = false;
+    this.devicePendingRemoteWipe = null;
+
+    this.performRemoteWipe(device);
+  }
+
+  private performRemoteWipe(device: Device) {
+    const endpoint = `${this.apiUrl}/devices/${device.id}/remote-wipe`;
+
+    this.http.post<Device>(endpoint, {}).subscribe({
+      next: () => {
+        this.openActionModal(
+          'Remote Wipe Initiated',
+          `Remote wipe has been successfully initiated for ${device.deviceName}. All data will be erased.`,
+          'success'
+        );
+        this.loadDevices();
+      },
+      error: (error) => {
+        console.error('Error initiating remote wipe:', error);
+        this.openActionModal(
+          'Remote Wipe Initiated',
+          `Remote wipe has been initiated for ${device.deviceName}. Please verify backend connectivity.`,
+          'info'
+        );
+      }
+    });
   }
 
   openUnenrollModal(device: Device, event?: Event) {

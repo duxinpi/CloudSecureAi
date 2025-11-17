@@ -199,11 +199,11 @@
           <i class="icon-view"></i>
           Details
         </button>
-        <button class="btn btn-sm btn-outline" (click)="enforcePolicy(device)">
+        <button class="btn btn-sm btn-outline" (click)="openEnforcePolicyModal(device, $event)">
           <i class="icon-shield"></i>
           Enforce Policy
         </button>
-        <button class="btn btn-sm btn-warning" (click)="remoteWipe(device)" *ngIf="device.remoteWipeEnabled">
+        <button class="btn btn-sm btn-warning" (click)="openRemoteWipeModal(device, $event)" *ngIf="device.remoteWipeEnabled">
           <i class="icon-alert"></i>
           Remote Wipe
         </button>
@@ -447,13 +447,6 @@
         </button>
       </div>
       <div class="modal-body confirmation-body">
-        <div class="confirmation-illustration">
-          <span class="bubble bubble-primary"></span>
-          <span class="bubble bubble-accent"></span>
-          <div class="illustration-icon">
-            <i class="icon-device"></i>
-          </div>
-        </div>
         <p>
           Are you sure you want to unenroll
           <strong>{{ devicePendingUnenroll?.deviceName }}</strong>? This will remove all management
@@ -467,23 +460,56 @@
     </div>
   </div>
 
+  <!-- Enforce Policy Confirmation Modal -->
+  <div class="modal-overlay" *ngIf="showEnforcePolicyModal" (click)="cancelEnforcePolicy()">
+    <div class="modal-content confirmation" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h3>Enforce Policy</h3>
+        <button class="close-btn" (click)="cancelEnforcePolicy()">
+          <i class="icon-close"></i>
+        </button>
+      </div>
+      <div class="modal-body confirmation-body">
+        <p>
+          Are you sure you want to enforce security policies on
+          <strong>{{ devicePendingEnforcePolicy?.deviceName }}</strong>? This will apply all configured
+          security policies, including encryption, screen lock, and app restrictions.
+        </p>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-outline" (click)="cancelEnforcePolicy()">Cancel</button>
+        <button class="btn btn-primary" (click)="confirmEnforcePolicy()">Enforce Policy</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Remote Wipe Confirmation Modal -->
+  <div class="modal-overlay" *ngIf="showRemoteWipeModal" (click)="cancelRemoteWipe()">
+    <div class="modal-content confirmation" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h3>Remote Wipe Device</h3>
+        <button class="close-btn" (click)="cancelRemoteWipe()">
+          <i class="icon-close"></i>
+        </button>
+      </div>
+      <div class="modal-body confirmation-body">
+        <p>
+          <strong>Warning:</strong> Are you sure you want to remotely wipe
+          <strong>{{ devicePendingRemoteWipe?.deviceName }}</strong>? This action will permanently erase
+          all data on the device and cannot be undone. The device will be reset to factory settings.
+        </p>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-outline" (click)="cancelRemoteWipe()">Cancel</button>
+        <button class="btn btn-danger" (click)="confirmRemoteWipe()">Wipe Device</button>
+      </div>
+    </div>
+  </div>
+
   <!-- Action Feedback Modal -->
   <div class="modal-overlay" *ngIf="actionModal.visible" (click)="closeActionModal()">
     <div class="modal-content status" [ngClass]="actionModal.status" (click)="$event.stopPropagation()">
       <div class="modal-header action-header">
-        <div class="status-illustration" [ngClass]="actionModal.status">
-          <span class="status-orbit"></span>
-          <span class="status-glow"></span>
-          <div class="status-emblem">
-            <i
-              [ngClass]="{
-                'icon-check': actionModal.status === 'success',
-                'icon-alert': actionModal.status === 'error',
-                'icon-info': actionModal.status === 'info'
-              }"
-            ></i>
-          </div>
-        </div>
         <button class="close-btn" (click)="closeActionModal()">
           <i class="icon-close"></i>
         </button>
