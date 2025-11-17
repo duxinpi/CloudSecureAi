@@ -317,31 +317,33 @@
   </div>
 
   <!-- Log Viewer -->
-  <div class="log-viewer" *ngIf="showLogViewer">
-    <div class="viewer-header">
-      <h3>🧭 Log Viewer</h3>
-      <div class="viewer-controls">
-        <select [(ngModel)]="selectedLogLevel">
-          <option value="">All Levels</option>
-          <option value="error">Error</option>
-          <option value="warning">Warning</option>
-          <option value="info">Info</option>
-          <option value="debug">Debug</option>
-        </select>
-        <button class="btn btn-sm" (click)="refreshLogs()">
-          <i class="icon-refresh"></i>
-          Refresh
-        </button>
-        <button class="close-btn" (click)="toggleLogViewer()">
-          <i class="icon-close"></i>
-        </button>
+  <div class="log-viewer-overlay" *ngIf="showLogViewer" (click)="closeLogViewerOnBackdrop()">
+    <div class="log-viewer" (click)="$event.stopPropagation()">
+      <div class="viewer-header">
+        <h3>🧭 Log Viewer</h3>
+        <div class="viewer-controls">
+          <select [(ngModel)]="selectedLogLevel">
+            <option value="">All Levels</option>
+            <option value="error">Error</option>
+            <option value="warning">Warning</option>
+            <option value="info">Info</option>
+            <option value="debug">Debug</option>
+          </select>
+          <button class="btn btn-sm" (click)="refreshLogs()">
+            <i class="icon-refresh"></i>
+            Refresh
+          </button>
+          <button class="close-btn" (click)="toggleLogViewer()">
+            <i class="icon-close"></i>
+          </button>
+        </div>
       </div>
-    </div>
-    <div class="log-content">
-      <div class="log-entry" *ngFor="let log of filteredLogs" [class]="'log-' + log.level">
-        <span class="log-time">{{ log.timestamp | date:'HH:mm:ss' }}</span>
-        <span class="log-level">{{ log.level.toUpperCase() }}</span>
-        <span class="log-message">{{ log.message }}</span>
+      <div class="log-content">
+        <div class="log-entry" *ngFor="let log of filteredLogs" [class]="'log-' + log.level">
+          <span class="log-time">{{ log.timestamp | date:'HH:mm:ss' }}</span>
+          <span class="log-level">{{ log.level.toUpperCase() }}</span>
+          <span class="log-message">{{ log.message }}</span>
+        </div>
       </div>
     </div>
   </div>

@@ -397,6 +397,12 @@ export class ResourcesComponent implements OnInit {
     this.showLogViewer = !this.showLogViewer;
   }
 
+  closeLogViewerOnBackdrop() {
+    if (this.showLogViewer) {
+      this.showLogViewer = false;
+    }
+  }
+
   acknowledgeAlert(alert: Alert) {
     this.activeAlerts = this.activeAlerts.filter(a => a.id !== alert.id);
   }
