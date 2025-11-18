@@ -12,6 +12,47 @@ interface ComplianceCheck {
   nextScan: Date;
   resourceCount: number;
   severity: 'LOW' | 'MEDIUM' | 'HIGH' | 'CRITICAL';
+  details?: ComplianceCheckDetails;
+}
+
+interface ComplianceCheckDetails {
+  requirement: string;
+  controlId: string;
+  resources: CheckResource[];
+  findings: Finding[];
+  remediation: RemediationStep[];
+  evidence: Evidence[];
+  complianceScore: number;
+  lastUpdated: Date;
+}
+
+interface CheckResource {
+  id: string;
+  name: string;
+  type: string;
+  status: string;
+  region: string;
+}
+
+interface Finding {
+  id: string;
+  description: string;
+  severity: 'LOW' | 'MEDIUM' | 'HIGH' | 'CRITICAL';
+  status: string;
+  resourceId: string;
+}
+
+interface RemediationStep {
+  step: number;
+  description: string;
+  action: string;
+  estimatedTime: string;
+}
+
+interface Evidence {
+  type: string;
+  description: string;
+  timestamp: Date;
 }
 
 interface FrameworkScore {
@@ -71,6 +112,8 @@ export class ComplianceComponent implements OnInit {
   // Modal properties
   showScheduleModal = false;
   showAIGuidance = false;
+  showDetailsModal = false;
+  selectedCheck: ComplianceCheck | null = null;
   scanFrequency = 'weekly';
   scanTime = '02:00';
   availableFrameworks = ['GDPR', 'SOC 2', 'ISO 27001', 'HIPAA', 'CIS Benchmarks'];
@@ -432,7 +475,237 @@ export class ComplianceComponent implements OnInit {
   }
 
   viewCheckDetails(check: ComplianceCheck) {
-    console.log('Viewing check details:', check);
+    // Load detailed information for the check
+    if (!check.details) {
+      check.details = this.loadCheckDetails(check);
+    }
+    this.selectedCheck = check;
+    this.showDetailsModal = true;
+  }
+
+  closeDetailsModal() {
+    this.showDetailsModal = false;
+    this.selectedCheck = null;
+  }
+
+  loadCheckDetails(check: ComplianceCheck): ComplianceCheckDetails {
+    // Mock detailed data - in production, this would come from the backend
+    const mockDetails: { [key: string]: ComplianceCheckDetails } = {
+      'gdpr-001': {
+        requirement: 'Data Subject Rights (Article 15-22)',
+        controlId: 'GDPR-ART-15-22',
+        resources: [
+          { id: 'res-1', name: 'User Data API', type: 'API Gateway', status: 'COMPLIANT', region: 'us-east-1' },
+          { id: 'res-2', name: 'Customer Database', type: 'RDS', status: 'COMPLIANT', region: 'us-east-1' },
+          { id: 'res-3', name: 'Data Export Service', type: 'Lambda', status: 'WARNING', region: 'us-west-2' }
+        ],
+        findings: [
+          {
+            id: 'find-1',
+            description: 'Data export functionality implemented correctly',
+            severity: 'LOW',
+            status: 'RESOLVED',
+            resourceId: 'res-1'
+          },
+          {
+            id: 'find-2',
+            description: 'Data deletion process needs optimization',
+            severity: 'MEDIUM',
+            status: 'OPEN',
+            resourceId: 'res-3'
+          }
+        ],
+        remediation: [
+          {
+            step: 1,
+            description: 'Review data deletion workflow',
+            action: 'Optimize Lambda function for bulk deletion',
+            estimatedTime: '2 hours'
+          },
+          {
+            step: 2,
+            description: 'Add automated testing',
+            action: 'Create unit tests for data subject rights endpoints',
+            estimatedTime: '4 hours'
+          }
+        ],
+        evidence: [
+          {
+            type: 'Configuration',
+            description: 'API endpoints configured for data subject access requests',
+            timestamp: new Date(Date.now() - 24 * 60 * 60 * 1000)
+          },
+          {
+            type: 'Log',
+            description: 'Data export logs show successful processing',
+            timestamp: new Date(Date.now() - 12 * 60 * 60 * 1000)
+          }
+        ],
+        complianceScore: 92,
+        lastUpdated: new Date(Date.now() - 2 * 60 * 60 * 1000)
+      },
+      'soc2-001': {
+        requirement: 'Access Control Monitoring (CC6.1)',
+        controlId: 'SOC2-CC6.1',
+        resources: [
+          { id: 'res-4', name: 'IAM Service', type: 'IAM', status: 'COMPLIANT', region: 'global' },
+          { id: 'res-5', name: 'CloudTrail Logs', type: 'CloudTrail', status: 'COMPLIANT', region: 'us-east-1' },
+          { id: 'res-6', name: 'Access Review Dashboard', type: 'CloudWatch', status: 'COMPLIANT', region: 'us-east-1' }
+        ],
+        findings: [
+          {
+            id: 'find-3',
+            description: 'All access attempts are logged and monitored',
+            severity: 'LOW',
+            status: 'RESOLVED',
+            resourceId: 'res-5'
+          }
+        ],
+        remediation: [],
+        evidence: [
+          {
+            type: 'Log',
+            description: 'CloudTrail logs show comprehensive access monitoring',
+            timestamp: new Date(Date.now() - 1 * 60 * 60 * 1000)
+          }
+        ],
+        complianceScore: 98,
+        lastUpdated: new Date(Date.now() - 1 * 60 * 60 * 1000)
+      },
+      'iso-001': {
+        requirement: 'Information Security Management System (A.5)',
+        controlId: 'ISO27001-A.5',
+        resources: [
+          { id: 'res-7', name: 'Security Policy DB', type: 'DynamoDB', status: 'WARNING', region: 'us-east-1' },
+          { id: 'res-8', name: 'Documentation Service', type: 'S3', status: 'COMPLIANT', region: 'us-west-2' }
+        ],
+        findings: [
+          {
+            id: 'find-4',
+            description: 'Security policy documentation needs update',
+            severity: 'MEDIUM',
+            status: 'OPEN',
+            resourceId: 'res-7'
+          }
+        ],
+        remediation: [
+          {
+            step: 1,
+            description: 'Update security policy documents',
+            action: 'Review and update ISMS documentation',
+            estimatedTime: '8 hours'
+          }
+        ],
+        evidence: [
+          {
+            type: 'Document',
+            description: 'ISMS documentation available in S3',
+            timestamp: new Date(Date.now() - 4 * 60 * 60 * 1000)
+          }
+        ],
+        complianceScore: 75,
+        lastUpdated: new Date(Date.now() - 4 * 60 * 60 * 1000)
+      },
+      'hipaa-001': {
+        requirement: 'Administrative Safeguards (164.308)',
+        controlId: 'HIPAA-164.308',
+        resources: [
+          { id: 'res-9', name: 'PHI Database', type: 'RDS', status: 'FAIL', region: 'us-east-1' },
+          { id: 'res-10', name: 'Access Control System', type: 'IAM', status: 'WARNING', region: 'global' }
+        ],
+        findings: [
+          {
+            id: 'find-5',
+            description: 'Missing encryption at rest for PHI database',
+            severity: 'CRITICAL',
+            status: 'OPEN',
+            resourceId: 'res-9'
+          },
+          {
+            id: 'find-6',
+            description: 'Access reviews not conducted quarterly',
+            severity: 'HIGH',
+            status: 'OPEN',
+            resourceId: 'res-10'
+          }
+        ],
+        remediation: [
+          {
+            step: 1,
+            description: 'Enable encryption for PHI database',
+            action: 'Enable RDS encryption with KMS key',
+            estimatedTime: '1 hour'
+          },
+          {
+            step: 2,
+            description: 'Schedule quarterly access reviews',
+            action: 'Configure automated access review workflow',
+            estimatedTime: '4 hours'
+          }
+        ],
+        evidence: [],
+        complianceScore: 45,
+        lastUpdated: new Date(Date.now() - 6 * 60 * 60 * 1000)
+      },
+      'cis-001': {
+        requirement: 'CIS Control 3.2.1 - S3 Bucket Encryption',
+        controlId: 'CIS-3.2.1',
+        resources: [
+          { id: 'res-11', name: 's3-bucket-1', type: 'S3', status: 'COMPLIANT', region: 'us-east-1' },
+          { id: 'res-12', name: 's3-bucket-2', type: 'S3', status: 'COMPLIANT', region: 'us-west-2' },
+          { id: 'res-13', name: 's3-bucket-3', type: 'S3', status: 'COMPLIANT', region: 'eu-west-1' }
+        ],
+        findings: [],
+        remediation: [],
+        evidence: [
+          {
+            type: 'Configuration',
+            description: 'All S3 buckets have server-side encryption enabled',
+            timestamp: new Date(Date.now() - 1 * 60 * 60 * 1000)
+          }
+        ],
+        complianceScore: 100,
+        lastUpdated: new Date(Date.now() - 1 * 60 * 60 * 1000)
+      },
+      'cis-002': {
+        requirement: 'CIS Control 4.1.1 - CloudTrail Configuration',
+        controlId: 'CIS-4.1.1',
+        resources: [
+          { id: 'res-14', name: 'CloudTrail-Logs', type: 'CloudTrail', status: 'PENDING', region: 'us-east-1' }
+        ],
+        findings: [
+          {
+            id: 'find-7',
+            description: 'CloudTrail configuration in progress',
+            severity: 'MEDIUM',
+            status: 'IN_PROGRESS',
+            resourceId: 'res-14'
+          }
+        ],
+        remediation: [
+          {
+            step: 1,
+            description: 'Complete CloudTrail setup',
+            action: 'Enable CloudTrail with log file validation',
+            estimatedTime: '30 minutes'
+          }
+        ],
+        evidence: [],
+        complianceScore: 0,
+        lastUpdated: new Date(Date.now() - 8 * 60 * 60 * 1000)
+      }
+    };
+
+    return mockDetails[check.id] || {
+      requirement: check.title,
+      controlId: check.id,
+      resources: [],
+      findings: [],
+      remediation: [],
+      evidence: [],
+      complianceScore: check.status === 'PASS' ? 100 : check.status === 'FAIL' ? 0 : 50,
+      lastUpdated: check.lastScan
+    };
   }
 
   runSingleCheck(check: ComplianceCheck) {
