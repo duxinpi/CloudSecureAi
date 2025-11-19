@@ -251,4 +251,146 @@
       </div>
     </div>
   </div>
+
+  <!-- Compliance Check Details Modal -->
+  <div class="modal-overlay" *ngIf="showDetailsModal && selectedCheck" (click)="closeDetailsModal()">
+    <div class="modal-content details-modal" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <div class="header-info">
+          <h3>{{ selectedCheck.title }}</h3>
+          <div class="check-badge">
+            <span class="badge" [class]="getCheckStatusClass(selectedCheck.status)">
+              {{ selectedCheck.status }}
+            </span>
+            <span class="badge severity" [class]="'severity-' + selectedCheck.severity.toLowerCase()">
+              {{ selectedCheck.severity }}
+            </span>
+          </div>
+        </div>
+        <button class="close-btn" (click)="closeDetailsModal()">
+          <i class="icon-close"></i>
+        </button>
+      </div>
+      
+      <div class="modal-body details-body" *ngIf="selectedCheck.details">
+        <!-- Overview Section -->
+        <div class="details-section">
+          <h4>📋 Overview</h4>
+          <div class="overview-grid">
+            <div class="overview-item">
+              <span class="label">Framework:</span>
+              <span class="value">{{ selectedCheck.framework }}</span>
+            </div>
+            <div class="overview-item">
+              <span class="label">Provider:</span>
+              <span class="value">{{ selectedCheck.provider }}</span>
+            </div>
+            <div class="overview-item">
+              <span class="label">Control ID:</span>
+              <span class="value">{{ selectedCheck.details.controlId }}</span>
+            </div>
+            <div class="overview-item">
+              <span class="label">Requirement:</span>
+              <span class="value">{{ selectedCheck.details.requirement }}</span>
+            </div>
+            <div class="overview-item">
+              <span class="label">Compliance Score:</span>
+              <span class="value score-value" [class]="getScoreClass(selectedCheck.details.complianceScore)">
+                {{ selectedCheck.details.complianceScore }}%
+              </span>
+            </div>
+            <div class="overview-item">
+              <span class="label">Last Updated:</span>
+              <span class="value">{{ selectedCheck.details.lastUpdated | date:'short' }}</span>
+            </div>
+          </div>
+          <p class="description">{{ selectedCheck.description }}</p>
+        </div>
+
+        <!-- Resources Section -->
+        <div class="details-section" *ngIf="selectedCheck.details.resources.length > 0">
+          <h4>🔧 Resources ({{ selectedCheck.details.resources.length }})</h4>
+          <div class="resources-list">
+            <div class="resource-item" *ngFor="let resource of selectedCheck.details.resources">
+              <div class="resource-header">
+                <div class="resource-name">
+                  <strong>{{ resource.name }}</strong>
+                  <span class="resource-type">{{ resource.type }}</span>
+                </div>
+                <span class="resource-status" [class]="resource.status.toLowerCase()">
+                  {{ resource.status }}
+                </span>
+              </div>
+              <div class="resource-meta">
+                <span class="resource-region">📍 {{ resource.region }}</span>
+                <span class="resource-id">ID: {{ resource.id }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Findings Section -->
+        <div class="details-section" *ngIf="selectedCheck.details.findings.length > 0">
+          <h4>🔍 Findings ({{ selectedCheck.details.findings.length }})</h4>
+          <div class="findings-list">
+            <div class="finding-item" *ngFor="let finding of selectedCheck.details.findings" [class]="'severity-' + finding.severity.toLowerCase()">
+              <div class="finding-header">
+                <div class="finding-severity">
+                  <span class="severity-badge" [class]="'severity-' + finding.severity.toLowerCase()">
+                    {{ finding.severity }}
+                  </span>
+                  <span class="finding-status" [class]="finding.status.toLowerCase().replace('_', '-')">
+                    {{ finding.status }}
+                  </span>
+                </div>
+              </div>
+              <p class="finding-description">{{ finding.description }}</p>
+              <div class="finding-meta">
+                <span>Resource: {{ finding.resourceId }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Remediation Steps Section -->
+        <div class="details-section" *ngIf="selectedCheck.details.remediation.length > 0">
+          <h4>🛠️ Remediation Steps</h4>
+          <div class="remediation-list">
+            <div class="remediation-item" *ngFor="let step of selectedCheck.details.remediation">
+              <div class="step-number">{{ step.step }}</div>
+              <div class="step-content">
+                <h5>{{ step.description }}</h5>
+                <p class="step-action">{{ step.action }}</p>
+                <div class="step-meta">
+                  <span class="time-estimate">⏱️ Estimated Time: {{ step.estimatedTime }}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Evidence Section -->
+        <div class="details-section" *ngIf="selectedCheck.details.evidence.length > 0">
+          <h4>📄 Evidence</h4>
+          <div class="evidence-list">
+            <div class="evidence-item" *ngFor="let evidence of selectedCheck.details.evidence">
+              <div class="evidence-header">
+                <span class="evidence-type">{{ evidence.type }}</span>
+                <span class="evidence-time">{{ evidence.timestamp | date:'short' }}</span>
+              </div>
+              <p class="evidence-description">{{ evidence.description }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn btn-outline" (click)="closeDetailsModal()">Close</button>
+        <button class="btn btn-primary" (click)="runSingleCheck(selectedCheck!)">
+          <i class="icon-play"></i>
+          Run Check Again
+        </button>
+      </div>
+    </div>
+  </div>
 </div>
