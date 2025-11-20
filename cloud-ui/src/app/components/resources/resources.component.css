@@ -764,6 +764,337 @@
   color: #1e3c72;
 }
 
+/* Discovery Modal Styles */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  backdrop-filter: blur(2px);
+}
+
+.discovery-modal {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  max-width: 800px;
+  width: 90%;
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.discovery-modal .modal-header {
+  padding: 20px 25px;
+  border-bottom: 1px solid #e9ecef;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+}
+
+.discovery-modal .modal-header h3 {
+  margin: 0;
+  color: #1e3c72;
+  font-size: 20px;
+}
+
+.discovery-modal .modal-header .close-btn {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.9);
+  border: 1px solid #ddd;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.discovery-modal .modal-header .close-btn:hover {
+  background: #dc3545;
+  color: white;
+  border-color: #dc3545;
+  transform: rotate(90deg);
+}
+
+.discovery-modal .modal-header .close-icon {
+  font-size: 20px;
+  font-weight: bold;
+  line-height: 1;
+}
+
+.discovery-modal .modal-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 25px;
+}
+
+.discovery-section {
+  margin-bottom: 30px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid #e9ecef;
+}
+
+.discovery-section:last-child {
+  border-bottom: none;
+  margin-bottom: 0;
+}
+
+.discovery-section h4 {
+  color: #1e3c72;
+  font-size: 16px;
+  font-weight: 600;
+  margin: 0 0 12px 0;
+}
+
+.section-hint {
+  font-size: 12px;
+  color: #666;
+  margin: 0 0 12px 0;
+  font-style: italic;
+}
+
+.selection-controls {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.checkbox-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 10px;
+}
+
+.regions-grid {
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+}
+
+.resource-types-grid {
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+}
+
+.checkbox-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  background: #f8f9fa;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.checkbox-item:hover {
+  background: #e9ecef;
+}
+
+.checkbox-item input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+  accent-color: #00d4aa;
+}
+
+.checkbox-label {
+  font-size: 14px;
+  color: #1e3c72;
+  cursor: pointer;
+  user-select: none;
+}
+
+/* Discovery Progress */
+.discovery-progress-section {
+  text-align: center;
+  padding: 40px 20px;
+}
+
+.progress-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.progress-header h4 {
+  margin: 0;
+  color: #1e3c72;
+  font-size: 18px;
+}
+
+.progress-percentage {
+  font-size: 24px;
+  font-weight: 700;
+  color: #00d4aa;
+}
+
+.progress-bar-container {
+  margin-bottom: 15px;
+}
+
+.progress-bar {
+  width: 100%;
+  height: 24px;
+  background: #e9ecef;
+  border-radius: 12px;
+  overflow: hidden;
+  position: relative;
+}
+
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #00d4aa, #00a8cc);
+  border-radius: 12px;
+  transition: width 0.5s ease;
+  position: relative;
+}
+
+.progress-fill::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.3),
+    transparent
+  );
+  animation: shimmer 2s infinite;
+}
+
+@keyframes shimmer {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
+.progress-status {
+  color: #666;
+  font-size: 14px;
+  margin: 0 0 20px 0;
+}
+
+/* Discovery Results */
+.discovery-results {
+  padding: 20px 0;
+}
+
+.results-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  padding-bottom: 15px;
+  border-bottom: 2px solid #e9ecef;
+}
+
+.results-header h4 {
+  margin: 0;
+  color: #1e3c72;
+  font-size: 18px;
+}
+
+.results-count {
+  font-size: 14px;
+  color: #00d4aa;
+  font-weight: 600;
+  background: #e6faf7;
+  padding: 4px 12px;
+  border-radius: 12px;
+}
+
+.discovered-resources-list {
+  max-height: 400px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.discovered-resource-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px;
+  background: #f8f9fa;
+  border-radius: 8px;
+  border-left: 4px solid #00d4aa;
+  transition: all 0.3s ease;
+}
+
+.discovered-resource-item:hover {
+  background: #e9ecef;
+  transform: translateX(4px);
+}
+
+.resource-icon-small {
+  width: 32px;
+  height: 32px;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  color: white;
+  flex-shrink: 0;
+}
+
+.resource-info-small {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.resource-info-small strong {
+  color: #1e3c72;
+  font-size: 14px;
+}
+
+.resource-meta {
+  font-size: 12px;
+  color: #666;
+}
+
+.resource-status-small {
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  flex-shrink: 0;
+}
+
+.resource-status-small.running {
+  background: #d4edda;
+  color: #155724;
+}
+
+.resource-status-small.stopped {
+  background: #fff3cd;
+  color: #856404;
+}
+
+.discovery-modal .modal-footer {
+  padding: 20px 25px;
+  border-top: 1px solid #e9ecef;
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  background: #f8f9fa;
+}
+
 /* Responsive Design */
 @media (max-width: 768px) {
   .resources-grid {
@@ -789,6 +1120,19 @@
   .timeline-panel,
   .log-viewer {
     width: 100%;
+  }
+
+  .discovery-modal {
+    width: 95%;
+    max-height: 95vh;
+  }
+
+  .checkbox-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .discovered-resources-list {
+    max-height: 300px;
   }
 }
 

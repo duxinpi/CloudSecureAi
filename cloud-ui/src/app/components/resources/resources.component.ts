@@ -89,6 +89,32 @@ export class ResourcesComponent implements OnInit {
   showMonitoringPanel = false;
   showTimelinePanel = false;
   showLogViewer = false;
+  showDiscoveryModal = false;
+  
+  // Discovery properties
+  discoveryProviders: string[] = [];
+  discoveryRegions: string[] = [];
+  discoveryResourceTypes: string[] = [];
+  discoveryInProgress = false;
+  discoveryProgress = 0;
+  discoveryStatus = '';
+  discoveredResources: CloudResource[] = [];
+  
+  availableProviders = ['AWS', 'Azure', 'GCP', 'DigitalOcean', 'Linode'];
+  availableRegions = [
+    'us-east-1', 'us-west-2', 'eu-west-1', 'ap-southeast-1',
+    'East US', 'West US', 'West Europe', 'Southeast Asia',
+    'us-central1', 'europe-west1', 'asia-east1',
+    'NYC1', 'SFO1', 'AMS3', 'SGP1',
+    'us-east', 'us-west', 'eu-west', 'ap-south'
+  ];
+  availableResourceTypes = [
+    'EC2 Instance', 'Virtual Machine', 'Compute Engine', 'Droplet', 'Linode',
+    'RDS', 'Database', 'Cloud SQL',
+    'S3 Bucket', 'Blob Storage', 'Cloud Storage',
+    'Load Balancer', 'Application Gateway',
+    'Lambda', 'Function', 'Cloud Function'
+  ];
 
   // Security & IAM
   iamStats: IAMStats = {
@@ -356,8 +382,209 @@ export class ResourcesComponent implements OnInit {
   }
 
   openDiscoveryModal() {
-    // TODO: Implement resource discovery modal
-    console.log('Opening resource discovery modal');
+    this.showDiscoveryModal = true;
+    this.discoveryInProgress = false;
+    this.discoveryProgress = 0;
+    this.discoveryStatus = '';
+    this.discoveredResources = [];
+    // Reset selections
+    this.discoveryProviders = [];
+    this.discoveryRegions = [];
+    this.discoveryResourceTypes = [];
+  }
+
+  closeDiscoveryModal() {
+    this.showDiscoveryModal = false;
+    if (this.discoveryInProgress) {
+      // Stop discovery if in progress
+      this.discoveryInProgress = false;
+    }
+  }
+
+  toggleProvider(provider: string) {
+    const index = this.discoveryProviders.indexOf(provider);
+    if (index > -1) {
+      this.discoveryProviders.splice(index, 1);
+    } else {
+      this.discoveryProviders.push(provider);
+    }
+  }
+
+  toggleRegion(region: string) {
+    const index = this.discoveryRegions.indexOf(region);
+    if (index > -1) {
+      this.discoveryRegions.splice(index, 1);
+    } else {
+      this.discoveryRegions.push(region);
+    }
+  }
+
+  toggleResourceType(type: string) {
+    const index = this.discoveryResourceTypes.indexOf(type);
+    if (index > -1) {
+      this.discoveryResourceTypes.splice(index, 1);
+    } else {
+      this.discoveryResourceTypes.push(type);
+    }
+  }
+
+  selectAllProviders() {
+    this.discoveryProviders = [...this.availableProviders];
+  }
+
+  clearAllProviders() {
+    this.discoveryProviders = [];
+  }
+
+  selectAllRegions() {
+    this.discoveryRegions = [...this.availableRegions];
+  }
+
+  clearAllRegions() {
+    this.discoveryRegions = [];
+  }
+
+  selectAllResourceTypes() {
+    this.discoveryResourceTypes = [...this.availableResourceTypes];
+  }
+
+  clearAllResourceTypes() {
+    this.discoveryResourceTypes = [];
+  }
+
+  startDiscovery() {
+    if (this.discoveryProviders.length === 0) {
+      alert('Please select at least one cloud provider to discover resources from.');
+      return;
+    }
+
+    this.discoveryInProgress = true;
+    this.discoveryProgress = 0;
+    this.discoveryStatus = 'Initializing discovery...';
+    this.discoveredResources = [];
+
+    // Simulate discovery process
+    this.simulateDiscovery();
+  }
+
+  simulateDiscovery() {
+    const steps = [
+      { progress: 10, status: 'Connecting to cloud providers...' },
+      { progress: 25, status: 'Scanning AWS resources...' },
+      { progress: 40, status: 'Scanning Azure resources...' },
+      { progress: 55, status: 'Scanning GCP resources...' },
+      { progress: 70, status: 'Analyzing discovered resources...' },
+      { progress: 85, status: 'Collecting resource metadata...' },
+      { progress: 95, status: 'Finalizing discovery...' },
+      { progress: 100, status: 'Discovery completed!' }
+    ];
+
+    let currentStep = 0;
+    const interval = setInterval(() => {
+      if (currentStep < steps.length) {
+        const step = steps[currentStep];
+        this.discoveryProgress = step.progress;
+        this.discoveryStatus = step.status;
+        currentStep++;
+      } else {
+        clearInterval(interval);
+        this.completeDiscovery();
+      }
+    }, 1000);
+  }
+
+  completeDiscovery() {
+    this.discoveryInProgress = false;
+    this.discoveryStatus = 'Discovery completed successfully!';
+    
+    // Generate mock discovered resources based on selections
+    this.discoveredResources = this.generateDiscoveredResources();
+    
+    // Add discovered resources to the main resources list
+    this.allResources = [...this.allResources, ...this.discoveredResources];
+    this.applyFilters();
+    this.calculateStats();
+  }
+
+  generateDiscoveredResources(): CloudResource[] {
+    const resources: CloudResource[] = [];
+    const environments = ['production', 'staging', 'development', 'testing'];
+    const projects = ['web-app', 'data-analytics', 'ml-pipeline', 'infrastructure'];
+    const statuses = ['Running', 'Stopped', 'Running', 'Running'];
+    const healthStatuses = ['Healthy', 'Warning', 'Healthy', 'Healthy'];
+
+    // Generate resources based on selected providers
+    this.discoveryProviders.forEach((provider, providerIndex) => {
+      const resourceCount = Math.floor(Math.random() * 3) + 2; // 2-4 resources per provider
+      
+      for (let i = 0; i < resourceCount; i++) {
+        const resourceId = `${provider.toLowerCase()}-discovered-${Date.now()}-${i}`;
+        const resourceType = this.discoveryResourceTypes.length > 0 
+          ? this.discoveryResourceTypes[Math.floor(Math.random() * this.discoveryResourceTypes.length)]
+          : this.getDefaultResourceType(provider);
+        
+        const region = this.discoveryRegions.length > 0
+          ? this.discoveryRegions[Math.floor(Math.random() * this.discoveryRegions.length)]
+          : this.getDefaultRegion(provider);
+
+        resources.push({
+          id: resourceId,
+          name: `${provider} ${resourceType} ${i + 1}`,
+          type: resourceType,
+          provider: provider,
+          region: region,
+          status: statuses[i % statuses.length],
+          health: healthStatuses[i % healthStatuses.length],
+          environment: environments[Math.floor(Math.random() * environments.length)],
+          project: projects[Math.floor(Math.random() * projects.length)],
+          cost: Math.random() * 100 + 10,
+          tags: ['discovered', 'auto-sync'],
+          metrics: {
+            cpu: Math.floor(Math.random() * 80) + 10,
+            memory: Math.floor(Math.random() * 80) + 10
+          },
+          createdAt: new Date(),
+          lastSync: new Date()
+        });
+      }
+    });
+
+    return resources;
+  }
+
+  getDefaultResourceType(provider: string): string {
+    const defaults: { [key: string]: string } = {
+      'AWS': 'EC2 Instance',
+      'Azure': 'Virtual Machine',
+      'GCP': 'Compute Engine',
+      'DigitalOcean': 'Droplet',
+      'Linode': 'Linode'
+    };
+    return defaults[provider] || 'Compute Instance';
+  }
+
+  getDefaultRegion(provider: string): string {
+    const defaults: { [key: string]: string } = {
+      'AWS': 'us-east-1',
+      'Azure': 'East US',
+      'GCP': 'us-central1',
+      'DigitalOcean': 'NYC1',
+      'Linode': 'us-east'
+    };
+    return defaults[provider] || 'us-east-1';
+  }
+
+  addDiscoveredResources() {
+    // Resources are already added in completeDiscovery()
+    this.closeDiscoveryModal();
+  }
+
+  cancelDiscovery() {
+    if (confirm('Are you sure you want to cancel the discovery process?')) {
+      this.discoveryInProgress = false;
+      this.discoveryProgress = 0;
+      this.discoveryStatus = 'Discovery cancelled.';
+    }
   }
 
   clearFilters() {
