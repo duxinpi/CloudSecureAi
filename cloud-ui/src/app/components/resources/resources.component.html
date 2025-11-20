@@ -347,4 +347,145 @@
       </div>
     </div>
   </div>
+
+  <!-- Resource Discovery Modal -->
+  <div class="modal-overlay" *ngIf="showDiscoveryModal" (click)="closeDiscoveryModal()">
+    <div class="modal-content discovery-modal" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h3>🔍 Discover Resources</h3>
+        <button class="close-btn" (click)="closeDiscoveryModal()" *ngIf="!discoveryInProgress">
+          <span class="close-icon">×</span>
+        </button>
+      </div>
+
+      <div class="modal-body" *ngIf="!discoveryInProgress && discoveredResources.length === 0">
+        <!-- Discovery Configuration -->
+        <div class="discovery-section">
+          <h4>Cloud Providers</h4>
+          <div class="selection-controls">
+            <button class="btn btn-sm btn-outline" (click)="selectAllProviders()">Select All</button>
+            <button class="btn btn-sm btn-outline" (click)="clearAllProviders()">Clear All</button>
+          </div>
+          <div class="checkbox-grid">
+            <label class="checkbox-item" *ngFor="let provider of availableProviders">
+              <input 
+                type="checkbox" 
+                [checked]="discoveryProviders.includes(provider)"
+                (change)="toggleProvider(provider)">
+              <span class="checkbox-label">{{ provider }}</span>
+            </label>
+          </div>
+        </div>
+
+        <div class="discovery-section">
+          <h4>Regions (Optional)</h4>
+          <p class="section-hint">Leave empty to scan all regions</p>
+          <div class="selection-controls">
+            <button class="btn btn-sm btn-outline" (click)="selectAllRegions()">Select All</button>
+            <button class="btn btn-sm btn-outline" (click)="clearAllRegions()">Clear All</button>
+          </div>
+          <div class="checkbox-grid regions-grid">
+            <label class="checkbox-item" *ngFor="let region of availableRegions">
+              <input 
+                type="checkbox" 
+                [checked]="discoveryRegions.includes(region)"
+                (change)="toggleRegion(region)">
+              <span class="checkbox-label">{{ region }}</span>
+            </label>
+          </div>
+        </div>
+
+        <div class="discovery-section">
+          <h4>Resource Types (Optional)</h4>
+          <p class="section-hint">Leave empty to discover all resource types</p>
+          <div class="selection-controls">
+            <button class="btn btn-sm btn-outline" (click)="selectAllResourceTypes()">Select All</button>
+            <button class="btn btn-sm btn-outline" (click)="clearAllResourceTypes()">Clear All</button>
+          </div>
+          <div class="checkbox-grid resource-types-grid">
+            <label class="checkbox-item" *ngFor="let type of availableResourceTypes">
+              <input 
+                type="checkbox" 
+                [checked]="discoveryResourceTypes.includes(type)"
+                (change)="toggleResourceType(type)">
+              <span class="checkbox-label">{{ type }}</span>
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <!-- Discovery Progress -->
+      <div class="modal-body" *ngIf="discoveryInProgress">
+        <div class="discovery-progress-section">
+          <div class="progress-header">
+            <h4>Discovering Resources...</h4>
+            <span class="progress-percentage">{{ discoveryProgress }}%</span>
+          </div>
+          <div class="progress-bar-container">
+            <div class="progress-bar">
+              <div class="progress-fill" [style.width.%]="discoveryProgress"></div>
+            </div>
+          </div>
+          <p class="progress-status">{{ discoveryStatus }}</p>
+          <button class="btn btn-outline btn-sm" (click)="cancelDiscovery()">
+            Cancel Discovery
+          </button>
+        </div>
+      </div>
+
+      <!-- Discovery Results -->
+      <div class="modal-body" *ngIf="!discoveryInProgress && discoveredResources.length > 0">
+        <div class="discovery-results">
+          <div class="results-header">
+            <h4>✅ Discovery Complete</h4>
+            <span class="results-count">{{ discoveredResources.length }} resources discovered</span>
+          </div>
+          <div class="discovered-resources-list">
+            <div class="discovered-resource-item" *ngFor="let resource of discoveredResources">
+              <div class="resource-icon-small" [class]="'provider-' + resource.provider.toLowerCase()">
+                <i [class]="'icon-' + resource.provider.toLowerCase()"></i>
+              </div>
+              <div class="resource-info-small">
+                <strong>{{ resource.name }}</strong>
+                <span class="resource-meta">{{ resource.type }} • {{ resource.provider }} • {{ resource.region }}</span>
+              </div>
+              <span class="resource-status-small" [class]="resource.status.toLowerCase()">
+                {{ resource.status }}
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button 
+          class="btn btn-outline" 
+          (click)="closeDiscoveryModal()"
+          *ngIf="!discoveryInProgress && discoveredResources.length === 0">
+          Cancel
+        </button>
+        <button 
+          class="btn btn-primary" 
+          (click)="startDiscovery()"
+          [disabled]="discoveryProviders.length === 0 || discoveryInProgress"
+          *ngIf="!discoveryInProgress && discoveredResources.length === 0">
+          <i class="icon-search"></i>
+          Start Discovery
+        </button>
+        <button 
+          class="btn btn-primary" 
+          (click)="addDiscoveredResources()"
+          *ngIf="!discoveryInProgress && discoveredResources.length > 0">
+          <i class="icon-check"></i>
+          Add to Resources
+        </button>
+        <button 
+          class="btn btn-outline" 
+          (click)="openDiscoveryModal()"
+          *ngIf="!discoveryInProgress && discoveredResources.length > 0">
+          Discover More
+        </button>
+      </div>
+    </div>
+  </div>
 </div>
