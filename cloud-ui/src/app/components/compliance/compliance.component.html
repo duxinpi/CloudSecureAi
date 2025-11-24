@@ -252,6 +252,98 @@
     </div>
   </div>
 
+  <!-- AI Chat Modal -->
+  <div class="modal-overlay" *ngIf="showAIChatModal && selectedCheck" (click)="closeAIChatModal()">
+    <div class="modal-content ai-chat-modal" (click)="$event.stopPropagation()">
+      <div class="modal-header ai-chat-header">
+        <button class="close-btn" (click)="closeAIChatModal()" title="Close" aria-label="Close">
+          <span class="close-icon">×</span>
+        </button>
+        <div class="header-info">
+          <div class="ai-header-title">
+            <i class="icon-ai"></i>
+            <h3>AI Assistant - {{ selectedCheck.title }}</h3>
+          </div>
+          <div class="check-context">
+            <span class="context-badge">{{ selectedCheck.framework }}</span>
+            <span class="context-badge">{{ selectedCheck.provider }}</span>
+            <span class="context-badge" [class]="getCheckStatusClass(selectedCheck.status)">
+              {{ selectedCheck.status }}
+            </span>
+          </div>
+        </div>
+      </div>
+      
+      <div class="ai-chat-body">
+        <div class="chat-messages" #chatMessages>
+          <div class="chat-message" *ngFor="let message of aiChatMessages" [class]="'message-' + message.type">
+            <div class="message-avatar" [class]="'avatar-' + message.type">
+              <i [class]="message.type === 'ai' ? 'icon-robot' : 'icon-user'"></i>
+            </div>
+            <div class="message-content-wrapper">
+              <div class="message-content" [class]="'content-' + message.type">
+                <div class="message-text">{{ message.content }}</div>
+                <div class="message-time">{{ message.timestamp | date:'short' }}</div>
+              </div>
+            </div>
+          </div>
+          
+          <!-- AI Typing Indicator -->
+          <div class="chat-message message-ai" *ngIf="isAiTyping">
+            <div class="message-avatar avatar-ai">
+              <i class="icon-robot"></i>
+            </div>
+            <div class="message-content-wrapper">
+              <div class="message-content content-ai">
+                <div class="typing-indicator">
+                  <span></span>
+                  <span></span>
+                  <span></span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="ai-chat-input-container">
+        <div class="suggested-questions" *ngIf="aiChatMessages.length <= 1">
+          <p class="suggestions-label">Try asking:</p>
+          <div class="suggestion-chips">
+            <button class="suggestion-chip" (click)="currentAIMessage = 'What does this check do?'; sendAIMessage()">
+              What does this check do?
+            </button>
+            <button class="suggestion-chip" (click)="currentAIMessage = 'How do I fix the issues?'; sendAIMessage()">
+              How do I fix the issues?
+            </button>
+            <button class="suggestion-chip" (click)="currentAIMessage = 'Why is this important?'; sendAIMessage()">
+              Why is this important?
+            </button>
+            <button class="suggestion-chip" (click)="currentAIMessage = 'What are the requirements?'; sendAIMessage()">
+              What are the requirements?
+            </button>
+          </div>
+        </div>
+        <div class="input-group">
+          <input 
+            type="text" 
+            [(ngModel)]="currentAIMessage" 
+            (keyup.enter)="sendAIMessage()"
+            placeholder="Ask me anything about this compliance check..."
+            class="chat-input"
+            [disabled]="isAiTyping">
+          <button 
+            class="btn btn-primary send-btn" 
+            (click)="sendAIMessage()"
+            [disabled]="!currentAIMessage.trim() || isAiTyping">
+            <i class="icon-send"></i>
+            Send
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- Compliance Check Details Modal -->
   <div class="modal-overlay" *ngIf="showDetailsModal && selectedCheck" (click)="closeDetailsModal()">
     <div class="modal-content details-modal" (click)="$event.stopPropagation()">

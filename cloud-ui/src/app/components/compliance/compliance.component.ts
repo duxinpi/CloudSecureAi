@@ -55,6 +55,13 @@ interface Evidence {
   timestamp: Date;
 }
 
+interface ChatMessage {
+  id: string;
+  type: 'user' | 'ai';
+  content: string;
+  timestamp: Date;
+}
+
 interface FrameworkScore {
   name: string;
   score: number;
@@ -113,11 +120,17 @@ export class ComplianceComponent implements OnInit {
   showScheduleModal = false;
   showAIGuidance = false;
   showDetailsModal = false;
+  showAIChatModal = false;
   selectedCheck: ComplianceCheck | null = null;
   scanFrequency = 'weekly';
   scanTime = '02:00';
   availableFrameworks = ['GDPR', 'SOC 2', 'ISO 27001', 'HIPAA', 'CIS Benchmarks'];
   selectedFrameworks: string[] = [];
+
+  // AI Chat properties
+  aiChatMessages: ChatMessage[] = [];
+  currentAIMessage = '';
+  isAiTyping = false;
 
   // Math object for template access
   Math = Math;
@@ -713,8 +726,171 @@ export class ComplianceComponent implements OnInit {
   }
 
   getAIRecommendation(check: ComplianceCheck) {
-    this.showAIGuidance = true;
-    console.log('Getting AI recommendation for:', check);
+    this.selectedCheck = check;
+    this.showAIChatModal = true;
+    this.initializeAIChat(check);
+  }
+
+  closeAIChatModal() {
+    this.showAIChatModal = false;
+    this.selectedCheck = null;
+    this.aiChatMessages = [];
+    this.currentAIMessage = '';
+  }
+
+  initializeAIChat(check: ComplianceCheck) {
+    // Clear previous messages
+    this.aiChatMessages = [];
+    
+    // Add welcome message with context
+    const welcomeMessage = `Hi! I'm here to help you with "${check.title}" (${check.framework} compliance check). I can explain what this check does, help you understand findings, provide remediation guidance, or answer any questions about compliance requirements. What would you like to know?`;
+    
+    this.aiChatMessages.push({
+      id: '1',
+      type: 'ai',
+      content: welcomeMessage,
+      timestamp: new Date()
+    });
+  }
+
+  sendAIMessage() {
+    if (!this.currentAIMessage.trim() || !this.selectedCheck) return;
+
+    // Add user message
+    this.aiChatMessages.push({
+      id: Date.now().toString(),
+      type: 'user',
+      content: this.currentAIMessage,
+      timestamp: new Date()
+    });
+
+    const userMessage = this.currentAIMessage;
+    this.currentAIMessage = '';
+
+    // Simulate AI typing
+    this.isAiTyping = true;
+    setTimeout(() => {
+      this.generateAIResponse(userMessage, this.selectedCheck!);
+      this.isAiTyping = false;
+    }, 1500);
+  }
+
+  generateAIResponse(userMessage: string, check: ComplianceCheck) {
+    let response = '';
+    const message = userMessage.toLowerCase();
+    const checkContext = {
+      title: check.title,
+      framework: check.framework,
+      provider: check.provider,
+      status: check.status,
+      description: check.description,
+      severity: check.severity
+    };
+
+    // Context-aware responses based on the compliance check
+    if (message.includes('what') && (message.includes('check') || message.includes('this'))) {
+      response = `This compliance check "${checkContext.title}" verifies that your ${checkContext.provider} infrastructure meets ${checkContext.framework} requirements. Specifically, it checks: ${checkContext.description}. The current status is ${checkContext.status}, which indicates ${this.getStatusExplanation(checkContext.status)}.`;
+    } else if (message.includes('how') && (message.includes('fix') || message.includes('remediate') || message.includes('resolve'))) {
+      response = this.getRemediationResponse(check);
+    } else if (message.includes('why') || message.includes('important')) {
+      response = `This check is important because ${checkContext.framework} compliance is ${this.getFrameworkImportance(checkContext.framework)}. ${checkContext.severity} severity indicates ${this.getSeverityExplanation(checkContext.severity)}. Ensuring compliance helps protect your data, meet regulatory requirements, and maintain customer trust.`;
+    } else if (message.includes('requirement') || message.includes('standard') || message.includes('framework')) {
+      response = `${checkContext.framework} is a ${this.getFrameworkDescription(checkContext.framework)}. This particular check focuses on ${checkContext.description}. Compliance with ${checkContext.framework} helps ensure your cloud infrastructure meets industry standards for security and data protection.`;
+    } else if (message.includes('status') || message.includes('result') || message.includes('pass') || message.includes('fail')) {
+      response = `The current status is "${checkContext.status}". ${this.getStatusExplanation(checkContext.status)}. ${checkContext.status === 'FAIL' ? 'You should review the findings and remediation steps in the Details view to address the issues.' : checkContext.status === 'WARNING' ? 'While not critical, you should review the warnings to ensure full compliance.' : 'Great! Your infrastructure meets this requirement.'}`;
+    } else if (message.includes('resource') || message.includes('what resource')) {
+      if (check.details && check.details.resources.length > 0) {
+        const resourceList = check.details.resources.map(r => `${r.name} (${r.type})`).join(', ');
+        response = `This check monitors ${check.details.resources.length} resource(s): ${resourceList}. Each resource is evaluated against the ${checkContext.framework} requirements. You can see detailed information about each resource in the Details view.`;
+      } else {
+        response = `This check applies to resources across your ${checkContext.provider} infrastructure. The specific resources being monitored depend on your cloud account configuration. Check the Details view for a complete list of resources.`;
+      }
+    } else if (message.includes('finding') || message.includes('issue') || message.includes('problem')) {
+      if (check.details && check.details.findings.length > 0) {
+        const findingsList = check.details.findings.map(f => `- ${f.description} (${f.severity} severity)`).join('\n');
+        response = `I found ${check.details.findings.length} finding(s) for this check:\n\n${findingsList}\n\n${check.details.findings.some(f => f.status === 'OPEN') ? 'Some findings are still open and need attention. Review the remediation steps to resolve them.' : 'All findings have been resolved. Great work!'}`;
+      } else {
+        response = `Currently, there are no active findings for this compliance check. The status is ${checkContext.status}, which means ${this.getStatusExplanation(checkContext.status)}.`;
+      }
+    } else if (message.includes('help') || message.includes('guidance') || message.includes('advice')) {
+      response = `I can help you with:\n\n1. Understanding what this compliance check does\n2. Explaining why it's important\n3. Providing remediation steps if there are issues\n4. Answering questions about ${checkContext.framework} requirements\n5. Explaining findings and their severity\n\nWhat specific aspect would you like to know more about?`;
+    } else {
+      // General response with context
+      response = `Regarding "${checkContext.title}": ${checkContext.description}. This is a ${checkContext.severity} severity check for ${checkContext.framework} compliance on ${checkContext.provider}. `;
+      
+      if (check.details) {
+        response += `The compliance score is ${check.details.complianceScore}%. `;
+        if (check.details.findings.length > 0) {
+          response += `There are ${check.details.findings.length} finding(s) that may need attention. `;
+        }
+        if (check.details.remediation.length > 0) {
+          response += `There are ${check.details.remediation.length} remediation step(s) available. `;
+        }
+      }
+      
+      response += `You can ask me about what this check does, how to fix issues, why it's important, or any other questions about ${checkContext.framework} compliance.`;
+    }
+
+    this.aiChatMessages.push({
+      id: Date.now().toString(),
+      type: 'ai',
+      content: response,
+      timestamp: new Date()
+    });
+  }
+
+  getStatusExplanation(status: string): string {
+    switch (status) {
+      case 'PASS': return 'your infrastructure meets this compliance requirement';
+      case 'FAIL': return 'your infrastructure does not meet this requirement and needs attention';
+      case 'WARNING': return 'there are some concerns that should be reviewed';
+      case 'PENDING': return 'the check is still running or has not been completed';
+      default: return 'the status is unclear';
+    }
+  }
+
+  getSeverityExplanation(severity: string): string {
+    switch (severity) {
+      case 'CRITICAL': return 'this is a critical security issue that must be addressed immediately';
+      case 'HIGH': return 'this is a high-priority issue that should be resolved soon';
+      case 'MEDIUM': return 'this is a medium-priority issue that should be addressed when possible';
+      case 'LOW': return 'this is a low-priority issue that can be addressed during regular maintenance';
+      default: return 'the severity level is not specified';
+    }
+  }
+
+  getFrameworkImportance(framework: string): string {
+    switch (framework) {
+      case 'GDPR': return 'required for handling EU citizen data and avoiding significant fines';
+      case 'SOC 2': return 'essential for demonstrating security controls to customers and auditors';
+      case 'ISO 27001': return 'an international standard for information security management';
+      case 'HIPAA': return 'mandatory for handling protected health information in the US';
+      case 'CIS': return 'industry best practices for securing cloud infrastructure';
+      default: return 'important for maintaining security and compliance standards';
+    }
+  }
+
+  getFrameworkDescription(framework: string): string {
+    switch (framework) {
+      case 'GDPR': return 'European Union regulation for data protection and privacy';
+      case 'SOC 2': return 'security compliance standard for service organizations';
+      case 'ISO 27001': return 'international information security management standard';
+      case 'HIPAA': return 'US healthcare data protection regulation';
+      case 'CIS': return 'Center for Internet Security benchmark for cloud security';
+      default: return 'compliance framework';
+    }
+  }
+
+  getRemediationResponse(check: ComplianceCheck): string {
+    if (check.details && check.details.remediation.length > 0) {
+      const steps = check.details.remediation.map(step => 
+        `Step ${step.step}: ${step.description}\n   Action: ${step.action}\n   Estimated time: ${step.estimatedTime}`
+      ).join('\n\n');
+      
+      return `Here are the remediation steps for "${check.title}":\n\n${steps}\n\nFollow these steps in order to resolve the compliance issues. If you need more detailed guidance on any step, feel free to ask!`;
+    } else {
+      return `To fix issues with "${check.title}", I recommend:\n\n1. Review the Details view to see specific findings\n2. Check the ${check.framework} documentation for ${check.provider}\n3. Implement the recommended security controls\n4. Re-run the compliance check to verify the fixes\n\nWould you like me to explain any specific aspect of the remediation process?`;
+    }
   }
 
   toggleAIGuidance() {
