@@ -89,6 +89,8 @@ export class ResourcesComponent implements OnInit {
   showMonitoringPanel = false;
   showTimelinePanel = false;
   showLogViewer = false;
+  showResourceDetailsModal = false;
+  selectedResource: CloudResource | null = null;
 
   // Security & IAM
   iamStats: IAMStats = {
@@ -369,7 +371,13 @@ export class ResourcesComponent implements OnInit {
   }
 
   viewResourceDetails(resource: CloudResource) {
-    console.log('Viewing resource details:', resource);
+    this.selectedResource = resource;
+    this.showResourceDetailsModal = true;
+  }
+
+  closeResourceDetailsModal() {
+    this.showResourceDetailsModal = false;
+    this.selectedResource = null;
   }
 
   manageResource(resource: CloudResource) {
@@ -403,5 +411,19 @@ export class ResourcesComponent implements OnInit {
 
   refreshLogs() {
     this.loadLogs();
+  }
+
+  getMetricClass(value: number): string {
+    if (value >= 80) return 'metric-high';
+    if (value >= 60) return 'metric-medium';
+    return 'metric-low';
+  }
+
+  getResourceAlerts(resourceId: string): Alert[] {
+    return this.activeAlerts.filter(alert => alert.resourceId === resourceId);
+  }
+
+  getResourceEvents(resourceId: string): TimelineEvent[] {
+    return this.timelineEvents.filter(event => event.resourceId === resourceId);
   }
 }
