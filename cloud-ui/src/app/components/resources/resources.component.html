@@ -347,4 +347,167 @@
       </div>
     </div>
   </div>
+
+  <!-- Resource Details Modal -->
+  <div class="modal-overlay" *ngIf="showResourceDetailsModal" (click)="closeResourceDetailsModal()">
+    <div class="modal-content large" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h3>
+          <i [class]="selectedResource ? 'icon-' + selectedResource.provider.toLowerCase() : ''"></i>
+          {{ selectedResource?.name }}
+        </h3>
+        <button class="close-btn" (click)="closeResourceDetailsModal()">
+          <i class="icon-close"></i>
+        </button>
+      </div>
+      
+      <div class="modal-body" *ngIf="selectedResource">
+        <!-- Resource Overview -->
+        <div class="resource-detail-section">
+          <h4>📋 Overview</h4>
+          <div class="detail-grid">
+            <div class="detail-item">
+              <span class="label">Resource ID:</span>
+              <span class="value">{{ selectedResource.id }}</span>
+            </div>
+            <div class="detail-item">
+              <span class="label">Type:</span>
+              <span class="value">{{ selectedResource.type }}</span>
+            </div>
+            <div class="detail-item">
+              <span class="label">Provider:</span>
+              <span class="value">{{ selectedResource.provider }}</span>
+            </div>
+            <div class="detail-item">
+              <span class="label">Status:</span>
+              <span class="value status-badge" [class]="selectedResource.status.toLowerCase()">
+                {{ selectedResource.status }}
+              </span>
+            </div>
+            <div class="detail-item">
+              <span class="label">Health:</span>
+              <span class="value health-indicator" [class]="selectedResource.health.toLowerCase()">
+                {{ selectedResource.health }}
+              </span>
+            </div>
+            <div class="detail-item">
+              <span class="label">Region:</span>
+              <span class="value">{{ selectedResource.region }}</span>
+            </div>
+            <div class="detail-item">
+              <span class="label">Environment:</span>
+              <span class="value">{{ selectedResource.environment }}</span>
+            </div>
+            <div class="detail-item">
+              <span class="label">Project:</span>
+              <span class="value">{{ selectedResource.project }}</span>
+            </div>
+            <div class="detail-item" *ngIf="selectedResource.cost">
+              <span class="label">Monthly Cost:</span>
+              <span class="value cost">${{ selectedResource.cost | number:'1.2-2' }}</span>
+            </div>
+            <div class="detail-item" *ngIf="selectedResource.createdAt">
+              <span class="label">Created:</span>
+              <span class="value">{{ selectedResource.createdAt | date:'medium' }}</span>
+            </div>
+            <div class="detail-item" *ngIf="selectedResource.lastSync">
+              <span class="label">Last Sync:</span>
+              <span class="value">{{ selectedResource.lastSync | date:'medium' }}</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Resource Metrics -->
+        <div class="resource-detail-section" *ngIf="selectedResource.metrics">
+          <h4>📊 Performance Metrics</h4>
+          <div class="metrics-detail">
+            <div class="metric-detail-item">
+              <div class="metric-header">
+                <span class="metric-label">CPU Usage</span>
+                <span class="metric-value">{{ selectedResource.metrics.cpu }}%</span>
+              </div>
+              <div class="metric-bar">
+                <div class="metric-fill" [style.width.%]="selectedResource.metrics.cpu" 
+                     [class]="getMetricClass(selectedResource.metrics.cpu)"></div>
+              </div>
+            </div>
+            <div class="metric-detail-item">
+              <div class="metric-header">
+                <span class="metric-label">Memory Usage</span>
+                <span class="metric-value">{{ selectedResource.metrics.memory }}%</span>
+              </div>
+              <div class="metric-bar">
+                <div class="metric-fill" [style.width.%]="selectedResource.metrics.memory"
+                     [class]="getMetricClass(selectedResource.metrics.memory)"></div>
+              </div>
+            </div>
+            <div class="metric-detail-item" *ngIf="selectedResource.metrics.disk">
+              <div class="metric-header">
+                <span class="metric-label">Disk Usage</span>
+                <span class="metric-value">{{ selectedResource.metrics.disk }}%</span>
+              </div>
+              <div class="metric-bar">
+                <div class="metric-fill" [style.width.%]="selectedResource.metrics.disk"
+                     [class]="getMetricClass(selectedResource.metrics.disk)"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Resource Tags -->
+        <div class="resource-detail-section" *ngIf="selectedResource.tags && selectedResource.tags.length > 0">
+          <h4>🏷️ Tags</h4>
+          <div class="tags-container">
+            <span class="tag" *ngFor="let tag of selectedResource.tags">{{ tag }}</span>
+          </div>
+        </div>
+
+        <!-- Related Alerts -->
+        <div class="resource-detail-section" *ngIf="getResourceAlerts(selectedResource.id).length > 0">
+          <h4>⚠️ Active Alerts</h4>
+          <div class="alerts-container">
+            <div class="alert-item" *ngFor="let alert of getResourceAlerts(selectedResource.id)" 
+                 [class]="'alert-' + alert.severity">
+              <div class="alert-icon">
+                <i [class]="'icon-' + alert.type"></i>
+              </div>
+              <div class="alert-content">
+                <h5>{{ alert.title }}</h5>
+                <p>{{ alert.description }}</p>
+                <span class="alert-time">{{ alert.timestamp | date:'short' }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Related Events -->
+        <div class="resource-detail-section" *ngIf="getResourceEvents(selectedResource.id).length > 0">
+          <h4>🕒 Recent Events</h4>
+          <div class="events-container">
+            <div class="event-item" *ngFor="let event of getResourceEvents(selectedResource.id)"
+                 [class]="'event-' + event.type">
+              <div class="event-marker"></div>
+              <div class="event-content">
+                <h5>{{ event.title }}</h5>
+                <p>{{ event.description }}</p>
+                <span class="event-time">{{ event.timestamp | date:'medium' }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="modal-footer" *ngIf="selectedResource">
+        <button class="btn btn-outline" (click)="viewLogs(selectedResource)">
+          <i class="icon-file"></i>
+          View Logs
+        </button>
+        <button class="btn btn-outline" (click)="manageResource(selectedResource)">
+          <i class="icon-settings"></i>
+          Manage
+        </button>
+        <button class="btn btn-primary" (click)="closeResourceDetailsModal()">Close</button>
+      </div>
+    </div>
+  </div>
 </div>

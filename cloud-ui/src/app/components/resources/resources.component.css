@@ -5,6 +5,12 @@
   margin: 0 auto;
 }
 
+/* Icon Definitions */
+.icon-eye::before { content: '👁️'; }
+.icon-file::before { content: '📄'; }
+.icon-search::before { content: '🔍'; }
+.icon-settings::before { content: '⚙️'; }
+
 /* Page Header */
 .page-header {
   margin-bottom: 30px;
@@ -840,4 +846,364 @@
 
 .btn-danger:hover {
   background: #c82333;
+}
+
+/* Resource Details Modal Styles */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 20px;
+}
+
+.modal-content {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+  max-width: 600px;
+  width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+}
+
+.modal-content.large {
+  max-width: 900px;
+}
+
+.modal-header {
+  padding: 24px;
+  border-bottom: 2px solid #00d4aa;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.modal-header h3 {
+  color: #1e3c72;
+  margin: 0;
+  font-size: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.modal-body {
+  padding: 24px;
+  flex: 1;
+  overflow-y: auto;
+}
+
+.modal-footer {
+  padding: 20px 24px;
+  border-top: 1px solid #e0e0e0;
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  flex-shrink: 0;
+}
+
+/* Resource Detail Sections */
+.resource-detail-section {
+  margin-bottom: 32px;
+}
+
+.resource-detail-section:last-child {
+  margin-bottom: 0;
+}
+
+.resource-detail-section h4 {
+  color: #1e3c72;
+  font-size: 1.2rem;
+  margin: 0 0 16px 0;
+  font-weight: 600;
+}
+
+.detail-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+}
+
+.detail-item {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.detail-item .label {
+  font-weight: 600;
+  color: #666;
+  font-size: 14px;
+}
+
+.detail-item .value {
+  color: #1e3c72;
+  font-size: 14px;
+}
+
+.detail-item .value.cost {
+  font-weight: 600;
+  color: #28a745;
+  font-size: 16px;
+}
+
+.detail-item .value.status-badge {
+  display: inline-block;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  width: fit-content;
+}
+
+.detail-item .value.health-indicator {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.detail-item .value.health-indicator::before {
+  content: '';
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.detail-item .value.health-indicator.healthy::before {
+  background: #28a745;
+}
+
+.detail-item .value.health-indicator.warning::before {
+  background: #ffc107;
+}
+
+.detail-item .value.health-indicator.critical::before {
+  background: #dc3545;
+}
+
+.detail-item .value.health-indicator.unknown::before {
+  background: #6c757d;
+}
+
+/* Metrics Detail */
+.metrics-detail {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.metric-detail-item {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.metric-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.metric-label {
+  font-weight: 600;
+  color: #1e3c72;
+  font-size: 14px;
+}
+
+.metric-bar {
+  height: 10px;
+  background: #e9ecef;
+  border-radius: 5px;
+  overflow: hidden;
+}
+
+.metric-fill {
+  height: 100%;
+  transition: width 0.3s ease;
+  border-radius: 5px;
+}
+
+.metric-fill.metric-low {
+  background: linear-gradient(90deg, #28a745 0%, #20c997 100%);
+}
+
+.metric-fill.metric-medium {
+  background: linear-gradient(90deg, #ffc107 0%, #fd7e14 100%);
+}
+
+.metric-fill.metric-high {
+  background: linear-gradient(90deg, #dc3545 0%, #c82333 100%);
+}
+
+/* Tags Container */
+.tags-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+/* Alerts Container */
+.alerts-container {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.alert-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 12px;
+  border-radius: 8px;
+  border-left: 4px solid #e0e0e0;
+}
+
+.alert-item.alert-critical {
+  background: #f8d7da;
+  border-left-color: #dc3545;
+}
+
+.alert-item.alert-high {
+  background: #fff3cd;
+  border-left-color: #ffc107;
+}
+
+.alert-item.alert-medium {
+  background: #d1ecf1;
+  border-left-color: #17a2b8;
+}
+
+.alert-item.alert-low {
+  background: #d4edda;
+  border-left-color: #28a745;
+}
+
+.alert-icon {
+  font-size: 16px;
+  margin-top: 2px;
+}
+
+.alert-content {
+  flex: 1;
+}
+
+.alert-content h5 {
+  margin: 0 0 4px 0;
+  font-size: 14px;
+  color: #1e3c72;
+}
+
+.alert-content p {
+  margin: 0 0 4px 0;
+  font-size: 12px;
+  color: #666;
+}
+
+.alert-time {
+  font-size: 11px;
+  color: #999;
+}
+
+/* Events Container */
+.events-container {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  position: relative;
+  padding-left: 20px;
+}
+
+.events-container::before {
+  content: '';
+  position: absolute;
+  left: 8px;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: #e0e0e0;
+}
+
+.event-item {
+  position: relative;
+  padding-left: 20px;
+}
+
+.event-marker {
+  position: absolute;
+  left: -12px;
+  top: 4px;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #e0e0e0;
+}
+
+.event-item.event-success .event-marker {
+  background: #28a745;
+}
+
+.event-item.event-warning .event-marker {
+  background: #ffc107;
+}
+
+.event-item.event-error .event-marker {
+  background: #dc3545;
+}
+
+.event-item.event-info .event-marker {
+  background: #17a2b8;
+}
+
+.event-content h5 {
+  margin: 0 0 4px 0;
+  font-size: 14px;
+  color: #1e3c72;
+}
+
+.event-content p {
+  margin: 0 0 4px 0;
+  font-size: 12px;
+  color: #666;
+}
+
+.event-time {
+  font-size: 11px;
+  color: #999;
+}
+
+/* Responsive Modal */
+@media (max-width: 768px) {
+  .modal-content {
+    max-width: 100%;
+    max-height: 100vh;
+    border-radius: 0;
+  }
+
+  .modal-content.large {
+    max-width: 100%;
+  }
+
+  .detail-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .modal-footer {
+    flex-direction: column;
+  }
+
+  .modal-footer .btn {
+    width: 100%;
+  }
 }
