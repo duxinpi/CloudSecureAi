@@ -902,3 +902,248 @@
   font-size: 14px;
   margin: 0;
 }
+
+/* Sync Popup Styles */
+.sync-popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+  padding: 20px;
+  animation: fadeIn 0.2s ease-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.sync-popup {
+  background: white;
+  border-radius: 20px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+  max-width: 420px;
+  width: 100%;
+  overflow: hidden;
+  animation: slideUp 0.3s ease-out;
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.sync-popup-content {
+  padding: 32px;
+}
+
+/* Header */
+.sync-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 32px;
+  position: relative;
+}
+
+.sync-account-icon {
+  width: 56px;
+  height: 56px;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28px;
+  color: white;
+  flex-shrink: 0;
+}
+
+.sync-account-name {
+  flex: 1;
+  min-width: 0;
+}
+
+.sync-account-name h3 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #1e3c72;
+  margin: 0 0 4px 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.sync-account-name p {
+  font-size: 0.9rem;
+  color: #666;
+  margin: 0;
+}
+
+.sync-close-btn {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: #f8f9fa;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  color: #666;
+  font-size: 18px;
+}
+
+.sync-close-btn:hover {
+  background: #e9ecef;
+  color: #333;
+  transform: rotate(90deg);
+}
+
+/* Status Section */
+.sync-status {
+  text-align: center;
+  margin-bottom: 24px;
+}
+
+.sync-icon-wrapper {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 20px;
+  font-size: 36px;
+  color: white;
+  position: relative;
+}
+
+.sync-icon-wrapper.status-syncing {
+  background: linear-gradient(135deg, #00d4aa 0%, #00a8cc 100%);
+}
+
+.sync-icon-wrapper.status-success {
+  background: linear-gradient(135deg, #4caf50 0%, #2e7d32 100%);
+  animation: scaleIn 0.3s ease-out;
+}
+
+.sync-icon-wrapper.status-error {
+  background: linear-gradient(135deg, #f44336 0%, #c62828 100%);
+  animation: shake 0.4s ease-out;
+}
+
+@keyframes scaleIn {
+  0% { transform: scale(0); }
+  50% { transform: scale(1.1); }
+  100% { transform: scale(1); }
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-10px); }
+  75% { transform: translateX(10px); }
+}
+
+.sync-icon-wrapper .icon-sync.spinning {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.sync-message {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.message-text {
+  font-size: 1rem;
+  color: #333;
+  margin: 0;
+  font-weight: 500;
+}
+
+.progress-percent {
+  font-size: 0.85rem;
+  color: #666;
+  margin: 0;
+  font-weight: 600;
+}
+
+/* Progress Bar */
+.sync-progress-bar {
+  margin-bottom: 24px;
+}
+
+.progress-track {
+  width: 100%;
+  height: 6px;
+  background: #e9ecef;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #00d4aa 0%, #00a8cc 100%);
+  border-radius: 10px;
+  transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 0 10px rgba(0, 212, 170, 0.3);
+}
+
+/* Actions */
+.sync-actions {
+  display: flex;
+  justify-content: center;
+}
+
+.sync-actions .btn {
+  min-width: 120px;
+  padding: 12px 24px;
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .sync-popup {
+    max-width: 100%;
+    margin: 10px;
+    border-radius: 16px;
+  }
+  
+  .sync-popup-content {
+    padding: 24px;
+  }
+  
+  .sync-header {
+    margin-bottom: 24px;
+  }
+  
+  .sync-icon-wrapper {
+    width: 64px;
+    height: 64px;
+    font-size: 28px;
+    margin-bottom: 16px;
+  }
+}

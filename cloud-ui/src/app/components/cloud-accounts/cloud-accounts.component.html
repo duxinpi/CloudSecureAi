@@ -308,3 +308,52 @@
     </div>
   </div>
 </div>
+
+<!-- Sync Status Popup -->
+<div class="sync-popup-overlay" *ngIf="showSyncPopup" (click)="closeSyncPopup()">
+  <div class="sync-popup" (click)="$event.stopPropagation()">
+    <div class="sync-popup-content" *ngIf="syncingAccount">
+      <!-- Account Header -->
+      <div class="sync-header">
+        <div class="sync-account-icon" [class]="'provider-' + syncingAccount.provider.toLowerCase()">
+          <i [class]="'icon-' + syncingAccount.provider.toLowerCase()"></i>
+        </div>
+        <div class="sync-account-name">
+          <h3>{{ syncingAccount.accountName }}</h3>
+          <p>{{ syncingAccount.provider }}</p>
+        </div>
+        <button class="sync-close-btn" (click)="closeSyncPopup()" *ngIf="syncStatus !== 'syncing'">
+          <i class="icon-close"></i>
+        </button>
+      </div>
+
+      <!-- Sync Status -->
+      <div class="sync-status">
+        <div class="sync-icon-wrapper" [class]="'status-' + syncStatus">
+          <i class="icon-sync" [class.spinning]="syncStatus === 'syncing'"></i>
+          <i class="icon-check" *ngIf="syncStatus === 'success'"></i>
+          <i class="icon-error" *ngIf="syncStatus === 'error'"></i>
+        </div>
+        
+        <div class="sync-message">
+          <p class="message-text">{{ syncMessage || getDefaultSyncMessage() }}</p>
+          <p class="progress-percent" *ngIf="syncStatus === 'syncing'">{{ syncProgress }}%</p>
+        </div>
+      </div>
+
+      <!-- Progress Bar -->
+      <div class="sync-progress-bar" *ngIf="syncStatus === 'syncing'">
+        <div class="progress-track">
+          <div class="progress-fill" [style.width.%]="syncProgress"></div>
+        </div>
+      </div>
+
+      <!-- Action Button -->
+      <div class="sync-actions" *ngIf="syncStatus !== 'syncing'">
+        <button class="btn btn-primary" (click)="closeSyncPopup()">
+          {{ syncStatus === 'success' ? 'Done' : 'Close' }}
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

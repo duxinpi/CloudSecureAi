@@ -42,6 +42,13 @@ export class CloudAccountsComponent implements OnInit {
   editingAccount: CloudAccount | null = null;
   accountForm: FormGroup;
   
+  // Sync popup properties
+  showSyncPopup = false;
+  syncingAccount: CloudAccount | null = null;
+  syncStatus: 'idle' | 'syncing' | 'success' | 'error' = 'idle';
+  syncProgress = 0;
+  syncMessage = '';
+  
   // Stats
   connectedAccounts = 0;
   warningAccounts = 0;
@@ -226,16 +233,57 @@ export class CloudAccountsComponent implements OnInit {
   }
 
   syncAccount(accountId: number) {
+    const account = this.cloudAccounts.find(acc => acc.id === accountId);
+    if (!account) return;
+    
+    this.syncingAccount = account;
+    this.showSyncPopup = true;
+    this.syncStatus = 'syncing';
+    this.syncProgress = 0;
+    this.syncMessage = 'Initializing sync...';
+    
+    // Simulate progress
+    const progressInterval = setInterval(() => {
+      if (this.syncProgress < 90) {
+        this.syncProgress += 10;
+        if (this.syncProgress < 30) {
+          this.syncMessage = 'Connecting to cloud provider...';
+        } else if (this.syncProgress < 60) {
+          this.syncMessage = 'Discovering resources...';
+        } else if (this.syncProgress < 90) {
+          this.syncMessage = 'Syncing resource data...';
+        }
+      }
+    }, 500);
+    
     this.http.post(`${this.apiUrl}/cloud-accounts/${accountId}/sync`, {}).subscribe({
       next: () => {
+        clearInterval(progressInterval);
+        this.syncProgress = 100;
+        this.syncStatus = 'success';
+        this.syncMessage = 'Sync completed successfully!';
         this.loadCloudAccounts();
-        alert('Account synced successfully!');
+        
+        // Auto-close after 2 seconds
+        setTimeout(() => {
+          this.closeSyncPopup();
+        }, 2000);
       },
       error: (error) => {
+        clearInterval(progressInterval);
+        this.syncStatus = 'error';
+        this.syncMessage = error.error?.message || 'Failed to sync account. Please try again.';
         console.error('Error syncing account:', error);
-        alert('Failed to sync account. Please try again.');
       }
     });
+  }
+
+  closeSyncPopup() {
+    this.showSyncPopup = false;
+    this.syncingAccount = null;
+    this.syncStatus = 'idle';
+    this.syncProgress = 0;
+    this.syncMessage = '';
   }
 
   deleteAccount(accountId: number) {
@@ -321,5 +369,31 @@ export class CloudAccountsComponent implements OnInit {
     if (!this.inventoryData) return 0;
     const total = this.inventoryData.totalResources;
     return total > 0 ? (count / total) * 100 : 0;
+  }
+
+  getSyncStatusIcon(): string {
+    switch (this.syncStatus) {
+      case 'syncing':
+        return 'icon-sync';
+      case 'success':
+        return 'icon-check';
+      case 'error':
+        return 'icon-error';
+      default:
+        return 'icon-sync';
+    }
+  }
+
+  getDefaultSyncMessage(): string {
+    switch (this.syncStatus) {
+      case 'syncing':
+        return 'Synchronizing account data...';
+      case 'success':
+        return 'Sync completed successfully!';
+      case 'error':
+        return 'Sync failed. Please try again.';
+      default:
+        return 'Preparing to sync...';
+    }
   }
 }
