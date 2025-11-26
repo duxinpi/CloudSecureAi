@@ -510,4 +510,126 @@
       </div>
     </div>
   </div>
+
+  <!-- Resource Discovery Modal -->
+  <div class="modal-overlay" *ngIf="showDiscoveryModal" (click)="closeDiscoveryModal()">
+    <div class="modal-content large" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h3>
+          <i class="icon-search"></i>
+          Discover Resources
+        </h3>
+        <button class="close-btn" (click)="closeDiscoveryModal()" *ngIf="discoveryStatus !== 'discovering'">
+          <i class="icon-close"></i>
+        </button>
+      </div>
+      
+      <div class="modal-body">
+        <!-- Discovery Configuration -->
+        <div class="discovery-config" *ngIf="discoveryStatus === 'idle'">
+          <div class="form-section">
+            <h4>Select Cloud Providers</h4>
+            <p class="section-description">Choose which cloud providers to scan for resources</p>
+            <div class="provider-selection">
+              <div class="provider-option" 
+                   *ngFor="let provider of availableProviders"
+                   [class.selected]="isProviderSelected(provider)"
+                   (click)="toggleProvider(provider)">
+                <div class="provider-icon" [class]="'provider-' + provider.toLowerCase()">
+                  <i [class]="'icon-' + provider.toLowerCase()"></i>
+                </div>
+                <span class="provider-name">{{ provider }}</span>
+                <i class="check-icon" *ngIf="isProviderSelected(provider)">✓</i>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-section">
+            <h4>Select Regions (Optional)</h4>
+            <p class="section-description">Leave empty to scan all regions, or select specific regions</p>
+            <div class="region-selection">
+              <div class="region-option"
+                   *ngFor="let region of availableRegions"
+                   [class.selected]="isRegionSelected(region)"
+                   (click)="toggleRegion(region)">
+                <span>{{ region }}</span>
+                <i class="check-icon" *ngIf="isRegionSelected(region)">✓</i>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Discovery Progress -->
+        <div class="discovery-progress" *ngIf="discoveryStatus === 'discovering'">
+          <div class="progress-icon-wrapper">
+            <i class="icon-search spinning"></i>
+          </div>
+          <div class="progress-content">
+            <p class="progress-message">{{ discoveryMessage }}</p>
+            <div class="progress-bar-container">
+              <div class="progress-bar">
+                <div class="progress-fill" [style.width.%]="discoveryProgress"></div>
+              </div>
+              <span class="progress-percent">{{ discoveryProgress }}%</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Discovery Results -->
+        <div class="discovery-results" *ngIf="discoveryStatus === 'completed'">
+          <div class="result-header">
+            <div class="result-icon success">
+              <i class="icon-check"></i>
+            </div>
+            <div class="result-info">
+              <h4>Discovery Complete!</h4>
+              <p>{{ discoveryMessage }}</p>
+            </div>
+          </div>
+          
+          <div class="discovered-resources-list" *ngIf="discoveredResources.length > 0">
+            <h5>Discovered Resources:</h5>
+            <div class="resource-item" *ngFor="let resource of discoveredResources">
+              <div class="resource-icon-small" [class]="'provider-' + resource.provider.toLowerCase()">
+                <i [class]="'icon-' + resource.provider.toLowerCase()"></i>
+              </div>
+              <div class="resource-info-small">
+                <span class="resource-name">{{ resource.name }}</span>
+                <span class="resource-type">{{ resource.type }} - {{ resource.region }}</span>
+              </div>
+              <span class="resource-status" [class]="resource.status.toLowerCase()">{{ resource.status }}</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Discovery Error -->
+        <div class="discovery-error" *ngIf="discoveryStatus === 'error'">
+          <div class="error-icon">
+            <i class="icon-error"></i>
+          </div>
+          <p class="error-message">{{ discoveryMessage }}</p>
+        </div>
+      </div>
+      
+      <div class="modal-footer">
+        <button class="btn btn-outline" 
+                (click)="closeDiscoveryModal()" 
+                *ngIf="discoveryStatus !== 'discovering'">
+          {{ discoveryStatus === 'completed' ? 'Close' : 'Cancel' }}
+        </button>
+        <button class="btn btn-primary" 
+                (click)="startDiscovery()" 
+                *ngIf="discoveryStatus === 'idle'"
+                [disabled]="discoveryProviders.length === 0">
+          <i class="icon-search"></i>
+          Start Discovery
+        </button>
+        <button class="btn btn-primary" 
+                (click)="closeDiscoveryModal()" 
+                *ngIf="discoveryStatus === 'completed'">
+          Done
+        </button>
+      </div>
+    </div>
+  </div>
 </div>

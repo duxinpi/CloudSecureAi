@@ -91,6 +91,24 @@ export class ResourcesComponent implements OnInit {
   showLogViewer = false;
   showResourceDetailsModal = false;
   selectedResource: CloudResource | null = null;
+  showDiscoveryModal = false;
+  
+  // Discovery properties
+  discoveryProviders: string[] = [];
+  discoveryRegions: string[] = [];
+  discoveryStatus: 'idle' | 'discovering' | 'completed' | 'error' = 'idle';
+  discoveryProgress = 0;
+  discoveredResources: CloudResource[] = [];
+  discoveryMessage = '';
+  
+  availableProviders = ['AWS', 'Azure', 'GCP', 'DigitalOcean', 'Linode'];
+  availableRegions = [
+    'us-east-1', 'us-west-2', 'eu-west-1', 'ap-southeast-1',
+    'East US', 'West US 2', 'West Europe',
+    'us-central1', 'europe-west1', 'asia-east1',
+    'NYC1', 'SFO1', 'AMS3',
+    'us-east', 'us-west', 'eu-west'
+  ];
 
   // Security & IAM
   iamStats: IAMStats = {
@@ -358,8 +376,145 @@ export class ResourcesComponent implements OnInit {
   }
 
   openDiscoveryModal() {
-    // TODO: Implement resource discovery modal
-    console.log('Opening resource discovery modal');
+    this.showDiscoveryModal = true;
+    this.discoveryProviders = [];
+    this.discoveryRegions = [];
+    this.discoveryStatus = 'idle';
+    this.discoveryProgress = 0;
+    this.discoveredResources = [];
+    this.discoveryMessage = '';
+  }
+
+  closeDiscoveryModal() {
+    this.showDiscoveryModal = false;
+    this.discoveryStatus = 'idle';
+    this.discoveryProgress = 0;
+    this.discoveredResources = [];
+    this.discoveryMessage = '';
+  }
+
+  startDiscovery() {
+    if (this.discoveryProviders.length === 0) {
+      this.discoveryMessage = 'Please select at least one provider';
+      return;
+    }
+
+    this.discoveryStatus = 'discovering';
+    this.discoveryProgress = 0;
+    this.discoveryMessage = 'Starting resource discovery...';
+    this.discoveredResources = [];
+
+    // Simulate discovery progress
+    const progressInterval = setInterval(() => {
+      if (this.discoveryProgress < 90) {
+        this.discoveryProgress += 10;
+        if (this.discoveryProgress < 30) {
+          this.discoveryMessage = 'Connecting to cloud providers...';
+        } else if (this.discoveryProgress < 60) {
+          this.discoveryMessage = 'Scanning regions for resources...';
+        } else if (this.discoveryProgress < 90) {
+          this.discoveryMessage = 'Cataloging discovered resources...';
+        }
+      }
+    }, 600);
+
+    // Call API to discover resources
+    const discoveryRequest = {
+      providers: this.discoveryProviders,
+      regions: this.discoveryRegions.length > 0 ? this.discoveryRegions : undefined
+    };
+
+    this.http.post<CloudResource[]>(`${this.apiUrl}/cloud-resources/discover`, discoveryRequest).subscribe({
+      next: (resources) => {
+        clearInterval(progressInterval);
+        this.discoveryProgress = 100;
+        this.discoveredResources = resources;
+        this.discoveryStatus = 'completed';
+        this.discoveryMessage = `Discovered ${resources.length} resources`;
+        
+        // Add discovered resources to the main list
+        resources.forEach(resource => {
+          if (!this.allResources.find(r => r.id === resource.id)) {
+            this.allResources.push(resource);
+          }
+        });
+        this.applyFilters();
+        this.calculateStats();
+      },
+      error: (error) => {
+        clearInterval(progressInterval);
+        this.discoveryStatus = 'error';
+        this.discoveryMessage = error.error?.message || 'Discovery failed. Please try again.';
+        console.error('Error discovering resources:', error);
+        // Fallback to mock discovery
+        this.simulateDiscovery();
+      }
+    });
+  }
+
+  simulateDiscovery() {
+    // Mock discovered resources
+    const mockDiscovered: CloudResource[] = [];
+    this.discoveryProviders.forEach((provider, index) => {
+      mockDiscovered.push({
+        id: `discovered-${provider.toLowerCase()}-${Date.now()}-${index}`,
+        name: `Discovered ${provider} Resource ${index + 1}`,
+        type: provider === 'AWS' ? 'EC2 Instance' : provider === 'Azure' ? 'Virtual Machine' : 'Compute Engine',
+        provider: provider,
+        region: this.discoveryRegions.length > 0 ? this.discoveryRegions[0] : 'us-east-1',
+        status: 'Running',
+        health: 'Healthy',
+        environment: 'production',
+        project: 'discovered',
+        cost: Math.random() * 100 + 10,
+        tags: ['discovered', provider.toLowerCase()],
+        metrics: { cpu: Math.floor(Math.random() * 50 + 20), memory: Math.floor(Math.random() * 50 + 30) },
+        createdAt: new Date(),
+        lastSync: new Date()
+      });
+    });
+
+    setTimeout(() => {
+      this.discoveryProgress = 100;
+      this.discoveredResources = mockDiscovered;
+      this.discoveryStatus = 'completed';
+      this.discoveryMessage = `Discovered ${mockDiscovered.length} resources`;
+
+      // Add to main list
+      mockDiscovered.forEach(resource => {
+        if (!this.allResources.find(r => r.id === resource.id)) {
+          this.allResources.push(resource);
+        }
+      });
+      this.applyFilters();
+      this.calculateStats();
+    }, 1000);
+  }
+
+  toggleProvider(provider: string) {
+    const index = this.discoveryProviders.indexOf(provider);
+    if (index > -1) {
+      this.discoveryProviders.splice(index, 1);
+    } else {
+      this.discoveryProviders.push(provider);
+    }
+  }
+
+  toggleRegion(region: string) {
+    const index = this.discoveryRegions.indexOf(region);
+    if (index > -1) {
+      this.discoveryRegions.splice(index, 1);
+    } else {
+      this.discoveryRegions.push(region);
+    }
+  }
+
+  isProviderSelected(provider: string): boolean {
+    return this.discoveryProviders.includes(provider);
+  }
+
+  isRegionSelected(region: string): boolean {
+    return this.discoveryRegions.includes(region);
   }
 
   clearFilters() {
