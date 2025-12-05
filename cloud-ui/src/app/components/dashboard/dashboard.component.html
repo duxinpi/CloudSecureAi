@@ -84,6 +84,9 @@
             <div class="activity-status" [class]="activity.status">
               {{ activity.result }}
             </div>
+            <button class="btn-review-detail" (click)="reviewDetail(activity)">
+              Review Detail
+            </button>
           </div>
         </div>
       </div>
@@ -201,6 +204,63 @@
           </div>
         </div>
       </div>
+    </div>
+  </div>
+</div>
+
+<!-- Detail Modal -->
+<div class="modal-overlay" *ngIf="selectedActivity" (click)="closeDetail()">
+  <div class="modal-content" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h2 class="modal-title">Scan Activity Details</h2>
+      <button class="modal-close" (click)="closeDetail()">×</button>
+    </div>
+    <div class="modal-body" *ngIf="selectedActivity">
+      <div class="detail-section">
+        <div class="detail-row">
+          <span class="detail-label">Activity Title:</span>
+          <span class="detail-value">{{ selectedActivity.title }}</span>
+        </div>
+        <div class="detail-row">
+          <span class="detail-label">Status:</span>
+          <span class="detail-value" [class]="'status-badge ' + selectedActivity.status">
+            {{ selectedActivity.result }}
+          </span>
+        </div>
+        <div class="detail-row">
+          <span class="detail-label">Time:</span>
+          <span class="detail-value">{{ selectedActivity.time }}</span>
+        </div>
+        <div class="detail-row">
+          <span class="detail-label">Scan Type:</span>
+          <span class="detail-value">{{ selectedActivity.scanType || 'Security Scan' }}</span>
+        </div>
+        <div class="detail-row">
+          <span class="detail-label">Resources Scanned:</span>
+          <span class="detail-value">{{ selectedActivity.resourcesScanned || 'N/A' }}</span>
+        </div>
+        <div class="detail-row">
+          <span class="detail-label">Vulnerabilities Found:</span>
+          <span class="detail-value">{{ selectedActivity.vulnerabilities || '0' }}</span>
+        </div>
+        <div class="detail-row">
+          <span class="detail-label">Compliance Score:</span>
+          <span class="detail-value">{{ selectedActivity.complianceScore || 'N/A' }}</span>
+        </div>
+        <div class="detail-row full-width">
+          <span class="detail-label">Description:</span>
+          <div class="detail-description">{{ selectedActivity.description || 'No additional details available for this scan activity.' }}</div>
+        </div>
+        <div class="detail-row full-width" *ngIf="selectedActivity.recommendations">
+          <span class="detail-label">Recommendations:</span>
+          <ul class="detail-recommendations">
+            <li *ngFor="let rec of selectedActivity.recommendations">{{ rec }}</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-primary" (click)="closeDetail()">Close</button>
     </div>
   </div>
 </div>
