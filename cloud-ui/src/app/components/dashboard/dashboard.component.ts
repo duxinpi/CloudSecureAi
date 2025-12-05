@@ -30,27 +30,71 @@ export class DashboardComponent implements OnInit {
       title: 'AWS Account Security Scan',
       time: '2 hours ago',
       result: 'Completed',
-      status: 'success'
+      status: 'success',
+      scanType: 'Security Scan',
+      resourcesScanned: '156 resources',
+      vulnerabilities: '3',
+      complianceScore: '92%',
+      description: 'Comprehensive security scan of AWS account infrastructure. All critical resources were scanned for vulnerabilities and compliance issues.',
+      recommendations: [
+        'Update IAM policies to follow least privilege principle',
+        'Enable MFA for all root accounts',
+        'Review and rotate access keys older than 90 days'
+      ]
     },
     {
       title: 'Azure Compliance Check',
       time: '4 hours ago',
       result: 'Warning',
-      status: 'warning'
+      status: 'warning',
+      scanType: 'Compliance Check',
+      resourcesScanned: '89 resources',
+      vulnerabilities: '7',
+      complianceScore: '78%',
+      description: 'Compliance check against SOC 2 and ISO 27001 standards. Some resources require attention to meet full compliance requirements.',
+      recommendations: [
+        'Implement encryption at rest for storage accounts',
+        'Configure network security groups properly',
+        'Enable audit logging for all critical resources'
+      ]
     },
     {
       title: 'GCP Resource Assessment',
       time: '6 hours ago',
       result: 'Completed',
-      status: 'success'
+      status: 'success',
+      scanType: 'Resource Assessment',
+      resourcesScanned: '203 resources',
+      vulnerabilities: '1',
+      complianceScore: '95%',
+      description: 'Full resource assessment of Google Cloud Platform infrastructure. Overall security posture is excellent.',
+      recommendations: [
+        'Review firewall rules for unused ports',
+        'Consider implementing VPC flow logs'
+      ]
     },
     {
       title: 'K8s Vulnerability Scan',
       time: '8 hours ago',
       result: 'Failed',
-      status: 'critical'
+      status: 'critical',
+      scanType: 'Vulnerability Scan',
+      resourcesScanned: '45 pods',
+      vulnerabilities: '12',
+      complianceScore: '65%',
+      description: 'Kubernetes cluster vulnerability scan identified several critical security issues that require immediate attention.',
+      recommendations: [
+        'Update container images to latest versions',
+        'Fix CVE-2024-1234 in production namespace',
+        'Implement network policies to restrict pod-to-pod communication',
+        'Enable Pod Security Standards',
+        'Review and update RBAC permissions'
+      ]
     }
   ];
+
+  // Selected activity for detail view
+  selectedActivity: any = null;
 
   // Cloud providers data
   cloudProviders = [
@@ -154,5 +198,17 @@ export class DashboardComponent implements OnInit {
         this.apiResponse = `Error: ${error.message}`;
       }
     });
+  }
+
+  reviewDetail(activity: any): void {
+    this.selectedActivity = activity;
+    // Prevent body scroll when modal is open
+    document.body.style.overflow = 'hidden';
+  }
+
+  closeDetail(): void {
+    this.selectedActivity = null;
+    // Restore body scroll
+    document.body.style.overflow = 'auto';
   }
 }
