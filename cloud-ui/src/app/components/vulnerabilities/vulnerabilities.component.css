@@ -39,6 +39,8 @@
   transition: all 0.2s ease;
   min-width: 120px;
   justify-content: center;
+  cursor: pointer;
+  border: none;
 }
 
 .header-actions .btn.btn-primary {
@@ -63,6 +65,21 @@
   cursor: not-allowed;
   transform: none;
   box-shadow: none;
+}
+
+/* Refresh Button Spinning Animation */
+.icon-refresh.spinning {
+  display: inline-block;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 /* Security Dashboard */

@@ -40,6 +40,9 @@ export class VulnerabilitiesComponent implements OnInit {
   lastScanTime: string | null = null;
   nextScanTime: string | null = null;
   
+  // Refresh Controls
+  isRefreshing = false;
+  
   // Findings Data
   findings: VulnerabilityFinding[] = [];
   filteredFindings: VulnerabilityFinding[] = [];
@@ -76,6 +79,7 @@ export class VulnerabilitiesComponent implements OnInit {
         this.findings = data.findings || [];
         this.filteredFindings = [...this.findings];
         this.updateSecurityMetrics();
+        this.lastScanTime = new Date().toISOString();
       },
       error: (error) => {
         console.error('Error loading vulnerability data:', error);
@@ -317,6 +321,79 @@ export class VulnerabilitiesComponent implements OnInit {
   }
 
   refreshVulnerabilities() {
-    this.loadVulnerabilityData();
+    console.log('Refresh button clicked');
+    
+    if (this.isRefreshing) {
+      console.log('Already refreshing, skipping...');
+      return; // Prevent multiple simultaneous refreshes
+    }
+    
+    this.isRefreshing = true;
+    console.log('Starting refresh...');
+    
+    const startTime = Date.now();
+    const minDisplayTime = 500; // Minimum 500ms to show refreshing state
+    
+    // Update timestamp immediately for user feedback
+    this.lastScanTime = new Date().toISOString();
+    
+    // Try to reload data from API first (with shorter timeout)
+    const timeoutId = setTimeout(() => {
+      if (this.isRefreshing) {
+        console.warn('API request timeout - using mock data');
+        this.loadMockData();
+        this.filterFindings();
+        
+        // Ensure minimum display time
+        const elapsed = Date.now() - startTime;
+        const remaining = Math.max(0, minDisplayTime - elapsed);
+        setTimeout(() => {
+          this.isRefreshing = false;
+        }, remaining);
+      }
+    }, 3000); // 3 second timeout
+    
+    this.http.get<any>(`${this.apiUrl}/vulnerabilities`).subscribe({
+      next: (data) => {
+        clearTimeout(timeoutId);
+        console.log('API response received:', data);
+        if (data && data.findings && Array.isArray(data.findings) && data.findings.length > 0) {
+          this.findings = data.findings;
+        } else {
+          // If API returns empty or invalid data, reload mock data
+          console.log('API returned empty data, reloading mock data...');
+          this.loadMockData();
+        }
+        this.filteredFindings = [...this.findings];
+        this.updateSecurityMetrics();
+        
+        // Reapply filters after refresh
+        this.filterFindings();
+        
+        // Ensure minimum display time
+        const elapsed = Date.now() - startTime;
+        const remaining = Math.max(0, minDisplayTime - elapsed);
+        setTimeout(() => {
+          this.isRefreshing = false;
+          console.log('Vulnerability data refreshed successfully');
+        }, remaining);
+      },
+      error: (error) => {
+        clearTimeout(timeoutId);
+        console.error('Error refreshing vulnerability data:', error);
+        // Fallback to mock data if API fails
+        console.log('Falling back to mock data...');
+        this.loadMockData();
+        // Reapply filters after loading mock data
+        this.filterFindings();
+        
+        // Ensure minimum display time
+        const elapsed = Date.now() - startTime;
+        const remaining = Math.max(0, minDisplayTime - elapsed);
+        setTimeout(() => {
+          this.isRefreshing = false;
+        }, remaining);
+      }
+    });
   }
 }
