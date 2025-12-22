@@ -7,9 +7,9 @@
         <p>Comprehensive vulnerability scanning and threat detection across all your cloud resources</p>
       </div>
       <div class="header-actions">
-        <button class="btn btn-primary" (click)="refreshVulnerabilities()">
-          <i class="icon-refresh"></i>
-          Refresh
+        <button type="button" class="btn btn-primary" (click)="refreshVulnerabilities()" [disabled]="isRefreshing">
+          <i class="icon-refresh" [class.spinning]="isRefreshing"></i>
+          {{ isRefreshing ? 'Refreshing...' : 'Refresh' }}
         </button>
         <button class="btn btn-primary" (click)="openScheduleModal()">
           <i class="icon-calendar"></i>
