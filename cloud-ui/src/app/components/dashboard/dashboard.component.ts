@@ -80,6 +80,30 @@ export class DashboardComponent implements OnInit {
     }
   ];
 
+  // Security Overview Details Modal
+  showSecurityDetailsModal = false;
+  
+  // Detailed security data
+  securityDetails = {
+    highRiskResources: [
+      { name: 'S3 Bucket: public-data-bucket', provider: 'AWS', region: 'us-east-1', issue: 'Publicly accessible' },
+      { name: 'EC2 Instance: web-server-01', provider: 'AWS', region: 'us-west-2', issue: 'Open security group' },
+      { name: 'Storage Account: prod-storage', provider: 'Azure', region: 'eastus', issue: 'No encryption' },
+      { name: 'Cloud SQL: db-instance-1', provider: 'GCP', region: 'us-central1', issue: 'Weak password policy' },
+      { name: 'Lambda Function: api-handler', provider: 'AWS', region: 'eu-west-1', issue: 'Missing IAM role' }
+    ],
+    mediumRiskResources: [
+      { name: 'RDS Instance: app-db', provider: 'AWS', region: 'us-east-1', issue: 'Outdated SSL certificate' },
+      { name: 'VM: app-server-02', provider: 'Azure', region: 'westus', issue: 'Missing security updates' },
+      { name: 'Cloud Storage: backup-bucket', provider: 'GCP', region: 'us-west1', issue: 'No versioning enabled' }
+    ],
+    compliantResources: [
+      { name: 'EC2 Instance: secure-server', provider: 'AWS', region: 'us-east-1', status: 'Compliant' },
+      { name: 'Azure Key Vault: secrets-vault', provider: 'Azure', region: 'eastus', status: 'Compliant' },
+      { name: 'Cloud Function: data-processor', provider: 'GCP', region: 'us-central1', status: 'Compliant' }
+    ]
+  };
+
   constructor(
     private authService: AuthService,
     private router: Router,
@@ -154,5 +178,14 @@ export class DashboardComponent implements OnInit {
         this.apiResponse = `Error: ${error.message}`;
       }
     });
+  }
+
+  viewSecurityDetails(): void {
+    this.showSecurityDetailsModal = true;
+    console.log('Opening security details modal');
+  }
+
+  closeSecurityDetailsModal(): void {
+    this.showSecurityDetailsModal = false;
   }
 }

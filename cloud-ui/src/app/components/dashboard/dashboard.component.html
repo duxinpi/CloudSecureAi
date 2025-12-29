@@ -47,7 +47,7 @@
       <div class="card-header">
         <h3 class="card-title">Security Overview</h3>
         <div class="card-actions">
-          <button class="btn-secondary">View Details</button>
+          <button class="btn-secondary" (click)="viewSecurityDetails()">View Details</button>
         </div>
       </div>
       <div class="card-content">
@@ -200,6 +200,99 @@
             </ul>
           </div>
         </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Security Details Modal -->
+  <div class="modal-overlay" *ngIf="showSecurityDetailsModal" (click)="closeSecurityDetailsModal()">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h3>Security Overview Details</h3>
+        <button class="close-btn" (click)="closeSecurityDetailsModal()">
+          <i class="icon-close">✕</i>
+        </button>
+      </div>
+      
+      <div class="modal-body">
+        <!-- High Risk Resources -->
+        <div class="detail-section">
+          <div class="section-header">
+            <h4 class="section-title critical">
+              <span class="section-icon">🔴</span>
+              High Risk Resources ({{ highRiskResources || 15 }})
+            </h4>
+          </div>
+          <div class="resource-list">
+            <div class="resource-item critical" *ngFor="let resource of securityDetails.highRiskResources">
+              <div class="resource-info">
+                <div class="resource-name">{{ resource.name }}</div>
+                <div class="resource-meta">
+                  <span class="resource-provider">{{ resource.provider }}</span>
+                  <span class="resource-region">{{ resource.region }}</span>
+                </div>
+              </div>
+              <div class="resource-issue">
+                <span class="issue-badge critical">{{ resource.issue }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Medium Risk Resources -->
+        <div class="detail-section">
+          <div class="section-header">
+            <h4 class="section-title warning">
+              <span class="section-icon">🟡</span>
+              Medium Risk Resources ({{ mediumRiskResources || 42 }})
+            </h4>
+          </div>
+          <div class="resource-list">
+            <div class="resource-item warning" *ngFor="let resource of securityDetails.mediumRiskResources">
+              <div class="resource-info">
+                <div class="resource-name">{{ resource.name }}</div>
+                <div class="resource-meta">
+                  <span class="resource-provider">{{ resource.provider }}</span>
+                  <span class="resource-region">{{ resource.region }}</span>
+                </div>
+              </div>
+              <div class="resource-issue">
+                <span class="issue-badge warning">{{ resource.issue }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Compliant Resources -->
+        <div class="detail-section">
+          <div class="section-header">
+            <h4 class="section-title success">
+              <span class="section-icon">🟢</span>
+              Compliant Resources ({{ compliantResources || 183 }})
+            </h4>
+          </div>
+          <div class="resource-list">
+            <div class="resource-item success" *ngFor="let resource of securityDetails.compliantResources">
+              <div class="resource-info">
+                <div class="resource-name">{{ resource.name }}</div>
+                <div class="resource-meta">
+                  <span class="resource-provider">{{ resource.provider }}</span>
+                  <span class="resource-region">{{ resource.region }}</span>
+                </div>
+              </div>
+              <div class="resource-issue">
+                <span class="issue-badge success">{{ resource.status }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="modal-footer">
+        <button class="btn-primary" (click)="closeSecurityDetailsModal()">Close</button>
+        <button class="btn-secondary" routerLink="/vulnerabilities" (click)="closeSecurityDetailsModal()">
+          View All Vulnerabilities
+        </button>
       </div>
     </div>
   </div>
